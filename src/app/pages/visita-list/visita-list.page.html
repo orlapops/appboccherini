@@ -1,0 +1,127 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <!-- <ion-title>{{ 'app.pages.visitalist.title.header' | translate }}</ion-title> -->
+        <ion-title>Lista Visitas</ion-title>
+    </ion-toolbar>
+
+    <ion-toolbar color="dark">
+        <ion-title>
+            <h6 no-margin>({{ visitas?.length || '0' }}) {{ 'app.label.resultsf' | translate }}</h6>
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="animated fadeIn">
+
+    <div padding>
+
+        <ion-segment [(ngModel)]="visitaLists" (ionChange)="segmentChanged($event)" color="tertiary" margin-bottom>
+            <!-- <ion-segment-button value="cardlist">
+                <ion-icon name="apps"></ion-icon>
+            </ion-segment-button> -->
+            <ion-segment-button value="linelist">
+                <ion-icon name="list"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button value="maplist">
+                <ion-icon name="map"></ion-icon>
+            </ion-segment-button>
+        </ion-segment>
+
+        <div [ngSwitch]="visitaLists">
+            <div *ngSwitchCase="'linelist'" [@staggerIn]='visitas.length'>
+                <ion-item tappable routerLink="/visita-detail/{{visita.id}}" *ngFor="let visita of visitas">
+                    <ion-label>
+                        <h2 [ngClass]="{'fw700 text-white': !true}">
+                            <div class="fechavisita">
+                                <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
+                                <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon>
+                                <ion-text color="primary">{{visita.data.fecha_in}}</ion-text>
+                            </div>
+                            <div class="horavisita">
+                                <ion-icon name="time" slot="end" color="tertiary" *ngIf="true"></ion-icon>
+                                <ion-text color="primary"> {{ visita.data.hora_in }}</ion-text>
+                            </div>
+                        </h2>
+                        <hr>
+                        <h2 class="clientevisita">
+                            <ion-text color="dark"> {{visita.data.nombre}}</ion-text>
+                        </h2>
+                        <h3>
+                            <div class="direcvisita">
+                                <ion-icon name="pin" slot="start" class="direcvisita"></ion-icon>
+                                <ion-text color="dark"> {{visita.data.direccion}} </ion-text>
+                            </div>
+                        </h3>
+                        <h4 class="notavisita">
+                            <p [ngClass]="{'text-light': !true}">
+                                <ion-text color="dark">{{ visita.data.notas }}</ion-text>
+                            </p>
+                        </h4>
+                    </ion-label>
+                </ion-item>
+            </div>
+            <div *ngSwitchCase="'maplist'">
+                <agm-map [latitude]="visitas[0].data.latitud" [longitude]="visitas[0].data.longitud" [zoom]="10" [zoomControl]="false" [styles]="agmStyles" [streetViewControl]="false">
+                    <agm-marker *ngFor="let visita of visitas" [latitude]="visita.data.latitud" [longitude]="visita.data.longitud">
+                        <agm-info-window>
+                            <ion-item tappable routerLink="/visita-detail/{{visita.id}}">
+                                <ion-label>
+                                    <h2 [ngClass]="{'fw700 text-white': !true}">
+                                        <div class="fechavisita">
+                                            <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
+                                            <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon>
+                                            <ion-text color="primary">{{ _parEmpre.cadafecha(visita.data.fecha_in) | date: 'shortDate'}}</ion-text>
+                                        </div>
+                                        <div class="horavisita">
+                                            <ion-icon name="time" slot="end" color="tertiary" *ngIf="true"></ion-icon>
+                                            <ion-text color="primary"> {{ _parEmpre.cadhoramil(visita.data.hora_in) }}</ion-text>
+                                        </div>
+                                        <!-- <ion-text color="primary">Mensaje</ion-text> -->
+                                    </h2>
+                                    <hr>
+                                    <h2 class="clientevisita">
+                                        <ion-text color="dark"> {{visita.data.nombre}}</ion-text>
+                                    </h2>
+                                    <h3>
+                                        <div class="direcvisita">
+                                            <ion-icon name="pin" slot="start" class="direcvisita"></ion-icon>
+                                            <!-- <p [ngClass]="{'text-light': !true}"> -->
+                                            <ion-text color="dark"> {{visita.data.direccion}} </ion-text>
+                                            <!-- </p> -->
+                                        </div>
+                                    </h3>
+                                    <h4 class="notavisita">
+                                        <p [ngClass]="{'text-light': !true}">
+                                            <ion-text color="dark">{{ visita.data.notas }}</ion-text>
+                                        </p>
+                                    </h4>
+                                </ion-label>
+
+                                <!-- <ion-label>
+                  <ion-text color="primary">
+                    <h2><strong>{{ visita.name }}</strong></h2>
+                  </ion-text>
+                  
+                  <h3>
+                    <ion-badge slot="start" color="secondary" class="rooms">
+                      <ion-icon name="book" color="tertiary"></ion-icon>
+                      {{ visita.numb_available_rooms }} {{ 'app.label.availrooms' | translate }}
+                    </ion-badge>
+                  </h3>
+                  <ion-badge color="warning">
+                    <ion-icon name="star"></ion-icon> {{ visita.rating }}
+                  </ion-badge>
+                </ion-label> -->
+                            </ion-item>
+                        </agm-info-window>
+                    </agm-marker>
+                </agm-map>
+            </div>
+        </div>
+        <!-- # -->
+    </div>
+
+</ion-content>

@@ -1,0 +1,111 @@
+:host {
+    ion-content {
+        --background: linear-gradient(-135deg, var(--ion-color-medium), var(--ion-color-light))
+    }
+}
+
+.carrito_vacio {
+    position: relative;
+    top: 30%;
+    font-size: 20px;
+}
+
+.icon-5x {
+    font-size: 100px;
+}
+
+.imagen {
+    font-size: 100px;
+}
+
+.carrito-numero {
+    position: absolute;
+    top: -5px;
+    left: 18px;
+}
+
+.btfactura-color {
+    color: #222428;
+    background-color: #e2decb;
+    --btn-background: #e2decb;
+    --btn-border-color: var(--border-color-checked);
+}
+
+.btfacturatot-color {
+    color: #000000;
+    background-color: #ffffff;
+    --btn-background: #ffffff;
+    --btn-border-color: var(--border-color-checked);
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.cuadrado_producto {
+    width: 200px;
+    padding: 5px 20px 5px 20px;
+}
+
+.trash_icon {
+    padding: 1px 2px 1px 2px;
+}
+
+.copletar_compra {
+    width: 300px;
+}
+
+.items {
+    float: left;
+    text-align: left;
+    height: 200px;
+}
+
+.columna_1 {
+    padding: 1px 2px 1px 2px;
+    width: 20%;
+    height: 20%;
+}
+
+.columnas {
+    width: 50px;
+    height: 70px;
+    padding: 0%;
+}
+
+.justify-content-start {
+    justify-content: flex-start;
+}
+
+.text-lowercase {
+    text-transform: lowercase;
+}
+
+.text {
+    text-align: center;
+}
+
+.texxt-rigth {
+    text-align: left;
+}
+
+.float {
+    position: relative;
+    left: 100px;
+}
+
+.padding {
+    padding-left: 100%;
+    padding-right: 100%;
+}
+
+.font_size {
+    font-size: 200%;
+    float: right;
+}
+
+.texto_imprimir {
+    text-align: left;
+    font-size: 10px;
+    width: -webkit-fill-available;
+    height: 400px;
+    background-color: ghostwhite;
+}

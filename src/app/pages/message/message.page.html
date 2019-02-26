@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>Mensaje</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="animated fadeIn">
+
+    <ion-card *ngIf="cargado" class="bg-white" no-margin>
+        <ion-card-header>
+            <ion-card-subtitle>{{message.fecha_enviado.toDate() | date: 'short'}} ∙ por <strong>{{message.enviadopor}}</strong></ion-card-subtitle>
+            <ion-card-title>
+                <ion-text color="primary">
+                    {{message.asunto}}
+                </ion-text>
+            </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <p margin-top>
+                <ion-text color="primary">
+                    {{message.mensaje}}
+                </ion-text>
+            </p>
+        </ion-card-content>
+    </ion-card>
+
+</ion-content>

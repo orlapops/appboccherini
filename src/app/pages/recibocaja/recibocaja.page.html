@@ -1,0 +1,325 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <!-- <ion-title>Items Recibo de Caja</ion-title> -->
+        <ion-title class="headercliente">Items Recibo de Caja</ion-title>
+        <!-- <ion-title class="headercliente">{{_visitas.clienteAct.cliente}}</ion-title> -->
+
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="animated fadeIn">
+    <ion-text color="primary">
+        <h6>
+            <ion-icon size="small" color="dark" name="cash"></ion-icon>{{_cliente.clienteActual.cliente}}</h6>
+        <!-- <ion-icon size="small" color="dark" name="cash"></ion-icon>{{_visitas.clienteAct.cliente}}</h6> -->
+    </ion-text>
+    <hr class="bg-tertiary">
+    <div text-center *ngIf="recibocaja.length === 0" class="carrito_vacio">
+        <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
+        <br> No tiene items en Recibo de Caja
+    </div>
+    <div *ngIf="!grabando_recibo && !mostrandoresulado && recibocaja.length != 0" class="bg-white">
+        <ion-card class="bg-primary" no-margin>
+            <ion-card-content>
+                <!-- margin-top: -14px; -->
+                <ion-segment [(ngModel)]="vistapagos" color="light" margin-bottom>
+                    <!-- <ion-segment [(ngModel)]="vistapagos" color="light"> -->
+                    <ion-segment-button value="verobls">
+                        <ion-label color="tertiary">Obligaciones</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="vertotales">
+                        <ion-label color="tertiary">Totales</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="verpagar">
+                        <ion-label color="tertiary">Pagar</ion-label>
+                    </ion-segment-button>
+                </ion-segment>
+                <div class="ccFlags" [ngSwitch]="vistapagos">
+                    <ion-grid *ngSwitchCase="'verobls'" nopadding>
+                        <ion-row class="rowtotales">
+                            <ion-col size="12" margin-bottom>
+                                <ion-list>
+                                    <ion-item-sliding *ngFor="let itemr of recibocaja; let i = index;">
+                                        <ion-item tappable routerLink="/recibo-detail/{{itemr.item.num_obliga}}">
+                                            <ion-label>
+                                                <h3>
+                                                    <div class="enviadomsg">
+                                                        <ion-icon name="document" slot="start" color="secondary"></ion-icon>
+                                                        <ion-text color="primary">{{itemr.item.num_obliga}}</ion-text>
+                                                    </div>
+                                                    <div class="fechamsg">
+                                                        <ion-icon name="calendar" slot="end" color="tertiary" *ngIf="true"></ion-icon>
+                                                        <ion-text color="primary"> {{itemr.item.fecha_obl | date: 'shortDate'}}</ion-text>
+                                                    </div>
+                                                </h3>
+                                                <hr>
+                                                <h4 class="asuntomsg">
+                                                    <ion-text solt="start" color="dark">Inicial: {{itemr.item.saldoini | currency}}</ion-text>
+                                                    <ion-text slot="end" color="tertiary"> Abono: {{itemr.item.abono | currency}}</ion-text>
+                                                </h4>
+                                                <h5 class="asuntomsg">
+                                                    <ion-text color="success"> Nuevo Saldo: {{itemr.item.saldo | currency}}</ion-text>
+                                                </h5>
+                                                <ion-text solt="start" color="danger">Descuentos</ion-text>
+                                                <h5>
+                                                    <ion-text solt="start" color="danger">Duchas: {{itemr.item.dcto_dchef + itemr.item.dcto_dchban | currency}}</ion-text>
+                                                    <ion-text slot="end" color="danger"> Otros: {{itemr.item.dcto_otref + itemr.item.dcto_otrban | currency}}</ion-text>
+                                                </h5>
+                                                <h5>
+                                                    <ion-text color="danger"> Otros dctos: {{itemr.item.otros_desc | currency}}</ion-text>
+                                                    <ion-text color="danger"> Aj.Retenciones: {{itemr.item.retencion | currency}}</ion-text>
+                                                </h5>
+                                                <h4>
+                                                    <ion-text color="success"> Neto a Recibir: {{itemr.item.neto_recibir | currency}}</ion-text>
+                                                </h4>
+                                            </ion-label>
+                                        </ion-item>
+                                        <!-- <ion-item-options side="end">
+                                            <ion-item-option color="danger" (click)="deleteItem(itemr)">Quitar</ion-item-option>
+                                        </ion-item-options> -->
+                                    </ion-item-sliding>
+                                </ion-list>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                    <ion-grid *ngSwitchCase="'vertotales'" padding>
+                        <ion-row class="rowtotales">
+                            <ion-col size="12" margin-bottom>
+                                <ion-card no-margin class="animated fadeIn" margin-top>
+                                    <ion-card-content class="cardtotales">
+                                        <h2>
+                                            <ion-text>
+                                                Totales Recibo
+                                            </ion-text>
+                                        </h2>
+                                    </ion-card-content>
+                                    <ion-item class="bg-white margentb">
+                                        <p>
+                                            Total Abonos:
+                                        </p>
+                                        <ion-badge slot="end" color="warning">
+                                            {{total_recibo | currency }}
+                                        </ion-badge>
+                                    </ion-item>
+                                    <ion-item class="bg-white margentb">
+                                        <ion-label>
+                                            Dcto Duchas Efectivo:
+                                        </ion-label>
+                                        <ion-badge slot="end" color="danger">
+                                            -{{tdcto_dchef | currency }}
+                                        </ion-badge>
+                                    </ion-item>
+                                    <ion-item class="bg-white margentb">
+                                        <ion-label>
+                                            Dcto Otros Efectivo:
+                                        </ion-label>
+                                        <ion-badge slot="end" color="danger">
+                                            -{{tdcto_otref | currency }}
+                                        </ion-badge>
+                                    </ion-item>
+                                    <ion-item class="bg-white margentb">
+                                        <ion-label>
+                                            Dcto Duchas Bancos:
+                                        </ion-label>
+                                        <ion-badge slot="end" color="danger">
+                                            -{{tdcto_dchban | currency }}
+                                        </ion-badge>
+                                    </ion-item>
+                                    <ion-item class="bg-white margentb">
+                                        <ion-label>
+                                            Dcto Otros Bancos:
+                                        </ion-label>
+                                        <ion-badge slot="end" color="danger">
+                                            -{{tdcto_otrban | currency }}
+                                        </ion-badge>
+                                    </ion-item>
+                                    <ion-item class="bg-white margentb">
+                                        <ion-label>
+                                            Descuento Otros:
+                                        </ion-label>
+                                        <ion-badge slot="end" color="danger">
+                                            -{{totros_desc | currency }}
+                                        </ion-badge>
+                                    </ion-item>
+                                    <ion-item class="bg-white margentb">
+                                        <ion-label>
+                                            Aj.x Retenciones:
+                                        </ion-label>
+                                        <ion-badge slot="end" color="danger">
+                                            -{{tretencion | currency }}
+                                        </ion-badge>
+                                    </ion-item>
+                                    <ion-item class="bg-white margentb">
+                                        <ion-label>
+                                            Neto a Recibir:
+                                        </ion-label>
+                                        <ion-badge slot="end" color="success">
+                                            {{tneto_recibir | currency }}
+                                        </ion-badge>
+                                    </ion-item>
+                                </ion-card>
+                                <ion-button slot="end" shape="round" color="success" (click)="realizar_recibo()">
+                                    Realizar Recibo
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                    <ion-grid *ngSwitchCase="'verpagar'">
+                        <ion-row>
+                            <ion-col size="12">
+                                <ion-list class="listafpago">
+                                    <ion-item-sliding *ngFor="let item of _recibos.formpago">
+                                        <ion-item tappable routerLink="/regpagosxtipo/{{item.id}}">
+                                            <!-- <ion-label> -->
+                                            <ion-text *ngIf="item.item.tipopago==='EFE'" color="dark">Efectivo</ion-text>
+                                            <ion-text *ngIf="item.item.tipopago==='CHD'" color="dark">Cheque al día</ion-text>
+                                            <ion-text *ngIf="item.item.tipopago==='PBCS'" color="dark">Consig. Banco</ion-text>
+                                            <ion-text *ngIf="item.item.tipopago==='PBTR'" color="dark">Transferencia Banco</ion-text>
+                                            <!-- </ion-label> -->
+                                            <ion-badge slot="end" color="success">
+                                                {{item.item.valor | currency }}
+                                            </ion-badge>
+                                            <!-- <ion-button slot="end" shape="round" color="danger" (click)="deleteItem(item)">
+                                                <ion-icon name="trash"></ion-icon>
+                                            </ion-button> -->
+                                        </ion-item>
+                                        <!-- <ion-item-options side="end">
+                                            <ion-item-option color="danger" (click)="deleteItem(item)">Quitar</ion-item-option>
+                                        </ion-item-options> -->
+                                    </ion-item-sliding>
+                                    <hr class="bg-tertiary">
+                                    <ion-text color="primary">
+                                        <h3>Valores recibidos</h3>
+                                    </ion-text>
+                                    <hr class="bg-tertiary">
+                                    <ion-row>
+                                        <ion-col size="3">
+                                            <strong></strong>
+                                        </ion-col>
+                                        <ion-col size="3">
+                                            <strong>F.Pago</strong>
+                                        </ion-col>
+                                        <ion-col size="3">
+                                            <strong>Recibo</strong>
+                                        </ion-col>
+                                        <ion-col size="3">
+                                            <strong>Diferencia</strong>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col size="3">
+                                            <strong class="titrowcol">Efectivo</strong>
+                                        </ion-col>
+                                        <ion-col size="3">
+                                            <ion-text class="fontrowcol" color="primary">
+                                                <h6 class="fontrowcol">{{_recibos.totformpagefec | currency }}</h6>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="3">
+                                            <ion-text class="fontrowcol" color="primary">
+                                                <h6 class="fontrowcol">{{tneto_recibirefe | currency }}</h6>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="3">
+                                            <ion-text *ngIf="tneto_recibirefe - (_recibos.totformpagefec)===0" class="fontrowcol" color="success">
+                                                <h6 class="fontrowcol">{{tneto_recibirefe - (_recibos.totformpagefec) | currency }}</h6>
+                                            </ion-text>
+                                            <ion-text *ngIf="tneto_recibirefe - (_recibos.totformpagefec)!=0" class="fontrowcol" color="danger">
+                                                <h6 class="fontrowcol">{{tneto_recibirefe - (_recibos.totformpagefec) | currency }}</h6>
+                                            </ion-text>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col size="3">
+                                            <strong class="titrowcol">Bancos</strong>
+                                        </ion-col>
+                                        <ion-col size="3">
+                                            <ion-text class="fontrowcol" color="primary">
+                                                <h6 class="fontrowcol">{{_recibos.totformpagban | currency }}</h6>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="3">
+                                            <ion-text class="fontrowcol" color="primary">
+                                                <h6 class="fontrowcol">{{tneto_recibirban | currency }}</h6>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="3">
+                                            <ion-text *ngIf="tneto_recibirban - (_recibos.totformpagban)===0" class="fontrowcol" color="success">
+                                                <h6 class="fontrowcol">{{tneto_recibirban - (_recibos.totformpagban) | currency }}</h6>
+                                            </ion-text>
+                                            <ion-text *ngIf="tneto_recibirban - (_recibos.totformpagban)!=0" class="fontrowcol" color="danger">
+                                                <h6 class="fontrowcol">{{tneto_recibirban - (_recibos.totformpagban) | currency }}</h6>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-row>
+                                            <ion-col size="3">
+                                                <strong class="titrowcol">Total</strong>
+                                            </ion-col>
+                                            <ion-col size="3">
+                                                <ion-text class="fontrowcol" color="primary">
+                                                    <h6 class="fontrowcol">{{_recibos.totformaspago | currency }}</h6>
+                                                </ion-text>
+                                            </ion-col>
+                                            <ion-col size="3">
+                                                <ion-text class="fontrowcol" color="primary">
+                                                    <h6 class="fontrowcol">{{tneto_recibir | currency }}</h6>
+                                                </ion-text>
+                                            </ion-col>
+                                            <ion-col size="3">
+                                                <ion-text *ngIf="tneto_recibir - (_recibos.totformaspago)===0" class="fontrowcol" color="success">
+                                                    <h6 class="fontrowcol">{{tneto_recibir - (_recibos.totformaspago) | currency }}</h6>
+                                                </ion-text>
+                                                <ion-text *ngIf="tneto_recibir - (_recibos.totformaspago)!=0" class="fontrowcol" color="danger">
+                                                    <h6 class="fontrowcol">{{tneto_recibir - (_recibos.totformaspago) | currency }}</h6>
+                                                </ion-text>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-row>
+                                    <ion-item>
+                                        <ion-button icon-left color="secondary" routerLink="/regpagosxtipo/0" shape="round" fill="solid">
+                                            <ion-icon name="add"></ion-icon>
+                                        </ion-button>
+                                        <ion-button *ngIf="(tneto_recibir - _recibos.totformaspago) === 0 && (tneto_recibirban - _recibos.totformpagban) ===0 && (tneto_recibirefe - _recibos.totformpagefec) ===0" slot="start" shape="round" color="success" (click)="realizar_recibo()">
+                                            Generar Recibo
+                                        </ion-button>
+                                    </ion-item>
+
+                                </ion-list>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    </div>
+    <ion-card *ngIf="grabando_recibo && !mostrandoresulado">
+        <ion-item padding class="animated fadeIn fast">
+            <ion-text color="warning"> Grabando recibo. Por favor espere...</ion-text>
+            <ion-spinner name="bubbles"></ion-spinner>
+        </ion-item>
+    </ion-card>
+    <ion-card *ngIf="grabando_recibo && !grabo_recibo && mostrandoresulado && _visitas.visita_activa_copvdet.errorgrb_recibo">
+        <ion-text color="danger"> Error Grabando recibo </ion-text>
+        <ion-item *ngFor="let iteme of _visitas.visita_activa_copvdet.resgrb_recibo; let i = index;" padding class="animated fadeIn fast">
+            <ion-text color="danger"> {{iteme.menerror.trim()}}</ion-text>
+        </ion-item>
+        <ion-button slot="end" shape="round" color="success" (click)="quitar_resuladograborecibo()">
+            Continuar
+        </ion-button>
+    </ion-card>
+    <ion-card class="btrecibotot-color" *ngIf="grabando_recibo && grabo_recibo && mostrandoresulado">
+        <ion-text color="green"><strong> {{_visitas.visita_activa_copvdet.recibo_grabado.men_error}}</strong></ion-text>
+        <div>
+            <textarea class="texto_imprimir">{{_visitas.visita_activa_copvdet.recibo_grabado.txt_imp}}</textarea>
+        </div>
+        <ion-button slot="start" shape="round" color="success" (click)="imprimir_recibo()">
+            Imprimir Recibo
+        </ion-button>
+        <ion-button slot="end" shape="round" color="success" (click)="quitar_resuladograborecibo()">
+            Continuar
+        </ion-button>
+    </ion-card>
+</ion-content>

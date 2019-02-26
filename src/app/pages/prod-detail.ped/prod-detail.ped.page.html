@@ -1,0 +1,86 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title class="headercliente">{{_cliente.clienteActual.cliente}}</ion-title>
+        <ion-title class="headercliente"><strong>Pedido - {{prodshop.cod_refinv}}</strong></ion-title>
+
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="animated fadeIn">
+    <ion-text color="primary">
+        <h6>
+            <ion-icon size="small" color="dark" name="bookmark"></ion-icon>{{_cliente.clienteActual.cliente}}</h6>
+        <hr class="bg-tertiary">
+    </ion-text>
+    <div class="bg-profile" text-center>
+        <img *ngIf="prodshop.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(prodshop.link_imgfb)" />
+        <img *ngIf="!prodshop.link_imgfb" src="assets/img/imagennodisponible.jpg" />
+    </div>
+    <ion-card no-margin class="animated fadeIn">
+        <ion-card-content class="bg-white">
+            <h3>
+                <ion-text color="bg-white">
+                    {{ prodshop.nombre }}
+                </ion-text>
+            </h3>
+        </ion-card-content>
+        <ion-item class="bg-white">
+            <ion-label>
+                Existencias:
+            </ion-label>
+            <ion-badge slot="end" color="warning">
+                {{ prodshop.existencia }}
+            </ion-badge>
+            <ion-badge slot="end" color="success">
+                {{ prodshop.existencia - cantidad_sol }}
+            </ion-badge>
+
+        </ion-item>
+        <ion-item class="bg-white">
+            <ion-text color="success">
+                {{ prodshop.precio_ven | currency }}
+            </ion-text>
+            <ion-text color="success" slot="end">
+                Total: {{ total_t | currency }}
+            </ion-text>
+        </ion-item>
+        <div class="bg-white">
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="3">
+                        <ion-button *ngIf="this.cantidad_sol >0" shape="round" color="success" (click)="addpedido(prodshop, cantidad_sol)">
+                            Agregar
+                        </ion-button>
+                    </ion-col>
+                    <ion-col size="3">
+                        <ion-button class="counter-position" shape="round" (click)="decrementar_cantidad()" color="danger" fill="solid" size="small">
+                            <ion-icon name="remove"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                    <ion-col size="3">
+                        <ion-input class="counter-position" (ionChange)="changecantsol($event)" [(ngModel)]="cantidad_sol" type="number" min="1" max="999999" step="1" placeholder="Cantidad" clearOnEdit="false">
+                        </ion-input>
+                    </ion-col>
+                    <ion-col size="3">
+                        <ion-button class="add-button" shape="round" (click)="incrementar_cantidad()" color="secondary" fill="solid" size="small">
+                            <ion-icon name="add"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </ion-card>
+    <ion-footer>
+        <!-- <ion-toolbar>
+            <ion-input slot="start" (ionChange)="total()" [(ngModel)]="cantidad_sol" type="number" min="1" max="1000" step="1" placeholder="Cantidad" clearOnEdit="true">
+            </ion-input>
+            <ion-button slot="end" shape="round" color="success" (click)="addpedido(prodshop, cantidad_sol)">
+                Agregar
+            </ion-button>
+        </ion-toolbar> -->
+    </ion-footer>
+
+</ion-content>

@@ -1,0 +1,168 @@
+:host {
+    ion-content {
+        --background: linear-gradient(-135deg, var(--ion-color-medium), var(--ion-color-light))
+    }
+}
+
+.fontrowcol {
+    font-size: smaller;
+    font-weight: bold;
+    text-align: -webkit-right;
+    width: 68px;
+}
+
+.titrowcol {
+    font-size: smaller;
+    font-weight: bold;
+    text-align: -webkit-left;
+}
+
+.btcartera-color {
+    color: #222428;
+    background-color: #c5d9fa;
+    --btn-background: #c5d9fa;
+    --btn-border-color: var(--border-color-checked);
+}
+
+.delete-position {
+    position: relative;
+    right: -90px;
+}
+
+.saldo-position {
+    position: relative;
+    top: -16px;
+}
+
+.valorescol {
+    padding: 0%;
+    position: static;
+    top: -16px;
+}
+
+.abonoinput {
+    padding: 6px;
+    background-color: aliceblue;
+    border: 1;
+}
+
+.listafpago {
+    margin-left: -18px;
+    margin-right: -18px;
+    margin-top: -24px;
+    margin-bottom: 0px;
+    padding-left: 0px;
+}
+
+.fechamsg {
+    position: absolute;
+    left: 58%;
+    top: 1%;
+}
+
+.headercliente {
+    font-size: 12px;
+}
+
+.enviadomsg {
+    position: absolute;
+    left: 0%;
+    top: 1%;
+}
+
+.asuntomsg {
+    position: relative;
+    left: 0%;
+    top: 10%;
+    // font-style: italic;
+    font-weight: bold;
+}
+
+.cardtotales {
+    background-color: yellowgreen;
+}
+
+.rowtotales {
+    margin-top: -30px;
+    margin-bottom: -20px;
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.cardpago {
+    background-color: #fed212;
+}
+
+.rowpago {
+    margin-top: -30px;
+    margin-bottom: -20px;
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.margentb {
+    margin-top: -5px;
+    margin-bottom: -5px;
+}
+
+.valpago {
+    margin-left: 30px;
+    margin-right: 60px;
+    background-color: lightgray;
+}
+
+.chbanpago {
+    margin-left: 30px;
+    margin-right: 60px;
+    background-color: lightgray;
+}
+
+.chcuenpago {
+    margin-left: 30px;
+    margin-right: 90px;
+    background-color: lightgray;
+}
+
+.pagcheque {
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.fechacons {
+    margin-left: 30px;
+    margin-right: 20px;
+    background-color: lightgray;
+}
+
+.colcheque {
+    margin-left: -10px;
+}
+
+.btrecibo-color {
+    color: #222428;
+    background-color: #e2decb;
+    --btn-background: #e2decb;
+    --btn-border-color: var(--border-color-checked);
+}
+
+.btrecibotot-color {
+    color: #000000;
+    background-color: #ffffff;
+    --btn-background: #ffffff;
+    --btn-border-color: var(--border-color-checked);
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.texto_imprimir {
+    text-align: left;
+    font-size: 10px;
+    width: -webkit-fill-available;
+    height: 400px;
+    background-color: ghostwhite;
+}
+
+.inputnumero {
+    text-align: -webkit-right;
+    background: whitesmoke;
+}

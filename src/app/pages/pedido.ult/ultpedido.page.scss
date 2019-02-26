@@ -1,0 +1,56 @@
+:host {
+    ion-content {
+        --background: linear-gradient(-135deg, var(--ion-color-medium), var(--ion-color-light))
+    }
+}
+
+.carrito_vacio {
+    position: relative;
+    top: 30%;
+    font-size: 20px;
+}
+
+.icon-5x {
+    font-size: 100px;
+}
+
+.imagen {
+    font-size: 100px;
+}
+
+.carrito-numero {
+    position: absolute;
+    top: -5px;
+    left: 18px;
+}
+
+.btpedido-color {
+    color: #222428;
+    background-color: #e2decb;
+    --btn-background: #e2decb;
+    --btn-border-color: var(--border-color-checked);
+    font-size: smaller;
+}
+
+.btpedidotot-color {
+    color: #000000;
+    background-color: #ffffff;
+    --btn-background: #ffffff;
+    --btn-border-color: var(--border-color-checked);
+    padding-bottom: 0;
+    padding-top: 0;
+    font-size: smaller;
+}
+
+.justify-content-start {
+    justify-content: flex-start;
+}
+
+.text-lowercase {
+    text-transform: lowercase;
+}
+
+.position-add-button {
+    position: relative;
+    right: -90px;
+}

@@ -1,0 +1,481 @@
+<ion-header *ngIf="cargoVisitaActual && _visitas.cargo_clienteact">
+
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <!-- <ion-title *ngIf="_cliente.cargoclienteNetsolin" class="headercliente">{{_cliente.clienteActual.cliente}}</ion-title> -->
+        <ion-buttons slot="end">
+            <ion-button *ngIf="_parEmpre.usuario.cap_factura" icon-left size="small" shape="round" color="tertiary" routerLink="/factura">
+                <ion-badge *ngIf="_prods.factura.length" color="success">{{ _prods.factura.length }}</ion-badge>
+                <ion-icon name="paper"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="_parEmpre.usuario.cap_pedido" icon-left size="small" shape="round" color="tertiary" routerLink="/pedido">
+                <ion-badge *ngIf="_prods.pedido.length" color="success">{{ _prods.pedido.length }}</ion-badge>
+                <ion-icon name="cart"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="_parEmpre.usuario.recauda" icon-left size="small" shape="round" color="tertiary" routerLink="/recibocaja">
+                <ion-badge *ngIf="_recibos.recibocaja.length" color="success">{{ _recibos.recibocaja.length }}</ion-badge>
+                <ion-icon name="cash"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<div *ngIf="!cargoVisitaActual || !cargo_clienteact">
+    <!-- <div *ngIf="!cargoVisitaActual || !_visitas.cargo_clienteact"> -->
+    <ion-card>
+        <ion-item padding class="animated fadeIn fast">
+            <ion-text color="warning"> Cargando datos cliente. Por favor espere...</ion-text>
+            <ion-spinner name="bubbles"></ion-spinner>
+        </ion-item>
+    </ion-card>
+</div>
+<ion-content class="animated fadeIn" *ngIf="cargoVisitaActual && cargo_clienteact">
+    <div padding-horizontal *ngIf="cargo_clienteact" class="ion-padding">
+        <ion-toolbar class="toolbaropciones" color="medium">
+            <!-- class="background-tolbar" -->
+            <ion-segment [(ngModel)]="visitaSegment" scrollable class="segmentabs">
+                <!-- class="btdetalles-color text-color" -->
+                <ion-segment-button size="small" class="buttonult" value="details" checked>
+                    <ion-label>Detalle</ion-label>
+                </ion-segment-button>
+                <!-- class="btactividades-color text-color" -->
+                <ion-segment-button size="small" *ngIf="_parEmpre.usuario.recauda" class="buttonult" value="actividades">
+                    <ion-label>Actividades</ion-label>
+                </ion-segment-button>
+                <!-- class="btcartera-color text-color" -->
+                <!-- <ion-segment-button size="small" *ngIf="_parEmpre.usuario.recauda" class="buttonult" value="cartera">
+                    <ion-label>Cartera</ion-label>
+                </ion-segment-button> -->
+                <!-- class="btfacturar-color text-color" -->
+                <!-- <ion-segment-button size="small" *ngIf="_parEmpre.usuario.cap_factura" class="buttonult" value="facturar">
+                    <ion-label>Factura</ion-label>
+                </ion-segment-button> -->
+                <!-- class="btpedido-color text-color" -->
+                <!-- <ion-segment-button size="small" *ngIf="_parEmpre.usuario.cap_pedido" class="buttonult" value="pedido">
+                    <ion-label>Pedidos</ion-label>
+                </ion-segment-button> -->
+            </ion-segment>
+        </ion-toolbar>
+        <div [ngSwitch]="visitaSegment">
+            <div *ngSwitchCase="'details'" class="bg-white detalles-padding">
+                <ion-card no-margin margin-top margin-bottom class="animated fadeIn margin-bottom margin-top">
+                    <!-- <ion-item [ngClass]="colorxEstado(visitaAct.estado)" class="background"> -->
+                    <ion-item [ngClass]="colorxEstado(visitaAct.estado)">
+                        <ion-grid class="size-col">
+                            <ion-row>
+                                <ion-col size="3">
+                                    <ion-avatar class="cliente-avatar" (click)="presentImage(ubicaAct.link_foto)">
+                                        <!-- <img *ngIf="_visitas.direc_actual != null" [src]="_DomSanitizer.bypassSecurityTrustUrl(_visitas.direc_actual.link_foto)" /> -->
+                                        <img *ngIf="cargo_ubicaact && ubicaAct.link_foto" [src]="_DomSanitizer.bypassSecurityTrustUrl(ubicaAct.link_foto)" />
+                                        <img *ngIf="cargo_ubicaact && !ubicaAct.link_foto" src="assets/img/imagennodisponible.jpg" />
+                                    </ion-avatar>
+                                </ion-col>
+                                <ion-col size="9" class="text-align">
+                                    <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
+                                    <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
+                                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
+                                    <!-- <p class="clientevisita text"> -->
+                                    <ion-text color="dark"> {{visitaAct.nombre}} </ion-text>
+                                    <!-- </p> -->
+                                    <h5 class="idtercer">
+                                        Id: {{visita.data.cod_tercer}}
+                                    </h5>
+                                    <h4 class="background fechahorahora">
+                                        <div class="fechavisita" class="hour">
+                                            <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
+                                            <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon>
+                                            <ion-text color="primary">{{ _parEmpre.cadafecha(visitaAct.fecha_in) | date: 'shortDate'}}</ion-text>
+                                        </div>
+                                        <div class="horavisita" class="position">
+                                            <ion-icon name="time" slot="end" color="tertiary" *ngIf="true"></ion-icon>
+                                            <ion-text color="primary"> {{ _parEmpre.cadhoramil(visitaAct.hora_in) }}</ion-text>
+                                        </div>
+                                    </h4>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                    <ion-card-content no-padding>
+                        <agm-map [latitude]="visitaAct.latitud" [longitude]="visitaAct.longitud" [zoom]="14" [zoomControl]="false" [styles]="agmStyles" [streetViewControl]="false">
+                            <agm-marker [latitude]="visitaAct.latitud" [longitude]="visitaAct.longitud"></agm-marker>
+                        </agm-map>
+                    </ion-card-content>
+                    <ion-fab *ngIf="visitaAct.estado == '' || visitaAct.estado == 'P'" vertical="top" horizontal="end" slot="fixed">
+                        <ion-fab-button color="success" (click)="registrarIngresoVisita()">
+                            <ion-icon name="log-in"></ion-icon>
+                        </ion-fab-button>
+                    </ion-fab>
+                    <ion-fab *ngIf="visitaAct.estado == 'A' && cargo_posicion" vertical="center" horizontal="start" slot="fixed">
+                        <ion-fab-button color="warning" (click)="actualizarCliente()">
+                            <ion-icon name="pin"></ion-icon>
+                            <ion-icon name="create"></ion-icon>
+                        </ion-fab-button>
+                    </ion-fab>
+
+                    <ion-fab *ngIf="visitaAct.estado == 'A'" vertical="center" horizontal="end" slot="fixed">
+                        <ion-fab-button color="danger" (click)="cerrarVisita()">
+                            <ion-icon name="log-out"></ion-icon>
+                        </ion-fab-button>
+                    </ion-fab>
+
+
+                    <!-- <ion-card-content [ngClass]="colorxEstado(visitaAct.estado)"> -->
+                    <ion-card-content>
+                        <ion-label>
+
+                            <h2 [ngClass]="{'fw700 text-red': true}">
+                                <div *ngIf="visitaAct.estado == 'A' || visitaAct.estado == 'C'">
+                                    <!-- <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
+        <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon> -->
+                                    Ingreso:
+                                    <ion-text color="primary">{{ visitaAct.fechahora_ingreso | date: 'short'}}</ion-text>
+                                </div>
+                                <div *ngIf="visitaAct.estado == 'C'">
+                                    Salio:
+                                    <ion-text color="primary">{{ visitaAct.fechahora_cierre | date: 'short'}}</ion-text>
+                                </div>
+                            </h2>
+                            <hr>
+
+                            <h3>
+                                <div class="direcvisita">
+                                    <ion-icon name="pin" slot="start" class="direcvisita"></ion-icon>
+                                    <ion-text color="dark"> {{visitaAct.direccion}} </ion-text>
+                                </div>
+                            </h3>
+                            <h4 class="notavisita">
+                                <p [ngClass]="{'text-light': !true}">
+                                    <ion-label>Nota Ingreso:</ion-label>
+                                    <ion-text color="dark">{{ visitaAct.notaing }}</ion-text>
+                                </p>
+                                <ion-label>Nota:</ion-label>
+                                <!-- <p [ngClass]="{'text-light': !true}"> -->
+                                <ion-text color="dark">{{ visitaAct.notas }}</ion-text>
+                                <!-- </p> -->
+                            </h4>
+                        </ion-label>
+                    </ion-card-content>
+                </ion-card>
+            </div>
+
+            <div *ngIf="cargoVisitaActual">
+                <div no-margin *ngSwitchCase="'actividades'" class="bg-white actividades-padding">
+                    <div class="booking-card">
+
+                        <ion-fab *ngIf="visitaAct.estado == 'A'" vertical="bottom" horizontal="end" slot="fixed">
+                            <ion-fab-button color="secondary" (click)="tomafoto()" class="fab-buttom" size="small">
+                                <ion-icon name="add"></ion-icon>
+                            </ion-fab-button>
+                        </ion-fab>
+                        <ion-text color="primary text-align">
+                            <h6 class="fw500">
+                                <ion-icon size="medium" color="dark" name="contact"></ion-icon>{{ visitaAct.nombre }}</h6>
+                            <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
+                            <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
+                            <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
+                            <h6 color="light" margin-bottom class="h6">
+                                <ion-icon size="medium" color="dark" name="locate"></ion-icon>{{visitaAct.direccion}}</h6>
+                        </ion-text>
+                        <hr class="bg-tertiary margin-special">
+                        <ion-text color="primary">
+                            <h3 class="h3">
+                                <ion-icon size="medium" color="dark" name="images"></ion-icon> Imagenes </h3>
+                        </ion-text>
+                        <hr class="bg-tertiary">
+                        <ion-slides pager="true" margin-bottom class="slide">
+                            <ion-slide *ngFor="let foto of listafotos | slice:0:4; let i = index" (click)="presentImage(foto.link_foto)">
+                                <ion-grid no-padding>
+                                    <ion-row>
+                                        <ion-col size="12">
+                                            <ion-card class="actividadesCard">
+                                                <ion-img [src]="foto.link_foto"></ion-img>
+                                                <!--
+        <ion-card-subtitle>
+        <ion-badge color="danger" (click)="eliminarFoto(foto)">
+        <ion-icon size="small" name="trash" class="trash_icon"></ion-icon>
+        </ion-badge>
+        </ion-card-subtitle> -->
+                                            </ion-card>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-grid>
+
+                            </ion-slide>
+                        </ion-slides>
+                        <hr class="bg-tertiary">
+
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col size="9">
+                                    <ion-text color="primary">
+                                        <h3 class="h3">
+                                            <ion-icon size="medium" color="dark" name="clipboard"></ion-icon> Actividades</h3>
+
+                                    </ion-text>
+                                </ion-col>
+                                <ion-col size="3">
+                                    <ion-button icon-left color="secondary" routerLink="/regactividades/0" shape="round" fill="solid">
+                                        <ion-icon name="add"></ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+
+                        <hr class="bg-tertiary">
+                        <ion-card class="animated fadeIn">
+                            <ion-card-content no-padding>
+                                <ion-item no-margin margin-vertical class="bg-white" tappable routerLink="/regactividades/{{item.id}}" *ngFor="let item of listaactividades">
+                                    <ion-label>
+                                        <h2 [ngClass]="{'fw700 text-white': !true}">
+                                            <div class="fechavisita">
+                                                <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
+                                                <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon>
+                                                <ion-text color="primary">{{ item.registro | date: 'medium'}}</ion-text>
+                                            </div>
+                                            <!-- <ion-text color="primary">Mensaje</ion-text> -->
+                                        </h2>
+                                        <hr>
+                                        <h2 class="clientevisita">
+                                            <ion-text color="dark">{{ item.nom_tipoact }}</ion-text>
+                                        </h2>
+                                        <h3 class="notavisita">
+                                            <p [ngClass]="{'text-light': !true}">
+                                                <ion-text color="dark">{{ item.notas }}</ion-text>
+                                            </p>
+                                        </h3>
+                                    </ion-label>
+                                </ion-item>
+                            </ion-card-content>
+                        </ion-card>
+                        <hr class="bg-tertiary">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="cargoVisitaActual">
+                <div *ngSwitchCase="'cartera'" [@staggerIn]='clienteAct.cartera.length' class="bg-white cartera-padding">
+                    <ion-text color="primary">
+                        <h6>
+                            <ion-icon size="small" color="dark" name="bookmark"></ion-icon>{{clienteAct.cliente}}</h6>
+                    </ion-text>
+                    <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
+                    <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
+                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
+                    <ion-card *ngIf="_parEmpre.usuario.recauda" class="facturaCard">
+                        <!-- <ion-card-content>
+        <ion-card no-margin margin-vertical class="bg-white" *ngFor="let item of clienteAct.cartera">
+        <ion-item>
+        <p>
+        Obligación: {{item.num_obliga}} {{item.fecha_obl | date: 'shortDate'}}
+        <br>
+        <ion-badge *ngIf="item.dias_venci>0" slot="start" color="danger" margin-bottom>{{ item.dias_venci }} días de vencida</ion-badge>
+        Saldo: {{item.saldo | currency }}
+        </p>
+        </ion-item>
+        <ion-button size="small" shape="round" expand="full" color="warning" routerLink="/recibo-detail/{{item.num_obliga}}">
+        <ion-icon slot="start" name="book"></ion-icon>
+        Detalle Obligacoón
+        </ion-button>
+        </ion-card>
+        </ion-card-content> -->
+                        <ion-card-content no-margin margin-vertical class="bg-white" *ngFor="let item of clienteAct.cartera">
+                            <ion-grid>
+                                <ion-row>
+                                    <ion-col size="8">
+                                        <ion-icon name="checkbox" color="primary"></ion-icon>Obligación: {{item.num_obliga}} {{item.cod_dfactu+'/'+item.num_dfactu}}
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <ion-icon name="alarm" color="primary"></ion-icon>{{item.fecha_obl | date: 'shortDate'}}
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col size="5">
+                                        <ion-badge *ngIf="item.dias_venci>0" color="danger" margin-bottom>{{ item.dias_venci }} días de vencida</ion-badge>
+                                    </ion-col>
+                                    <ion-col size="7">
+                                        <p class="saldo-cartera">Saldo:{{item.saldo | currency }}</p>
+                                    </ion-col>
+
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>
+                                        <ion-button size="small" shape="round" expand="full" color="warning" routerLink="/recibo-detail/{{item.num_obliga}}">
+                                            <ion-icon slot="start" name="book"></ion-icon>
+                                            Detalle Obligación
+                                        </ion-button>
+                                    </ion-col>
+
+                                </ion-row>
+                            </ion-grid>
+                        </ion-card-content>
+                    </ion-card>
+                </div>
+            </div>
+            <div *ngSwitchCase="'facturar'">
+                <div *ngIf="_parEmpre.usuario.cap_factura" class="bg-white facturar-padding">
+                    <ion-text color="primary">
+                        <h6>
+                            <ion-icon size="small" color="dark" name="paper"></ion-icon> {{clienteAct.cliente}}
+                            <!-- <ion-icon size="small" color="dark" name="arrow-round-down" (click)="actimgfactura()"></ion-icon> -->
+                        </h6>
+                    </ion-text>
+                    <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
+                    <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
+                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
+                    <ion-searchbar [(ngModel)]="buscar_item" (ionInput)="buscar_productos($event)" placeholder="Buscar Producto"></ion-searchbar>
+                    <div *ngIf="searching" class="spinner-container">
+                        <ion-spinner></ion-spinner>
+                    </div>
+                    <ion-card no-margin margin-vertical class="bg-white margin-top margin-bottom" *ngFor="let item of productos_bus">
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col size="5">
+                                    <div>
+                                        <p class="text-align">{{item.cod_refinv}}</p>
+                                        <a routerLink="/prod-detail/{{item.cod_refinv}}">
+                                            <img *ngIf="item.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(item.link_imgfb)" />
+                                            <img *ngIf="!item.link_imgfb" src="assets/img/imagennodisponible.jpg" />
+                                        </a>
+                                    </div>
+                                </ion-col>
+                                <ion-col size="7">
+                                    <div>
+                                        <ion-item>
+                                            <p text-capitalize>
+                                                {{item.nombre}}
+                                                <br> Existencias: {{item.existencia}} Precio: {{item.precio_ven | currency}}
+                                            </p>
+                                        </ion-item>
+                                        <ion-button size="small" shape="round" expand="full" color="success" routerLink="/prod-detail/{{item.cod_refinv}}">
+                                            <ion-icon slot="start" name="cart"></ion-icon>
+                                            Detalle Producto
+                                        </ion-button>
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                        <hr class="bg-tertiary">
+                    </ion-card>
+
+                    <!-- </div> -->
+                </div>
+
+            </div>
+            <div *ngSwitchCase="'pedido'">
+                <div *ngIf="_parEmpre.usuario.cap_pedido" class="bg-white pedido-padding">
+                    <ion-text color="primary">
+                        <h6>
+                            <ion-icon size="small" color="dark" name="cart"></ion-icon> {{clienteAct.cliente}}
+                            <!-- <ion-icon size="small" color="dark" name="arrow-round-down" (click)="actimgpedido()"></ion-icon> -->
+                        </h6>
+                    </ion-text>
+                    <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
+                    <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
+                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
+                    <!-- <hr class="bg-tertiary"> -->
+                    <ion-searchbar class="margin-top" [(ngModel)]="buscar_itemped" (ionInput)="buscar_productosped($event)" placeholder="Buscar producto"></ion-searchbar>
+                    <div *ngIf="searchingped" class="spinner-container">
+                        <ion-spinner></ion-spinner>
+                    </div>
+                    <ion-card no-margin margin-vertical class="bg-white margin-top margin-bottom" *ngFor="let item of productos_busped">
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col size="5">
+                                    <div>
+                                        <p class="text-align">{{item.cod_refinv}}</p>
+                                        <a routerLink="/prod-detail.ped/{{item.cod_refinv}}">
+                                            <img *ngIf="item.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(item.link_imgfb)" />
+                                            <img *ngIf="!item.link_imgfb" src="assets/img/imagennodisponible.jpg" />
+                                        </a>
+                                    </div>
+                                </ion-col>
+                                <ion-col size="7">
+                                    <div>
+                                        <ion-item>
+                                            <p text-capitalize>
+                                                {{item.nombre}}
+                                                <br> Existencias: {{item.existencia}} Precio: {{item.precio_ven | currency}}
+                                            </p>
+                                        </ion-item>
+                                        <ion-button size="small" shape="round" expand="full" color="success" routerLink="/prod-detail.ped/{{item.cod_refinv}}">
+                                            <ion-icon slot="start" name="cart"></ion-icon>
+                                            Detalle Producto
+                                        </ion-button>
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                        <hr class="bg-tertiary">
+                    </ion-card>
+                </div>
+            </div>
+            <div>
+            </div>
+        </div>
+    </div>
+</ion-content>
+<ion-footer>
+    <ion-toolbar class="toolbaropciones" color="medium">
+        <ion-segment [(ngModel)]="visitaSegment" scrollable class="segmentabs">
+            <!-- class="btpedido-color text-color" -->
+            <ion-segment-button size="small" *ngIf="_parEmpre.usuario.cap_pedido" class="buttonult" value="pedido">
+                <ion-icon slot="start" name="cart"></ion-icon>
+                <ion-label>Pedidos</ion-label>
+            </ion-segment-button>
+            <!-- class="btfacturar-color text-color" -->
+            <ion-segment-button size="small" *ngIf="_parEmpre.usuario.cap_factura" class="buttonult" value="facturar">
+                <ion-icon slot="start" name="paper"></ion-icon>
+                <ion-label>Factura</ion-label>
+            </ion-segment-button>
+            <!-- class="btcartera-color text-color" -->
+            <ion-segment-button size="small" *ngIf="_parEmpre.usuario.recauda" class="buttonult" value="cartera">
+                <ion-icon slot="start" name="cash"></ion-icon>
+                <ion-label>Recaudo</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+    <ion-toolbar class="toolbaropciones" color="medium">
+        <ion-buttons slot="secondary" class="botones">
+            <ion-button size="small" class="buttonult" fill="solid" color="tertiary" routerLink="/ultpedido">
+                <ion-icon slot="start" name="cart"></ion-icon>
+                U.Pedidos
+            </ion-button>
+            <!-- </ion-buttons> -->
+            <!-- <ion-buttons slot="primary"> -->
+            <ion-button class="buttonult" fill="solid" color="tertiary" routerLink="/ultfactura">
+                U.Factur.
+                <ion-icon slot="start" name="paper"></ion-icon>
+            </ion-button>
+            <!-- </ion-buttons> -->
+            <!-- <ion-buttons slot="primary"> -->
+            <ion-button class="buttonult" fill="solid" color="tertiary" routerLink="/ultrecibo">
+                U.Recaudo
+                <ion-icon slot="start" name="cash"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+</ion-footer>
+
+<!-- <ion-toolbar color="primary">
+        <ion-tabs>
+        <ion-tab-bar slot="bottom">
+        
+        <ion-tab-button href="/ultfactura">
+        <ion-label>Ult. Facturas</ion-label>
+        <ion-icon name="paper"></ion-icon>
+        </ion-tab-button>
+        
+        <ion-tab-button tab="/ultpedido">
+        <ion-label>Ult. Pedidos</ion-label>
+        <ion-icon name="cart"></ion-icon>
+        </ion-tab-button>
+        
+        <ion-tab-button tab="ultrecibo">
+        <ion-label>Ult. Recibos</ion-label>
+        <ion-icon name="cash"></ion-icon>
+        </ion-tab-button>
+        </ion-tab-bar>
+        </ion-tabs>
+        </ion-toolbar> -->

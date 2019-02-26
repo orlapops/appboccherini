@@ -1,0 +1,86 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title class="headercliente">Ultimos Pedidos</ion-title>
+        <!-- <ion-title class="headercliente">{{_cliente.clienteActual.cliente}}</ion-title> -->
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="animated fadeIn">
+    <ion-text color="primary">
+        <h6>
+            <ion-icon size="small" color="dark" name="cart"></ion-icon>{{_cliente.clienteActual.cliente}}</h6>
+    </ion-text>
+    <hr class="bg-tertiary">
+
+    <div text-center *ngIf="pedidos.length === 0" class="carrito_vacio">
+
+        <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
+        <br> No tiene Pedidos para esta dirección
+    </div>
+    <hr class="bg-tertiary">
+    <ion-card class="animated fadeIn">
+        <ion-card-content no-padding>
+            <ion-item no-margin margin-vertical class="bg-white" tappable routerLink="/verpedido/{{itemp.id}}" *ngFor="let itemp of pedidos">
+                <ion-label>
+                    <h2 [ngClass]="{'fw700 text-white': !true}">
+                        <div class="fechavisita">
+                            <ion-icon name="calendar" slot="start" color="secondary"></ion-icon>
+                            <ion-text color="primary">{{ itemp.data.fecha | date: 'medium'}}</ion-text>
+                        </div>
+                    </h2>
+                    <hr>
+                    <h2 class="clientevisita">
+                        <ion-text color="dark">{{itemp.data.cod_dpedid + '/'+ itemp.data.num_dpedid}} {{itemp.data.fecha | date: 'shortDate'}}</ion-text>
+                    </h2>
+                </ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+    <!-- <ion-card class="btpedidotot-color" *ngIf="cargo_pedidos">
+        <ion-grid class="btpedidotot-color">
+            <ion-row *ngFor="let itemp of pedidos; let i = index;">
+                <ion-col size="12">
+                    <strong> {{itemp.data.cod_dpedid + '/'+ itemp.data.num_dpedid}} {{itemp.data.fecha | date: 'shortDate'}}
+                        </strong>
+                    <ion-row>
+                        <ion-col size="2">
+                            Código
+                        </ion-col>
+                        <ion-col size="5">
+                            Referencia
+                        </ion-col>
+                        <ion-col size="2">
+                            Cantidad
+                        </ion-col>
+                        <ion-col size="2">
+                            Valor
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngFor="let itempdet of itemp.data.detalle; let i = index;">
+                        <ion-col>
+                            <ion-col size="2">
+                                {{itempdet.cod_refven}}
+                            </ion-col>
+                            <ion-col size="5">
+                                {{itempdet.descrip}}
+                            </ion-col>
+                            <ion-col size="2">
+                                {{itempdet.cantidad}}
+                            </ion-col>
+                            <ion-col size="2">
+                                {{itempdet.valor_neto | currency }}
+                            </ion-col>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        <ion-button slot="start" shape="round" color="success" (click)="imprimir_pedido()">
+            Imprimir Pedido
+        </ion-button>
+    </ion-card> -->
+
+</ion-content>

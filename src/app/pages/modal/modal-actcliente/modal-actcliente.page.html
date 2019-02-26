@@ -1,0 +1,92 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Actualizar Datos Cliente</ion-title>
+        <ion-buttons slot="end">
+            <ion-button size="small" shape="round" (click)="cerrarModal()" color="tertiary">
+                <ion-icon slot="start" name="close"></ion-icon> Cerrar
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <!-- <ion-toolbar color="primary">
+        <ion-searchbar type="text" placeholder="Find location" animated="true" (ionInput)="setFilteredItems($event)"></ion-searchbar>
+    </ion-toolbar> -->
+</ion-header>
+
+
+<ion-content padding>
+    <ion-card>
+        <ion-card-header>
+            <ion-text color="primary text-align">
+                <h6 class="headerdirec">
+                    <ion-icon size="medium" color="dark" name="contact"></ion-icon>{{ _clientes.clienteActual.cliente }}</h6>
+                <h6 color="light" margin-bottom class="headerdirec">
+                    <ion-icon size="medium" color="dark" name="locate"></ion-icon>{{_visitas.direc_actual.ciudad +' '+ _visitas.direc_actual.direccion}}</h6>
+            </ion-text>
+
+            <!-- {{ _clientes.clienteActual.cliente }}! -->
+            <!-- <img [src]="imagenPreview" /> -->
+        </ion-card-header>
+        <ion-card-content>
+            <!-- <ion-item> -->
+            <img *ngIf="_visitas.direc_actual.link_foto" [src]="_DomSanitizer.bypassSecurityTrustUrl(_visitas.direc_actual.link_foto)" />
+            <img *ngIf="!_visitas.direc_actual.link_foto" src="assets/img/imagennodisponible.jpg" />
+            <ion-button icon-left size="small" shape="round" color="tertiary" (click)="mostrar_camara()">
+                Actualizar Foto
+                <ion-icon name="camera"></ion-icon>
+            </ion-button>
+            <!-- </ion-item> -->
+
+        </ion-card-content>
+        <p>{{address}}</p>
+
+        <ion-card-content no-padding>
+            <agm-map [latitude]="coords.lat" [longitude]="coords.lng" [zoom]="14" [zoomControl]="false" [styles]="agmStyles" [streetViewControl]="false">
+                <agm-marker [latitude]="coords.lat" [longitude]="coords.lng"></agm-marker>
+            </agm-map>
+        </ion-card-content>
+
+        <form [formGroup]="onActclieForm" class="list-form">
+            <ion-item no-padding class="itemcaptura animated fadeInUp">
+                <ion-label position="floating">
+                    <ion-icon name="pin" item-start></ion-icon>
+                    Direccion</ion-label>
+                <ion-input color="secondary" type="text" formControlName="direccion"></ion-input>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="onActclieForm.get('direccion').touched && onActclieForm.get('direccion').hasError('required')">
+                <ion-text color="danger">
+                    Este campo es obligatorio
+                </ion-text>
+            </p>
+            <ion-item no-padding class="itemcaptura animated fadeInUp">
+                <ion-label position="floating">
+                    <ion-icon name="mail" item-start></ion-icon>
+                    <!-- {{ 'app.label.email' | translate }} -->
+                    Email
+                </ion-label>
+                <ion-input color="secondary" type="email" formControlName="email"></ion-input>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="onActclieForm.get('email').touched && onActclieForm.get('email').hasError('required')">
+                <ion-text color="danger">
+                    Este campo es obligatorio
+                </ion-text>
+            </p>
+            <ion-item no-padding class="itemcaptura animated fadeInUp">
+                <ion-label position="floating">
+                    <ion-icon name="person" item-start></ion-icon>
+                    <!-- {{ 'app.label.email' | translate }} -->
+                    Contacto
+                </ion-label>
+                <ion-input color="secondary" type="email" formControlName="contacto"></ion-input>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="onActclieForm.get('contacto').touched && onActclieForm.get('email').hasError('contacto')">
+                <ion-text color="danger">
+                    Este campo es obligatorio
+                </ion-text>
+            </p>
+        </form>
+        <ion-button *ngIf="cargo_posicion" icon-left size="small" shape="round" [disabled]="!onActclieForm.valid" color="tertiary" (click)="actualiza_ubicaciongps()">
+            Actualizar
+            <ion-icon name="pin"></ion-icon>
+        </ion-button>
+    </ion-card>
+</ion-content>

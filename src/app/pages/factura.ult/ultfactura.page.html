@@ -1,0 +1,43 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title class="headercliente">Ultimas Facturas</ion-title>
+        <!-- <ion-title class="headercliente">{{_cliente.clienteActual.cliente}}</ion-title> -->
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="animated fadeIn">
+    <ion-text color="primary">
+        <h6>
+            <ion-icon size="small" color="dark" name="cart"></ion-icon>{{_cliente.clienteActual.cliente}}</h6>
+    </ion-text>
+    <hr class="bg-tertiary">
+
+    <div text-center *ngIf="facturas.length === 0" class="carrito_vacio">
+
+        <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
+        <br> No tiene Facturas para esta dirección
+    </div>
+    <hr class="bg-tertiary">
+    <ion-card class="animated fadeIn">
+        <ion-card-content no-padding>
+            <ion-item no-margin margin-vertical class="bg-white" tappable routerLink="/verfactura/{{itemp.id}}" *ngFor="let itemp of facturas">
+                <ion-label>
+                    <h2 [ngClass]="{'fw700 text-white': !true}">
+                        <div class="fechavisita">
+                            <ion-icon name="calendar" slot="start" color="secondary"></ion-icon>
+                            <ion-text color="primary">{{ itemp.data.fecha | date: 'medium'}}</ion-text>
+                        </div>
+                    </h2>
+                    <hr>
+                    <h2 class="clientevisita">
+                        <ion-text color="dark">{{itemp.data.cod_dfactur + '/'+ itemp.data.num_dfactur}}</ion-text>
+                    </h2>
+                </ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+
+</ion-content>

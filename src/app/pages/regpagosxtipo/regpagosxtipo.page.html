@@ -1,0 +1,123 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>Registrar Pagos</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="profile">
+    <ion-card no-margin>
+        <ion-card-content class="bg-profile">
+            <h2 class="fw500">{{ _visitas.visita_activa_copvdet.nombre }}</h2>
+            <h3 color="light" margin-bottom>{{_visitas.visita_activa_copvdet.direccion}}</h3>
+            <!-- <ion-button icon-left color="secondary">
+                                <ion-icon name="photos"></ion-icon>
+                                {{ 'app.label.edit' | translate }} / {{ 'app.label.insertavatar' | translate }}
+                            </ion-button> -->
+        </ion-card-content>
+        <ion-grid fixed no-padding>
+            <ion-row>
+                <ion-col size="12" padding>
+                    <ion-list margin-bottom>
+                        <ion-list-header color="light">
+                            <ion-label class="fw700">Datos Pago</ion-label>
+                        </ion-list-header>
+
+                        <ion-item>
+                            <ion-label color="dark">Forma de Pago</ion-label>
+                            <ion-select [(ngModel)]="regpago.tipopago" cancelText="Cancelar" okText="OK" color="primary" no-padding class="text1 text-dark" (ionChange)="changeFormapago($event)">
+                                <ion-select-option value="PBCS">Bancos consignación </ion-select-option>
+                                <ion-select-option value="PBTR">Bancos Transferencia</ion-select-option>
+                                <ion-select-option value="EFE" selected="true">Efectivo</ion-select-option>
+                                <ion-select-option value="CHD">Cheque al día</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='EFE'">
+                            <ion-label color="dark">Valor:</ion-label>
+                            <ion-input required slot="end" class="inputnumero" [(ngModel)]="regpago.valor" type="number" min="0" max="9999999999">
+                            </ion-input>
+                        </ion-item>
+
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='PBCS'">
+                            <ion-label color="dark">Consignado en Banco:</ion-label>
+                            <ion-select *ngIf="cargobancos" placeholder="Seleccione Uno" [(ngModel)]="regpago.cta_banco" (ionChange)="changeBanco($event)">
+                                <ion-select-option *ngFor="let banco of bancos" [value]="banco.cod_banco">{{banco.banco}}</ion-select-option>
+                            </ion-select>
+                            <!-- <ion-select [(ngModel)]="regpago.cta_banco" cancelText="Cancelar" okText="OK" color="primary" no-padding class="text1 text-dark">
+                                    <ion-select-option value="111020">Banco de Occidente</ion-select-option>
+                                    <ion-select-option value="111030">Bancolombia</ion-select-option>
+                                </ion-select> -->
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='PBCS'">
+                            <ion-label color="dark">Fecha:</ion-label>
+                            <ion-datetime slot="end" no-padding no-margin class="text-primary fechacons" displayFormat="MM/DD/YYYY" pickerFormat="YYYY-MM-DD" min="2018" max="2032" [(ngModel)]="regpago.fecha"></ion-datetime>
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='PBCS'">
+                            <ion-label color="dark">Referencia:</ion-label>
+                            <ion-input required slot="end" class="chcuenpago" [(ngModel)]="regpago.referencia" type="text">
+                            </ion-input>
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='PBCS'">
+                            <ion-label color="dark">Valor:</ion-label>
+                            <ion-input required slot="end" class="inputnumero" [(ngModel)]="regpago.valor" type="number" min="1" max="9999999999">
+                            </ion-input>
+                        </ion-item>
+
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='PBTR'">
+                            <ion-label color="dark">Banco:</ion-label>
+                            <ion-select *ngIf="cargobancos" placeholder="Seleccione Uno" [(ngModel)]="regpago.cta_banco" (ionChange)="changeBanco($event)">
+                                <ion-select-option *ngFor="let banco of bancos" [value]="banco.cod_banco">{{banco.banco}}</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='PBTR'">
+                            <ion-label color="dark">Fecha a consignar:</ion-label>
+                            <ion-datetime slot="end" no-padding no-margin class="text-primary fechacons" displayFormat="MM/DD/YYYY" pickerFormat="YYYY-MM-DD" min="2018" max="2032" [(ngModel)]="regpago.fecha"></ion-datetime>
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='PBTR'">
+                            <ion-label color="dark">Referencia:</ion-label>
+                            <ion-input autocapitalize="none" required slot="end" class="chcuenpago" [(ngModel)]="regpago.referencia" type="text">
+                            </ion-input>
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='PBTR'">
+                            <ion-label color="dark">Valor:</ion-label>
+                            <ion-input required slot="end" class="inputnumero" [(ngModel)]="regpago.valor" type="number" min="1" max="9999999999">
+                            </ion-input>
+                        </ion-item>
+
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='CHD'">
+                            <ion-label color="dark">Banco:</ion-label>
+                            <ion-input required slot="end" class="chcuenpago" [(ngModel)]="regpago.banco" type="text">
+                            </ion-input>
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='CHD'">
+                            <ion-label color="dark">Fecha a consignar:</ion-label>
+                            <ion-datetime slot="end" no-padding no-margin class="text-primary fechacons" displayFormat="MM/DD/YYYY" pickerFormat="YYYY-MM-DD" min="2018" max="2032" [(ngModel)]="regpago.fecha"></ion-datetime>
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='CHD'">
+                            <ion-label color="dark">Núm Cheque:</ion-label>
+                            <ion-input required autocapitalize="none" slot="end" class="chcuenpago" [(ngModel)]="regpago.referencia" type="text">
+                            </ion-input>
+                        </ion-item>
+                        <ion-item class="bg-white" *ngIf="regpago.tipopago==='CHD'">
+                            <ion-label color="dark">Valor:</ion-label>
+                            <ion-input required slot="end" class="inputnumero" [(ngModel)]="regpago.valor" type="number" min="1" max="9999999999">
+                            </ion-input>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label color="dark" position="stacked">Notas:</ion-label>
+                            <ion-textarea rows="3" cols="12" inputmode="text" placeholder="Registre las Notas" [(ngModel)]="regpago.nota" [value]="regpago.nota"></ion-textarea>
+                        </ion-item>
+                        <ion-item>
+                            <ion-button *ngIf="tipocrud == 'A'" size="large" expand="full" color="dark" (click)="addFormapago()">Registrar</ion-button>
+                            <ion-button *ngIf="tipocrud != 'A'" size="default" color="dark" (click)="modificarFormapago()">Modificar</ion-button>
+                            <ion-button *ngIf="tipocrud != 'A'" size="default" color="danger" (click)="eliminarFormapago()">Quitar</ion-button>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+
+    </ion-card>
+
+</ion-content>

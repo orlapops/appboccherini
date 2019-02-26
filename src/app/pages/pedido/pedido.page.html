@@ -1,0 +1,186 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title class="headercliente">Items a Pedir</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="animated fadeIn">
+    <ion-text color="primary">
+        <h6>
+            <ion-icon size="small" color="dark" name="cart"></ion-icon>{{_cliente.clienteActual.cliente}}</h6>
+    </ion-text>
+    <hr class="bg-tertiary">
+    <div text-center *ngIf="pedido.length === 0" class="carrito_vacio">
+
+        <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
+        <br> No tiene items a Pedir
+    </div>
+    <div *ngIf="!grabando_pedido && !mostrandoresulado && pedido.length != 0" class="bg-white">
+        <ion-grid class="btpedido-color">
+            <ion-row *ngFor="let itemp of pedido; let i = index;">
+                <ion-col size="4">
+                    <img *ngIf="itemp.item.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(itemp.item.link_imgfb)" />
+                    <img *ngIf="!itemp.item.link_imgfb" src="assets/img/imagennodisponible.jpg" />
+                </ion-col>
+                <ion-col>
+                    <ion-row>
+                        <ion-col>
+                            <div>
+                                <ion-text color="primary" slot="start" tappable routerLink="/prod-detail.ped/{{itemp.item.cod_ref}}">
+                                    {{itemp.item.cod_ref}} {{itemp.item.nombre}}
+                                </ion-text>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="7" class="justify-content-start">
+                            <div>
+                                <ion-input slot="start" (ionChange)="total(itemp,i,$event)" [(ngModel)]="itemp.item.cantidad" type="number" min="1" max="999999" step="1" placeholder="Cantidad" clearOnEdit="false">
+                                </ion-input>
+                            </div>
+                        </ion-col>
+                        <ion-col size="5" class="justify-content-start">
+                            <div>
+                                <ion-button slot="end" shape="round" color="danger" (click)="deleteItem(itemp)">
+                                    <ion-icon name="trash"></ion-icon>
+                                </ion-button>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <div>
+                                <ion-text color="success" slot="end">
+                                    Total: {{ itemp.item.total | currency }}
+                                </ion-text>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        <hr>
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <h3>
+                        <strong>Total:</strong>
+                    </h3>
+                </ion-col>
+                <ion-col>
+                    <h3>
+                        <strong> {{ total_ped | currency }}</strong>
+                    </h3>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        <ion-button *ngIf="!grabando_pedido && !mostrandoresulado" slot="end" shape="round" color="success" (click)="realizar_pedido()">
+            Realizar Pedido
+        </ion-button>
+    </div>
+    <ion-card *ngIf="grabando_pedido && !mostrandoresulado">
+        <ion-item padding class="animated fadeIn fast">
+            <ion-text color="warning"> Grabando pedido. Por favor espere...</ion-text>
+            <ion-spinner name="bubbles"></ion-spinner>
+        </ion-item>
+    </ion-card>
+
+    <ion-card *ngIf="grabando_pedido && !grabo_pedido && mostrandoresulado && _visitas.visita_activa_copvdet.errorgrb_pedido">
+        <!-- <ion-text color="danger"> {{_visitas.visita_activa_copvdet.pedido_grabado.men_error}}</ion-text> -->
+        <ion-text color="danger"> Error Grabando pedido </ion-text>
+        <ion-item *ngFor="let iteme of _visitas.visita_activa_copvdet.resgrb_pedido; let i = index;" padding class="animated fadeIn fast">
+            <ion-text color="danger"> {{iteme.menerror.trim()}}</ion-text>
+        </ion-item>
+        <ion-button slot="end" shape="round" color="success" (click)="quitar_resuladograboped()">
+            Continuar
+        </ion-button>
+    </ion-card>
+    <ion-card class="btpedidotot-color" *ngIf="grabando_pedido && grabo_pedido && mostrandoresulado">
+        <ion-text color="green"><strong> {{_visitas.visita_activa_copvdet.pedido_grabado.men_error}}</strong></ion-text>
+        <div>
+            <textarea class="texto_imprimir">{{_visitas.visita_activa_copvdet.pedido_grabado.txt_imp}}</textarea>
+        </div>
+        <!-- <ion-grid class="btpedidotot-color">
+            <ion-row>
+                <ion-col size="2">
+                    Código
+                </ion-col>
+                <ion-col size="5">
+                    Referencia
+                </ion-col>
+                <ion-col size="2">
+                    Cantidad
+                </ion-col>
+                <ion-col size="3">
+                    Valor
+                </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let itemp of _visitas.visita_activa_copvdet.pedido_grabado.ped_grabado; let i = index;">
+                <ion-col size="2">
+                    <div text-lowercase>
+                        <ion-text color="primary" slot="start">
+                            {{itemp.cod_refven}}
+                        </ion-text>
+                    </div>
+                </ion-col>
+                <ion-col size="5">
+                    <div text-lowercase>
+                        <ion-text color="primary" slot="start">
+                            {{itemp.cod_refven}} {{itemp.descrip}}
+                        </ion-text>
+                    </div>
+                </ion-col>
+                <ion-col size="2">
+                    <div text-lowercase>
+                        <ion-text color="primary" slot="start">
+                            {{itemp.cantidad}}
+                        </ion-text>
+                    </div>
+                </ion-col>
+                <ion-col size="3">
+                    <div text-lowercase>
+                        <ion-text color="primary" slot="start">
+                            {{itemp.valor_neto | currency }}
+                        </ion-text>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid> -->
+        <!-- <ion-grid class="btpedidotot-color">
+            <ion-row>
+                <ion-col size="7">
+                    <strong>Subtotal:</strong>
+                </ion-col>
+                <ion-col size="5">
+                    <strong> {{ _visitas.visita_activa_copvdet.pedido_grabado.tvalneto | currency }}</strong>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col size="7">
+                    <strong>Iva:</strong>
+                </ion-col>
+                <ion-col size="5">
+                    <strong> {{ _visitas.visita_activa_copvdet.pedido_grabado.tiva | currency }}</strong>
+                </ion-col>
+            </ion-row>
+        </ion-grid> -->
+        <!-- <ion-row>
+            <ion-col size="7">
+                <strong>Total:</strong>
+            </ion-col>
+            <ion-col size="5">
+                <strong> {{ (_visitas.visita_activa_copvdet.pedido_grabado.tvalneto + _visitas.visita_activa_copvdet.pedido_grabado.tiva) | currency }}</strong>
+            </ion-col>
+        </ion-row> -->
+        <ion-button slot="start" shape="round" color="success" (click)="imprimir_pedido()">
+            Imprimir Pedido
+        </ion-button>
+        <ion-button slot="end" shape="round" color="success" (click)="quitar_resuladograboped()">
+            Continuar
+        </ion-button>
+    </ion-card>
+
+</ion-content>

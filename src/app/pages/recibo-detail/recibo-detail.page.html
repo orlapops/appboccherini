@@ -1,0 +1,211 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <!-- <ion-title class="headercliente">{{_cliente.clienteActual.cliente}}</ion-title>
+        <ion-title class="headercliente"><strong>Recibo Obl: {{oblshop.num_obliga}} </strong></ion-title> -->
+
+    </ion-toolbar>
+</ion-header>
+
+<!-- 
+<ion-content class="animated fadeIn">
+    <ion-card no-margin class="animated fadeIn">
+        <ion-card-content class="bg-white">
+            <h3>
+                <ion-text>
+                    Cliente: {{ _cliente.clienteActual.cliente }}
+                </ion-text>
+            </h3>
+            <h3>
+                <ion-text>
+                    Obligación: {{ oblshop.num_obliga }} Fecha: {{ oblshop.fecha_obl | date }}
+                </ion-text>
+            </h3>
+        </ion-card-content>
+        <ion-item class="bg-white">
+            <ion-label slot="start">
+                Saldo:
+            </ion-label>
+            <ion-badge slot="end" color="warning">
+                {{oblshop.saldo | currency }}
+            </ion-badge>
+            <ion-badge slot="end" color="danger">
+                {{oblshop.dias_venci }} Días Vencido
+            </ion-badge>
+
+        </ion-item>
+        <ion-item class="bg-white">
+            <ion-label>
+                Abono:
+            </ion-label>
+            <ion-badge slot="end" color="warning">
+                {{valor_abono | currency }}
+            </ion-badge>
+        </ion-item>
+        <ion-item class="bg-white">
+            <ion-label>
+                Nuevo Saldo:
+            </ion-label>
+            <ion-badge slot="end" color="success">
+                {{oblshop.saldo - valor_abono | currency }}
+            </ion-badge>
+
+        </ion-item>
+
+    </ion-card>
+    <ion-footer>
+        <ion-toolbar>
+            <ion-label>
+                Abonar:
+            </ion-label>
+            <ion-input slot="end" (ionChange)="total()" [(ngModel)]="valor_abono" type="number" min="1" max="99999999" step="10000" placeholder="Valor a Abonar" clearOnEdit="true">
+            </ion-input>
+            <ion-button slot="end" shape="round" color="success" (click)="addrecibo(oblshop, valor_abono)">
+                Agregar
+            </ion-button>
+
+        </ion-toolbar>
+    </ion-footer>
+</ion-content> -->
+<ion-content class="animated fadeIn">
+    <ion-card no-margin class="animated fadeIn">
+        <ion-card-content class="bg-white">
+            <h3>
+                <ion-text>
+                    Cliente: {{ _cliente.clienteActual.cliente }}
+                </ion-text>
+            </h3>
+            <h3 class="hdatobliga">
+                <ion-text>
+                    <a [href]="cleanURL(oblshop.link_fact)" class="list-group-item active">
+                                Obligación: {{ oblshop.num_obliga }} {{ oblshop.cod_dfactu+'/'+oblshop.num_dfactu }} Fecha: {{ oblshop.fecha_obl | date }}
+                            </a>
+                </ion-text>
+            </h3>
+            <h3 class="hdatobliga">
+                <ion-text>
+                    Duchas: {{ oblshop.tot_duchas | currency }} Otros: {{ oblshop.tot_otros | currency }} Total: {{ oblshop.valor_neto | currency }}
+                </ion-text>
+            </h3>
+            <h3 class="hdatobliga">
+                <ion-text>
+                    +Iva: {{ oblshop.iva | currency }} -Retención: {{ oblshop.retencion+oblshop.ret_indyci | currency }} total: {{ oblshop.valor_neto +oblshop.iva - oblshop.retencion - oblshop.ret_indyci | currency }}
+                </ion-text>
+            </h3>
+            <h3 class="hdatobliga">
+                <ion-text *ngIf="!apli_desc" color="danger">
+                    No aplica Descuentos vencieron el {{ oblshop.fec_limdesc | date}}
+                </ion-text>
+                <ion-text *ngIf="apli_desc" color="success">
+                    Descuentos hasta: {{ oblshop.fec_limdesc | date}}
+                </ion-text>
+            </h3>
+        </ion-card-content>
+        <ion-item class="bg-white">
+            <p slot="start">
+                Saldo:
+            </p>
+            <ion-badge slot="start" color="warning">
+                {{oblshop.saldo | currency }}
+            </ion-badge>
+            <ion-badge slot="end" color="danger">
+                {{oblshop.dias_venci }} Días Vencido
+            </ion-badge>
+        </ion-item>
+        <ion-item class="bg-white">
+            <ion-label>Pago en Efectivo</ion-label>
+            <ion-checkbox (ionChange)="total()" [(ngModel)]="paga_efectivo"></ion-checkbox>
+        </ion-item>
+        <ion-item class="bg-white">
+            <ion-label>Paga Saldo Total </ion-label>
+            <ion-checkbox (ionChange)="total()" [(ngModel)]="abono_total"></ion-checkbox>
+        </ion-item>
+        <ion-item class="bg-white">
+            <p>
+                Abono:
+            </p>
+            <ion-badge slot="end" color="warning">
+                {{valor_abono | currency }}
+            </ion-badge>
+        </ion-item>
+        <ion-item class="bg-white">
+            <ion-label>
+                Nuevo Saldo:
+            </ion-label>
+            <ion-badge slot="end" color="success">
+                {{oblshop.saldo - valor_abono | currency }}
+            </ion-badge>
+        </ion-item>
+        <ion-item class="bg-white" *ngIf="apli_desc && (dcto_dchef>0 || dcto_dchban>0)">
+            <p *ngIf="paga_efectivo">
+                Descuento Duchas {{oblshop.pord_duefec}}%:
+            </p>
+            <ion-badge slot="end" color="danger" *ngIf="paga_efectivo">
+                -{{dcto_dchef | currency }}
+            </ion-badge>
+            <p *ngIf="!paga_efectivo">
+                Descuento Duchas {{oblshop.pord_duban}}%:
+            </p>
+            <ion-badge slot="end" color="danger" *ngIf="!paga_efectivo">
+                -{{dcto_dchban | currency }}
+            </ion-badge>
+        </ion-item>
+        <ion-item class="bg-white" *ngIf="apli_desc && (dcto_dchef>0 || dcto_dchban>0 || dcto_otref>0 || dcto_otrban>0)">
+            <p *ngIf="paga_efectivo">
+                Descuento Otros {{oblshop.pord_otrefe}}%:
+            </p>
+            <ion-badge slot="end" color="danger" *ngIf="paga_efectivo">
+                -{{dcto_otref | currency }}
+            </ion-badge>
+            <p *ngIf="!paga_efectivo">
+                Descuento Otros {{oblshop.pord_otrban}}%:
+            </p>
+            <ion-badge slot="end" color="danger" *ngIf="!paga_efectivo">
+                -{{dcto_otrban | currency }}
+            </ion-badge>
+        </ion-item>
+        <ion-item class="bg-white" *ngIf="!abono_total">
+            <p>
+                Valor Abonar:
+            </p>
+            <ion-input class="inputnumero" slot="end" (ionChange)="total()" [(ngModel)]="valor_abono" type="number" min="1" max="99999999" step="10000" placeholder="Valor a Abonar" clearOnEdit="true">
+            </ion-input>
+        </ion-item>
+        <ion-item class="bg-white">
+            <p>
+                Otros Descuentos:
+            </p>
+            <ion-input class="inputnumero" slot="end" (ionChange)="total()" [(ngModel)]="otros_desc" type="number" min="0" max="99999999" step="10000" clearOnEdit="true">
+            </ion-input>
+        </ion-item>
+        <ion-item class="bg-white">
+            <p>
+                Aj.Retenciones:
+            </p>
+            <ion-input class="inputnumero" slot="end" (ionChange)="total()" [(ngModel)]="retencion" type="number" min="0" max="99999999" step="10000" clearOnEdit="true">
+            </ion-input>
+        </ion-item>
+        <ion-item class="bg-white">
+            <ion-button shape="round" color="success" (click)="addrecibo(oblshop)">
+                <ion-icon slot="start" name="save"></ion-icon>
+            </ion-button>
+            <ion-button shape="round" color="danger" (click)="deleterecibo(oblshop)">
+                <ion-icon slot="start" name="trash"></ion-icon>
+            </ion-button>
+            <ion-label>
+                Neto a Recibir:
+            </ion-label>
+            <ion-badge slot="end" color="success">
+                {{valor_abono - dcto_dchef - dcto_dchban - dcto_otref - dcto_otrban - otros_desc - retencion | currency }}
+            </ion-badge>
+        </ion-item>
+
+    </ion-card>
+    <ion-footer>
+        <ion-toolbar>
+        </ion-toolbar>
+    </ion-footer>
+
+</ion-content>

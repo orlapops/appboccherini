@@ -1,0 +1,42 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>Ver Pedido</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="profile">
+    <ion-card no-margin>
+        <ion-card-content class="bg-profile">
+            <h2 class="fw500">{{ _visitas.visita_activa_copvdet.nombre }}</h2>
+            <h3 color="light" margin-bottom>{{_visitas.visita_activa_copvdet.direccion}}</h3>
+        </ion-card-content>
+        <div *ngIf="cargoped">
+            <ion-grid fixed no-padding>
+                <ion-row>
+                    <ion-col size="12" padding>
+                        <ion-list margin-bottom>
+                            <ion-list-header color="light">
+                                <ion-label class="fw700">Pedido {{PedAct.cod_dpedid+'/'+PedAct.num_dpedid}} {{ PedAct.fecha | date: 'shortDate'}}</ion-label>
+                                <ion-button shape="round" size="small" (click)="imprimir_pedido()">
+                                    <ion-icon slot="end" name="print"></ion-icon>
+                                </ion-button>
+                            </ion-list-header>
+
+                            <ion-item>
+                                <ion-label color="dark" position="stacked"></ion-label>
+                                <!-- [readonly]="true" -->
+                                <ion-textarea class="textareaped" rows="20" cols="12" inputmode="text" placeholder="" [(ngModel)]="txtPed" [value]="txtPed"></ion-textarea>
+                            </ion-item>
+
+                        </ion-list>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <!-- <ion-button *ngIf="tipocrud == 'A'" size="large" expand="full" color="dark" (click)="grabarActividad()">Imprimir</ion-button>
+            <ion-button *ngIf="tipocrud != 'A'" size="large" expand="full" color="dark" (click)="modificarActividad()">Modificar</ion-button> -->
+        </div>
+    </ion-card>
+</ion-content>

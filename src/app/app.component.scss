@@ -1,0 +1,22 @@
+:host {
+    ion-content {
+        // --background: linear-gradient(135deg, var(--ion-color-dark), var(--ion-color-primary));
+        --background: linear-gradient(-135deg, var(--ion-color-medium), var(--ion-color-light))
+    }
+}
+
+.listmenu {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    --background: var(--ion-item-background, var(--ion-background-color, --ion-color-dark));
+}
+
+.ionitemmenu {
+    --background: var(--ion-item-background, var(--ion-background-color, --ion-color-dark));
+    // --background: linear-gradient(-135deg, var(--ion-color-medium), var(--ion-color-light));
+    // --background: aqua;
+}
+
+.iconfill {
+    fill: white;
+}

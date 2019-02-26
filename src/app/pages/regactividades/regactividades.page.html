@@ -1,0 +1,98 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>Registrar Actividad</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="profile">
+    <ion-card no-margin>
+        <ion-card-content class="bg-profile">
+            <h2 class="fw500">{{ _visitas.visita_activa_copvdet.nombre }}</h2>
+            <h3 color="light" margin-bottom>{{_visitas.visita_activa_copvdet.direccion}}</h3>
+            <!-- <ion-button icon-left color="secondary">
+                                <ion-icon name="photos"></ion-icon>
+                                {{ 'app.label.edit' | translate }} / {{ 'app.label.insertavatar' | translate }}
+                            </ion-button> -->
+        </ion-card-content>
+        <ion-grid fixed no-padding>
+            <ion-row>
+                <ion-col size="12" padding>
+                    <ion-list margin-bottom>
+                        <ion-list-header color="light">
+                            <ion-label class="fw700">Datos Actividad</ion-label>
+                        </ion-list-header>
+
+                        <ion-item>
+                            <ion-label color="dark">Actividad</ion-label>
+                            <ion-select placeholder="Seleccione Una" [(ngModel)]="cod_tipoact" (ionChange)="changeActividad($event)">
+                                <ion-select-option *ngFor="let actividad of tipos_act" [value]="actividad.cod_tipo">{{actividad.descrip}}</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-label color="dark" position="stacked">Notas:</ion-label>
+                            <!-- <ion-input inputmode="text" placeholder="Notas" [value]="notaAct"></ion-input> -->
+                            <ion-textarea rows="6" cols="12" inputmode="text" placeholder="Registre las Notas" [(ngModel)]="notaAct" [value]="notaAct"></ion-textarea>
+                        </ion-item>
+
+                        <!-- <ion-item>
+                                    <ion-label color="dark" position="stacked">{{ 'app.label.email' | translate }}:</ion-label>
+                                    <ion-input inputmode="email" placeholder="Ex.: joe@doe.com" value="firminoata@gmail.com"></ion-input>
+                                </ion-item> -->
+
+                    </ion-list>
+
+                    <!-- <ion-list>
+                                <ion-radio-group>
+                                    <ion-list-header color="light">
+                                        <ion-label class="fw700">Tipo</ion-label>
+                                    </ion-list-header>
+        
+                                    <ion-item>
+                                        <ion-label color="primary">Customer</ion-label>
+                                        <ion-radio slot="start" value="customer" checked></ion-radio>
+                                    </ion-item>       
+                                </ion-radio-group>        
+                                <ion-item>
+                                    <ion-label class="text-1x">{{ 'app.pages.editprofile.avail.text' | translate }}</ion-label>
+                                    <ion-checkbox></ion-checkbox>
+                                </ion-item>
+                            </ion-list>
+         -->
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+
+        <ion-button *ngIf="tipocrud == 'A'" size="large" expand="full" color="dark" (click)="grabarActividad()">Registrar</ion-button>
+        <ion-button *ngIf="tipocrud != 'A'" size="large" expand="full" color="dark" (click)="modificarActividad()">Modificar</ion-button>
+    </ion-card>
+
+    <!-- <div padding>
+                <ion-text color="dark" no-margin>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum odio placeat incidunt nesciunt atque ratione quisquam, fugit omnis maxime adipisci excepturi dignissimos aliquam asperiores itaque unde sequi? Minus, quia, dolore?
+                </ion-text>
+            </div> -->
+</ion-content>
+
+<!-- <ion-content class="animated fadeIn">
+    <ion-card no-margin class="animated fadeIn">
+        <ion-card-content class="bg-white">
+            <h3>
+                <ion-text>
+                    Cliente: {{ _cliente.clienteActual.cliente }}
+                </ion-text>
+            </h3>
+            <ion-item>
+                <ion-label>Actividad</ion-label>
+                <ion-select placeholder="Seleccione Una" [(ngModel)]="tipoact" (ionChange)="changeActividad($event)">
+                    <ion-select-option *ngFor="let actividad of tipos_act" [value]="actividad.cod_tipo">{{actividad.descrip}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+    <ion-footer>
+    </ion-footer>
+
+</ion-content> -->
