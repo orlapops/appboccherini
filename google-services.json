@@ -8,9 +8,40 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:22671254985:android:a1669a8eb6e01e7a",
+        "mobilesdk_app_id": "1:22671254985:android:2cce1d5fbb4e1609",
         "android_client_info": {
           "package_name": "appboccherini.com.netsolin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22671254985-l1cs1012ei1k5mme51nl533ih4t08tf7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKeuOHaEZ4YOa6WKwarECJguC_uF3zM2w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22671254985:android:a1669a8eb6e01e7a",
+        "android_client_info": {
+          "package_name": "netsolinappruterpbocche.com.netsolin"
         }
       },
       "oauth_client": [

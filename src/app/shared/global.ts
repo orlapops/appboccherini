@@ -10,7 +10,7 @@ export var NetsolinApp = {
     "prefijo_sqlbd": '',
     "nomusuar": '',
     "superusuar": '',
-    "num_version": '1.1.0',
+    "num_version": '1.1.1',
     "en_prod": '',
     "obj_actual": 'CODOBJ',
   },
