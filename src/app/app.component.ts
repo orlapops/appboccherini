@@ -45,12 +45,12 @@ export class AppComponent {
         direct: 'root',
         icon: 'home'
       },
-      // {
-      //   title: 'Recibo Caja',
-      //   url: '/recibocaja',
-      //   direct: 'forward',
-      //   icon: 'book'
-      // },
+      {
+        title: 'Consignar',
+        url: '/consignacion',
+        direct: 'forward',
+        icon: 'book'
+      },
       // {
       //   title: 'Factura',
       //   url: '/factura',

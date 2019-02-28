@@ -216,7 +216,7 @@
                                     </ion-text>
                                 </ion-col>
                                 <ion-col size="3">
-                                    <ion-button icon-left color="secondary" routerLink="/regactividades/0" shape="round" fill="solid">
+                                    <ion-button *ngIf="visitaAct.estado == 'A'" icon-left color="secondary" routerLink="/regactividades/0" shape="round" fill="solid">
                                         <ion-icon name="add"></ion-icon>
                                     </ion-button>
                                 </ion-col>
@@ -262,7 +262,7 @@
                     <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
                     <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
                     <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
-                    <ion-card *ngIf="_parEmpre.usuario.recauda" class="facturaCard">
+                    <ion-card *ngIf="_parEmpre.usuario.recauda && visitaAct.estado == 'A'" class="facturaCard">
                         <!-- <ion-card-content>
         <ion-card no-margin margin-vertical class="bg-white" *ngFor="let item of clienteAct.cartera">
         <ion-item>
@@ -313,7 +313,7 @@
                 </div>
             </div>
             <div *ngSwitchCase="'facturar'">
-                <div *ngIf="_parEmpre.usuario.cap_factura" class="bg-white facturar-padding">
+                <div *ngIf="_parEmpre.usuario.cap_factura  && visitaAct.estado == 'A'" class="bg-white facturar-padding">
                     <ion-text color="primary">
                         <h6>
                             <ion-icon size="small" color="dark" name="paper"></ion-icon> {{clienteAct.cliente}}
@@ -363,7 +363,7 @@
 
             </div>
             <div *ngSwitchCase="'pedido'">
-                <div *ngIf="_parEmpre.usuario.cap_pedido" class="bg-white pedido-padding">
+                <div *ngIf="_parEmpre.usuario.cap_pedido  && visitaAct.estado == 'A'" class="bg-white pedido-padding">
                     <ion-text color="primary">
                         <h6>
                             <ion-icon size="small" color="dark" name="cart"></ion-icon> {{clienteAct.cliente}}

@@ -47,6 +47,7 @@ export class VisitasProvider {
     public cargo_clienteact = false;
     public direc_actual: any;
     public id_visita_activa: any;
+    public visitaabierta: any;
       
     
     constructor(private fbDb: AngularFirestore,
@@ -56,6 +57,7 @@ export class VisitasProvider {
         public _cliente: ClienteProvider,
         // public _message: MessageService,
         public _parempre: ParEmpreService) {
+          this.visitaabierta = null;
     }
 
     // inicializarVisitaActual(id){
@@ -167,6 +169,48 @@ cargaPeriodoUsuar(pcod_usuar){
       .collection(`/personal/${this._parempre.usuario.cod_usuar}/rutas/${this.id_ruta}/periodos/${this.id_periodo}/visitas`)
       .doc(id.toString()).update(datosact);
     }
+      //Guardar para el vendedor o usuario datos para cierre, recibo y formas de pago
+  guardarcierrevisitaFb(id, datosact) {
+    console.log("guardarcierrevisitaFb id:", id);
+    console.log("guardarcierrevisitaFb objrecibo:", datosact);
+    //Actualizar
+    const now = new Date();
+    //extraemos el día mes y año
+    const dia = now.getDate();
+    const mes = now.getMonth() + 1;
+    const ano = now.getFullYear();
+    const hora = now.getHours();
+    const minutos = now.getMinutes();
+    console.log('1');
+    //asegurarse que este creado el año, mes y dia
+    this.fbDb
+      .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario`)
+      .doc(ano.toString())
+      .set({ ano: ano.toString() });
+    //asegurarse que este creado el año, mes y dia
+    this.fbDb
+      .collection(
+        `/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses`
+      )
+      .doc(mes.toString())
+      .set({ mes: mes.toString() });
+      console.log('2');
+      //asegurarse que este creado el año, mes y dia
+    this.fbDb
+      .collection(
+        `/personal/${
+          this._parempre.usuario.cod_usuar
+        }/resumdiario/${ano}/meses/${mes}/dias`
+      )
+      .doc(dia.toString())
+      .set({ dia: dia.toString() });
+      console.log('3');
+  
+    return this.fbDb
+    .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrevisita`)
+    .doc(id.toString()).set(datosact);
+
+  }
     
     public actualizarUbicaVisitaAct(longitud, latitud){
         console.log('actualizarUbicaVisitaAct id_ruta, id_periodo, this.visita_activa_copvdet.id_visita ',
@@ -410,12 +454,20 @@ cargaPeriodoUsuar(pcod_usuar){
                           this.error_cargarruta = false;
                         //   this.visitaTodas = datosv;
                         this.visitaTodas = [];
+                        this.visitaabierta = null;
                         datosv.forEach((visiData: any) => {
                             this.visitaTodas.push({
                               id: visiData.payload.doc.id,
                               cargocartera: false,
                               data: visiData.payload.doc.data()
                             });
+                            //su esta abierta y no hay abierta cargarla como abierta
+                            const datos = visiData.payload.doc.data();
+                            console.log('recorriendo visitas para verificar abierta', datos);
+                            if (datos.estado === 'A' && !this.visitaabierta){
+                              console.log('Esta visita esta abierta ',datos);
+                              this.visitaabierta = datos;
+                            }
                           });   
                         //   console.log('Todas las visitas con id');
                         //   console.log(this.visitaTodas);                     
@@ -436,10 +488,17 @@ cargaPeriodoUsuar(pcod_usuar){
 
  
   clasificaVisitas() {
-    //   console.log('clasificando visitas 1');
+      console.log('clasificando visitas 1');
       this.visitas_cumplidas = this.visitaTodas.filter(reg => reg.data.estado === 'C');
       this.visitas_pendientes = this.visitaTodas.filter(regP => regP.data.estado === 'P'
        || regP.data.estado === 'A' || regP.data.estado === '');
+      //  const visiabiertas = this.visitaTodas.filter(regP => regP.data.estado === 'A');
+      //  console.log('clasificando visitas 2',visiabiertas.data, visiabiertas.lenght);
+      //  if (visiabiertas.lenght > 0){
+      //    //asignar a abierta la primera que encuentre abierta
+      //    this.visitaabierta = visiabiertas[0].data;
+      //    console.log('hay visita abierta',this.visitaabierta);
+      //  }
     // console.log('clasificando visitas 5');
     // console.log(this.visitas_pendientes);
     // console.log(this.visitas_cumplidas);

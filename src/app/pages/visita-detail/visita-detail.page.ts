@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, ActionSheetController, ToastController, ModalController, Platform, LoadingController } from '@ionic/angular';
+import { NavController, ActionSheetController, ToastController, ModalController, Platform, LoadingController, AlertController } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImagePage } from './../modal/image/image.page';
@@ -88,6 +88,7 @@ export class VisitaDetailPage implements OnInit {
     public router: Router,
     private camera: Camera,
     public loadingCtrl: LoadingController,
+    public alertCtrl: AlertController,
     private impresora: BluetoothSerial
   ) {   
     platform.ready().then(() => {
@@ -139,7 +140,7 @@ export class VisitaDetailPage implements OnInit {
         //   }
         // });
       this._visitas.getVisitaActual(this.visitaID).subscribe((datos: any) => {
-          // console.log('constructor detalle visita getVisitaActual datos:', datos);                
+          console.log('constructor detalle visita getVisitaActual datos:', datos, this._visitas.visitaabierta);                
           this.visitaAct = datos;
           this._visitas.visita_activa_copvdet = datos;
           this.cargoVisitaActual = true;
@@ -238,6 +239,15 @@ export class VisitaDetailPage implements OnInit {
     return await loading.present();
   }
 
+  async presentError(pmensaje) {
+    const alert2 = await this.alertCtrl.create({
+      header: 'Error',
+      message: pmensaje,
+      buttons: ['Enterado'],
+      cssClass: 'alerterror'
+    });
+    return await alert2.present();
+  }
 
   registrarIngresoVisita() {
     const datactvisita = {
@@ -256,16 +266,49 @@ export class VisitaDetailPage implements OnInit {
       pedido_recibo : null,
       errorgrb_recibo : false
     };
-    this._visitas.actualizarVisita(this.visitaID, datactvisita);
+    console.log('registrarIngresoVisita ', this._visitas.visitaabierta);
+    if (this._visitas.visitaabierta){
+      console.error('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre, this._visitas.visitaabierta);
+      this.presentError('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre);
+    } else {
+      console.log('No Hay visitas abiertas establece esta como abierta');
+      //dejar como visita abierta esta
+      this._visitas.visitaabierta = this.visita;
+      this._visitas.actualizarVisita(this.visitaID, datactvisita);      
+    }
   }
 
+  validaCierreVisita() {
+    let retorna = false;
+    //valida si puede cerrar visita
+    if (this.ubicaAct.email && this.ubicaAct.contacto && this.ubicaAct.longitud && this.ubicaAct.latitud) {
+      //valida si tiene items de pedido en proceso
+    if(this._prods.factura.length > 0 || this._prods.pedido.length > 0 || this._recibos.recibocaja.length > 0 ){
+      console.error('No puede tener items en proceso en pedidos, facturas o recibos. Elimine para cerrar o termine el proceso.',this._prods.factura , this._prods.pedido, this._recibos.recibocaja);
+      this.presentError('No puede tener items en proceso en pedidos, facturas o recibos. Elimine para cerrar o termine el proceso.');
+    } else {
+      retorna = true;
+    }
+    } else {
+      console.error('Debe ingresar a actualizar datos cliente. Email, contacto, Ubicación Gps', this.visitaAct, this.cargo_posicion, this.ubicaAct);
+      this.presentError('Debe ingresar a actualizar datos cliente. Email, contacto, Ubicación Gps');
+    }    
+    return retorna;
+  }
   cerrarVisita() {
-    // this.estadoVisita = 'C';
+    // validar si puede cerrar
+    
     const datactvisita = {
       fechahora_cierre : Date(),
+      lat_cierre: this.coords.lat,
+      long_cierre: this.coords.lng,
       estado : 'C'
     };
-    this._visitas.actualizarVisita(this.visitaID, datactvisita);
+    if (this.validaCierreVisita()) {
+      console.log('a cerrar visita');
+      this._visitas.actualizarVisita(this.visitaID, datactvisita);
+      this._visitas.visitaabierta = null;
+    }
   }
   actualizarGps(){
 
