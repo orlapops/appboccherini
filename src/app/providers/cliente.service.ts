@@ -20,7 +20,6 @@ export interface Icliente {
     cartera: Array<any>;
     direcciones: Array<any>;
  }
-
 @Injectable({
   providedIn: 'root'
 })

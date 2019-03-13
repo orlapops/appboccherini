@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="appboccherini.com.netsolin" version="1.1.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="appboccherini.com.netsolin" version="1.1.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>App Boccherini Netsolin</name>
     <description>App Boccherini Netsolin rutero y operenaciones  Erp Netsolin.</description>
     <author email="info@netsolin.com" href="http://netsolin.com/">Equipo Netsolin</author>
@@ -88,7 +88,7 @@
     <plugin name="cordova-plugin-geolocation" spec="4.0.1" />
     <plugin name="cordova-plugin-network-information" spec="2.0.1" />
     <plugin name="cordova-plugin-ionic" spec="5.2.10">
-        <variable name="APP_ID" value="4771304e" />
+        <variable name="APP_ID" value="d2668b42" />
         <variable name="CHANNEL_NAME" value="Master" />
         <variable name="UPDATE_METHOD" value="background" />
         <variable name="MAX_STORE" value="3" />
@@ -96,7 +96,7 @@
         <variable name="MIN_BACKGROUND_DURATION" value="30" />
     </plugin>
     <plugin name="cordova-plugin-ionic-webview" spec="^2.0.0">
-        <variable name="APP_ID" value="4771304e" />
+        <variable name="APP_ID" value="d2668b42" />
         <variable name="CHANNEL_NAME" value="Master" />
         <variable name="UPDATE_METHOD" value="background" />
         <variable name="MAX_STORE" value="3" />
