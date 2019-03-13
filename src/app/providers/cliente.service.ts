@@ -119,6 +119,7 @@ export class ClienteProvider {
            .subscribe( (data:any) =>{ 
             console.log(" cargaClienteNetsolin 3");
             console.log(data);  
+            // if (data){
             if( data.error){
                 // console.log(" cargaClienteNetsolin 31");
               // Aqui hay un problema
@@ -160,6 +161,12 @@ export class ClienteProvider {
                 // console.log(this.clienteActual);
                 resolve(true);
               }
+            // } 
+            // else {
+            //   this.cargoclienteNetsolin = false;
+            //      this.clienteActual = null;
+            //      resolve(false);  
+            // }
             // console.log(" cargaClienteNetsolin 4");
            });
           //  console.log(" cargaClienteNetsolin 5");

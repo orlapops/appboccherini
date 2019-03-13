@@ -120,6 +120,7 @@ cargaPeriodoUsuar(pcod_usuar){
         let url= this._parempre.URL_SERVICIOS + "netsolin_servirestgo.csvc?VRCod_obj=IDRUTAPERAPP";
         this.http.post( url, NetsolinApp.objenvrest )   
          .subscribe( (data:any) =>{ 
+           if (data){
              console.log('cargo periodo en netsolin', data);
           if( data.error){
               console.error(" cargaPeriodoUsuar ", data.error);
@@ -136,6 +137,14 @@ cargaPeriodoUsuar(pcod_usuar){
               this.id_periodo = data.datos_periodo[0].id_per;
               resolve(true);
             }
+          } 
+          // else {
+          //   this.cargoidperiodo = false;
+          //   this.cargo_ruta = false;
+          //   this.error_cargarruta = true;
+          //   this.men_errorcargarruta = 'Error cargando Periodo. No se ha generado ruta.';
+          //   resolve(false);
+          // }
          });
        });
   }

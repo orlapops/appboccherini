@@ -102,21 +102,50 @@ export class ConsignarPage implements OnInit {
   }
 
 
+
   realizar_consigna(){
     this.grabando_consigna = true;
-    // console.log('a generar recibo ', this.consignacion,  this._recibos.consignacion ,  this._recibos.formpago);
-
+    const obj_graba = {
+      cta_banco: this.regconsig.cta_banco,
+      fecha: this.regconsig.fecha,
+      referencia: this.regconsig.referencia,
+      nota: this.regconsig.nota,
+      valor: this.regconsig.valor,
+      ajuste: this.regconsig.ajuste,
+      efectivo: this.formpagefec,
+      cheques: this.formpagcheq
+    };
+  
+    this._consigna.genera_consigna_netsolin(obj_graba)
+    .then(res => {
+      if (res){
+        this.mostrandoresulado = true;
+        this.grabo_consigna = true;
+        console.log('retorna genera_consigna_netsolin res:', res);
+      } else {
+        this.mostrandoresulado = true;
+        this.grabo_consigna = false;
+        this.grabando_consigna = true;
+        console.log('retorna genera_consigna_netsolin error.message: ');  
+      }
+    })
+    .catch(error => {
+      this.mostrandoresulado = true;
+      this.grabo_consigna = false;
+      this.grabando_consigna = true;
+      console.log('retorna genera_consigna_netsolin error.message: ', error.message);
+    });
+    
   }
-  quitar_resuladograborecibo(){
+  quitar_resuladograboconsigna(){
     if (this.grabo_consigna){
-      // this.consignacion = [];
       this.grabo_consigna = false;
     }
     this.grabando_consigna = false;
     this.mostrandoresulado = false;    
   }
 
-  imprimir_recibo() {
+  imprimir_consigna() {
     let printer;
     this.btCtrl.list().then(async datalist => {
       let sp = datalist;
@@ -144,7 +173,7 @@ export class ConsignarPage implements OnInit {
               console.log(inpu);
               const printing = this.btCtrl.connect(printer.id).subscribe(data => {
                 this.btCtrl.connect(printer.id);
-                this.btCtrl.write(this._visitas.visita_activa_copvdet.recibo_grabado.txt_imp).then(async msg => {
+                this.btCtrl.write(this._consigna.consig_grabada.txt_imp).then(async msg => {
                   const alert2 = await this.alertCtrl.create({
                     message: 'Imprimiendo',
                     buttons: ['Cancel']

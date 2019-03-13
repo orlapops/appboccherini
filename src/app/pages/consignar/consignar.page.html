@@ -170,118 +170,7 @@
                     </ion-grid>
                     <ion-grid *ngSwitchCase="'verpagasdsr'">
                         <ion-row>
-                            <ion-col size="12">
-                                <ion-list class="listafpago">
-                                    <ion-item-sliding *ngFor="let item of _recibos.formpago">
-                                        <ion-item tappable routerLink="/regpagosxtipo/{{item.id}}">
-                                            <ion-text *ngIf="item.item.tipopago==='EFE'" color="dark">Efectivo</ion-text>
-                                            <ion-text *ngIf="item.item.tipopago==='CHD'" color="dark">Cheque al día</ion-text>
-                                            <ion-text *ngIf="item.item.tipopago==='PBCS'" color="dark">Consig. Banco</ion-text>
-                                            <ion-text *ngIf="item.item.tipopago==='PBTR'" color="dark">Transferencia Banco</ion-text>
-                                            <ion-badge slot="end" color="success">
-                                                {{item.item.valor | currency }}
-                                            </ion-badge>
-                                        </ion-item>
-                                    </ion-item-sliding>
-                                    <hr class="bg-tertiary">
-                                    <ion-text color="primary">
-                                        <h3>Valores recibidos</h3>
-                                    </ion-text>
-                                    <hr class="bg-tertiary">
-                                    <ion-row>
-                                        <ion-col size="3">
-                                            <strong></strong>
-                                        </ion-col>
-                                        <ion-col size="3">
-                                            <strong>F.Pago</strong>
-                                        </ion-col>
-                                        <ion-col size="3">
-                                            <strong>Recibo</strong>
-                                        </ion-col>
-                                        <ion-col size="3">
-                                            <strong>Diferencia</strong>
-                                        </ion-col>
-                                    </ion-row>
-                                    <ion-row>
-                                        <ion-col size="3">
-                                            <strong class="titrowcol">Efectivo</strong>
-                                        </ion-col>
-                                        <ion-col size="3">
-                                            <ion-text class="fontrowcol" color="primary">
-                                                <h6 class="fontrowcol">{{_recibos.totformpagefec | currency }}</h6>
-                                            </ion-text>
-                                        </ion-col>
-                                        <ion-col size="3">
-                                            <ion-text class="fontrowcol" color="primary">
-                                                <h6 class="fontrowcol">{{tneto_recibirefe | currency }}</h6>
-                                            </ion-text>
-                                        </ion-col>
-                                        <ion-col size="3">
-                                            <ion-text *ngIf="tneto_recibirefe - (_recibos.totformpagefec)===0" class="fontrowcol" color="success">
-                                                <h6 class="fontrowcol">{{tneto_recibirefe - (_recibos.totformpagefec) | currency }}</h6>
-                                            </ion-text>
-                                            <ion-text *ngIf="tneto_recibirefe - (_recibos.totformpagefec)!=0" class="fontrowcol" color="danger">
-                                                <h6 class="fontrowcol">{{tneto_recibirefe - (_recibos.totformpagefec) | currency }}</h6>
-                                            </ion-text>
-                                        </ion-col>
-                                    </ion-row>
-                                    <ion-row>
-                                        <ion-col size="3">
-                                            <strong class="titrowcol">Bancos</strong>
-                                        </ion-col>
-                                        <ion-col size="3">
-                                            <ion-text class="fontrowcol" color="primary">
-                                                <h6 class="fontrowcol">{{_recibos.totformpagban | currency }}</h6>
-                                            </ion-text>
-                                        </ion-col>
-                                        <ion-col size="3">
-                                            <ion-text class="fontrowcol" color="primary">
-                                                <h6 class="fontrowcol">{{tneto_recibirban | currency }}</h6>
-                                            </ion-text>
-                                        </ion-col>
-                                        <ion-col size="3">
-                                            <ion-text *ngIf="tneto_recibirban - (_recibos.totformpagban)===0" class="fontrowcol" color="success">
-                                                <h6 class="fontrowcol">{{tneto_recibirban - (_recibos.totformpagban) | currency }}</h6>
-                                            </ion-text>
-                                            <ion-text *ngIf="tneto_recibirban - (_recibos.totformpagban)!=0" class="fontrowcol" color="danger">
-                                                <h6 class="fontrowcol">{{tneto_recibirban - (_recibos.totformpagban) | currency }}</h6>
-                                            </ion-text>
-                                        </ion-col>
-                                        <ion-row>
-                                            <ion-col size="3">
-                                                <strong class="titrowcol">Total</strong>
-                                            </ion-col>
-                                            <ion-col size="3">
-                                                <ion-text class="fontrowcol" color="primary">
-                                                    <h6 class="fontrowcol">{{_recibos.totformaspago | currency }}</h6>
-                                                </ion-text>
-                                            </ion-col>
-                                            <ion-col size="3">
-                                                <ion-text class="fontrowcol" color="primary">
-                                                    <h6 class="fontrowcol">{{tneto_recibir | currency }}</h6>
-                                                </ion-text>
-                                            </ion-col>
-                                            <ion-col size="3">
-                                                <ion-text *ngIf="tneto_recibir - (_recibos.totformaspago)===0" class="fontrowcol" color="success">
-                                                    <h6 class="fontrowcol">{{tneto_recibir - (_recibos.totformaspago) | currency }}</h6>
-                                                </ion-text>
-                                                <ion-text *ngIf="tneto_recibir - (_recibos.totformaspago)!=0" class="fontrowcol" color="danger">
-                                                    <h6 class="fontrowcol">{{tneto_recibir - (_recibos.totformaspago) | currency }}</h6>
-                                                </ion-text>
-                                            </ion-col>
-                                        </ion-row>
-                                    </ion-row>
-                                    <ion-item>
-                                        <ion-button icon-left color="secondary" routerLink="/regpagosxtipo/0" shape="round" fill="solid">
-                                            <ion-icon name="add"></ion-icon>
-                                        </ion-button>
-                                        <ion-button *ngIf="(tneto_recibir - _recibos.totformaspago) === 0 && (tneto_recibirban - _recibos.totformpagban) ===0 && (tneto_recibirefe - _recibos.totformpagefec) ===0" slot="start" shape="round" color="success" (click)="realizar_recibo()">
-                                            Generar Recibo
-                                        </ion-button>
-                                    </ion-item>
 
-                                </ion-list>
-                            </ion-col>
                         </ion-row>
                     </ion-grid>
                 </div>
@@ -294,24 +183,25 @@
             <ion-spinner name="bubbles"></ion-spinner>
         </ion-item>
     </ion-card>
-    <ion-card *ngIf="grabando_consigna && !grabo_consigna && mostrandoresulado && _visitas.visita_activa_copvdet.errorgrb_recibo">
+    <ion-card *ngIf="grabando_consigna && !grabo_consigna && mostrandoresulado && _consigna.errorgrb_consig">
         <ion-text color="danger"> Error Grabando recibo </ion-text>
-        <ion-item *ngFor="let iteme of _visitas.visita_activa_copvdet.resgrb_recibo; let i = index;" padding class="animated fadeIn fast">
-            <ion-text color="danger"> {{iteme.menerror.trim()}}</ion-text>
-        </ion-item>
-        <ion-button slot="end" shape="round" color="success" (click)="quitar_resuladograborecibo()">
+        <ion-text color="danger"> {{_consigna.menerrorgraba}}</ion-text>
+        <!-- <ion-item *ngFor="let iteme of _visitas.visita_activa_copvdet.resgrb_recibo; let i = index;" padding class="animated fadeIn fast"> -->
+        <!-- <ion-text color="danger"> {{iteme.menerror.trim()}}</ion-text> -->
+        <!-- </ion-item> -->
+        <ion-button slot="end" shape="round" color="success" (click)="quitar_resuladograboconsigna()">
             Continuar
         </ion-button>
     </ion-card>
     <ion-card class="btrecibotot-color" *ngIf="grabando_consigna && grabo_consigna && mostrandoresulado">
-        <ion-text color="green"><strong> {{_visitas.visita_activa_copvdet.recibo_grabado.men_error}}</strong></ion-text>
+        <ion-text color="green"><strong> {{_consigna.resgrb_consig}}</strong></ion-text>
         <div>
-            <textarea class="texto_imprimir">{{_visitas.visita_activa_copvdet.recibo_grabado.txt_imp}}</textarea>
+            <textarea class="texto_imprimir">{{_consigna.consig_grabada.txt_imp}}</textarea>
         </div>
-        <ion-button slot="start" shape="round" color="success" (click)="imprimir_recibo()">
-            Imprimir Recibo
+        <ion-button slot="start" shape="round" color="success" (click)="imprimir_consigna()">
+            Imprimir consigna
         </ion-button>
-        <ion-button slot="end" shape="round" color="success" (click)="quitar_resuladograborecibo()">
+        <ion-button slot="end" shape="round" color="success" (click)="quitar_resuladograboconsigna()">
             Continuar
         </ion-button>
     </ion-card>

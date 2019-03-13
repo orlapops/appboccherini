@@ -176,16 +176,17 @@
 
         <ion-card *ngIf="_visitas.cargo_ruta">
             <ion-list>
-                <ng-container *ngIf="!_visitas.visitas_pendientes || _visitas.visitas_pendientes.length == 0">
-                    <div *ngFor="let n of [0,1,2]" padding>
+                <ng-container *ngIf="!_visitas.visitas_pendientes || _visitas.visitas_pendientes.length === 0">
+                    <ion-text color="danger"> No tiene visitas Pendientes</ion-text>
+                    <!-- <div *ngFor="let n of [0,1,2]" padding>
                         <ion-skeleton-text></ion-skeleton-text>
                         <p>
                             <ion-skeleton-text class="fake-skeleton"></ion-skeleton-text>
                         </p>
-                    </div>
+                    </div> -->
                 </ng-container>
 
-                <!-- <ion-item color="dark" tappable routerLink="/hotel-detail/{{visita.id}}" *ngFor="let visita of visitas | slice:4:8; let i = index"> -->
+                <!-- <div *ngIf="_visitas.visitas_pendientes.length>0"> -->
                 <ion-item tappable routerLink="/visita-detail/{{visita.id}}" *ngFor="let visita of _visitas.visitas_pendientes" [ngClass]="colorxEstado(visita.data.estado)">
                     <ion-label>
                         <h2 [ngClass]="{'fw700 text-white': true}">
@@ -223,6 +224,7 @@
                         </h4>
                     </ion-label>
                 </ion-item>
+                <!-- </div> -->
             </ion-list>
         </ion-card>
 

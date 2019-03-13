@@ -46,6 +46,7 @@ export class ActividadesService implements OnInit {
       let url =this._parempre.URL_SERVICIOS +"netsolin_servirestgo.csvc?VRCod_obj=APPTIPOSACT";
       console.log('ingreso a cargaActividadesNetsolin url', url, NetsolinApp.objenvrest);
       this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
+        if (data){
         console.log('ingreso a cargaActividadesNetsolin data', data);
         if (data.error) {
           console.error(" cargaActividadesNetsolin ", data.error);
@@ -58,6 +59,12 @@ export class ActividadesService implements OnInit {
           this.tipos_activ = data.actividades;
           resolve(true);
         }
+      } 
+      // else {
+      //   this.cargoActividadesNetsolin = false;
+      //   this.tipos_activ = null;
+      //   resolve(false);
+      // }
       });
     });
   }

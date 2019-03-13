@@ -116,6 +116,7 @@ export class ProdsService implements OnInit {
       );
       this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
         // console.log(" cargaInventarioNetsolin data:", data);
+        if (data){
         if (data.error) {
           console.error(" cargaInventarioNetsolin ", data.error);
           this.cargoInventarioNetsolin = false;
@@ -128,6 +129,12 @@ export class ProdsService implements OnInit {
           this.inventario = data.inventario;
           resolve(true);
         }
+      } 
+      // else {
+      //   this.cargoInventarioNetsolin = false;
+      //   this.inventario = null;
+      //   resolve(false);
+      // }
         // console.log(" cargaInventarioNetsolin 4");
       });
     });
@@ -163,19 +170,26 @@ export class ProdsService implements OnInit {
       );
       console.log('url:', url);
       this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
-        // console.log(" cargaInventarioNetsolinPedido data:", data);
-        if (data.error) {
-          // console.error(" cargaInventarioNetsolinPedido ", data.error);
-          this.cargoInventarioNetsolinPed = false;
-          this.inventarioPed = null;
-          resolve(false);
-        } else {
-          // console.log("Datos traer cargaInventarioNetsolinPedido ",data.inventario);
-          this.cargoInventarioNetsolinPed = true;
-          // this.menerror_usuar="";
-          this.inventarioPed = data.inventario;
-          resolve(true);
-        }
+        console.log(" cargaInventarioNetsolinPedido data:", data);
+        if (data){
+          if (data.error) {
+            // console.error(" cargaInventarioNetsolinPedido ", data.error);
+            this.cargoInventarioNetsolinPed = false;
+            this.inventarioPed = null;
+            resolve(false);
+          } else {
+            // console.log("Datos traer cargaInventarioNetsolinPedido ",data.inventario);
+            this.cargoInventarioNetsolinPed = true;
+            // this.menerror_usuar="";
+            this.inventarioPed = data.inventario;
+            resolve(true);
+          }
+        } 
+        // else {
+        //   this.cargoInventarioNetsolinPed = false;
+        //   this.inventarioPed = null;
+        //   resolve(false);
+        // }
         // console.log(" cargaInventarioNetsolinPedido 4");
       });
     });
