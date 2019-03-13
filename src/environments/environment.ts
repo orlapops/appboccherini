@@ -1,5 +1,5 @@
 export const environment = {
-  production: false, // set TRUE before you build and release a prod version.
+  production: true, // set TRUE before you build and release a prod version.
   // Set your app configurations here.
   // For the list of config options, please refer to https://ionicframework.com/docs/api/config/Config/
   config: {
