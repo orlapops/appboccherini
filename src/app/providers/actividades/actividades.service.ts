@@ -70,10 +70,10 @@ export class ActividadesService implements OnInit {
   }
       //Obtiene actividad con id
   public getIdRegActividad(Id: string) {
-    console.log('en getIdRegActividad');
+    console.log('en getIdRegActividad',Id);
+    console.log(`/personal/${this._parempre.usuario.cod_usuar}/rutas/${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${this._visitas.visita_activa_copvdet.id_visita}/actividades`);
   return this.fbDb
-    .collection(`/personal/${this._parempre.usuario.cod_usuar}/
-    rutas/${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${this._visitas.visita_activa_copvdet.id_visita}/actividades`)
+    .collection(`/personal/${this._parempre.usuario.cod_usuar}/rutas/${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${this._visitas.visita_activa_copvdet.id_visita}/actividades`)
    .doc(Id).valueChanges();
   }
 
@@ -109,7 +109,8 @@ export class ActividadesService implements OnInit {
   }
 
   public grabarActividad(objact) {
-    console.log('en grabar actividad coleccion: ',
+    console.log('obj act a grabar:',objact);
+    console.log('en grabar actividad coleccion: ',    
     `/personal/${this._parempre.usuario.cod_usuar}
     /rutas/${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${this._visitas.visita_activa_copvdet.id_visita}/actividades`);
     return this.fbDb
@@ -124,7 +125,7 @@ export class ActividadesService implements OnInit {
     return this.fbDb
     // tslint:disable-next-line:max-line-length
     .collection(`/personal/${this._parempre.usuario.cod_usuar}/rutas/${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${this._visitas.visita_activa_copvdet.id_visita}/actividades`)
-    .doc(id).set(objact);
+    .doc(id).update(objact);
   }
   
  //Obtiene actividades de la visita actual

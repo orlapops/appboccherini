@@ -29,24 +29,25 @@ export class RegActividadesPage implements OnInit {
     public router: Router
   ) {
     console.log('reactividades idact:', this.idact);
-    if (this.idact==='0') {
-      this.tipocrud = 'A';
-    } else {
-      this.tipocrud = 'E';
-      this._actividad.getIdRegActividad(this.idact).subscribe((datos:any) =>{
-          console.log('Editar datos actividad ', datos);
-          if (datos){
-          this.cod_tipoact = datos.tipo_act;
-          this.nom_tipoact = datos.nom_tipoact;
-          this.notaAct = datos.notas;
-          this.registro = datos.registro;
-          }
-      });
-    }
     //cargar actividades de firebase
     this._actividad.gettiposactFB().subscribe((datos: any) =>{
       console.log('Cargo en regactividades los tipo de act de firebase datos', datos);
       this.tipos_act = datos;      
+      if (this.idact==='0') {
+        this.tipocrud = 'A';
+      } else {
+        this.tipocrud = 'E';
+        this._actividad.getIdRegActividad(this.idact).subscribe((datos:any) =>{
+            console.log('Editar datos actividad ', datos);
+            if (datos){
+            this.cod_tipoact = datos.tipo_act;
+            this.nom_tipoact = datos.nom_tipoact;
+            this.notaAct = datos.notas;
+            this.registro = datos.registro;
+            }
+        });
+      }
+  
     });
     console.log('_visitas ', this._visitas);
     console.log('_cliente ', this._cliente);
@@ -58,10 +59,16 @@ export class RegActividadesPage implements OnInit {
   changeActividad(e){
      console.log('changeActividad e: ', e);
      console.log('e.detail.value', e.detail.value);
+     console.log(this.tipos_act);
      console.log('tipoact:', this.cod_tipoact);
-     this.nom_tipoact = e.detail.text;
+     //buscar en tipos actividdad
+     this.nom_tipoact = this.retornanomact(this.cod_tipoact);
+     console.log(this.nom_tipoact);
   }
-  
+  retornanomact(cod) {
+    const rfiltro = this.tipos_act.filter(reg => reg.cod_tipo === cod);
+    return rfiltro[0].descrip;
+  }
   grabarActividad(){
     const fh = Date.now();
     const activigrab = {
