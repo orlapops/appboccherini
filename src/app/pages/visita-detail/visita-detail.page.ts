@@ -302,12 +302,52 @@ export class VisitaDetailPage implements OnInit {
       fechahora_cierre : Date(),
       lat_cierre: this.coords.lat,
       long_cierre: this.coords.lng,
+      envio_email: false,
+      error_envemail: '',
       estado : 'C'
     };
     if (this.validaCierreVisita()) {
+      this.presentLoading('Cerrando visita y enviando Eamil');
       console.log('a cerrar visita');
-      this._visitas.actualizarVisita(this.visitaID, datactvisita);
-      this._visitas.visitaabierta = null;
+      //Recaudar todos datos visita para al cerrar enviar resumen a netsolin, para que puede generar email
+      //visita
+      console.log('visita activa:', this._visitas.visita_activa_copvdet);
+      console.log('Actividades visita:', this.listaactividades);
+      this._visitas.getPedidosVisitaActual().subscribe((datosvp: any) => {
+          console.log('Pedidos visita act: ',datosvp);  
+          this._visitas.getFacturasVisitaActual().subscribe((datosvf: any) => {
+            console.log('Facturas visita act: ',datosvf);  
+            this._visitas.getRecibosVisitaActual().subscribe((datosvr: any) => {
+              console.log('Recibos visita act: ',datosvr);  
+              const dvis_act = {
+                cod_tercer: this._visitas.visita_activa_copvdet.cod_tercer,
+                nombre: this._visitas.visita_activa_copvdet.nombre,
+                direccion: this._visitas.visita_activa_copvdet.direccion,
+                fechaing: this._visitas.visita_activa_copvdet.cod_tercer,
+                fechacierre: datactvisita.fechahora_cierre
+              };
+              this._visitas.genera_cierrevisita_netsolin(dvis_act,this.listaactividades,datosvp,datosvf,datosvr)
+              .then(result =>{
+                if (result){
+                } else {
+                  datactvisita.envio_email = false;
+                  datactvisita.error_envemail = this._visitas.men_errocierrevisnetsolin;
+                  console.log('Error al cerrar visita en Netsolin no pudo enviar email', this._visitas.men_errocierrevisnetsolin);
+                  this.presentError('Error enviando email visita. Se cierra pero no se envia email. ' + datactvisita.error_envemail);
+                }
+              })
+              .catch(error => {
+                datactvisita.envio_email = false;
+                datactvisita.error_envemail = error;
+              console.log('Error al genera_cierrevisita_netsolin error.message:', error);
+              this.presentError('Error enviando email visita. Se cierra pero no se envia email. ' + datactvisita.error_envemail);
+            });
+            });
+              this._visitas.actualizarVisita(this.visitaID, datactvisita);
+              this._visitas.visitaabierta = null;
+
+            });
+        });
     }
   }
   actualizarGps(){

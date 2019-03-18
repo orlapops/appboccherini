@@ -48,7 +48,9 @@ export class VisitasProvider {
     public direc_actual: any;
     public id_visita_activa: any;
     public visitaabierta: any;
-      
+    public error_cierrevisnetsolin = false;
+    public men_errocierrevisnetsolin = '';
+
     
     constructor(private fbDb: AngularFirestore,
         private firestore: AngularFirestore,
@@ -220,7 +222,42 @@ cargaPeriodoUsuar(pcod_usuar){
     .doc(id.toString()).set(datosact);
 
   }
-    
+  genera_cierrevisita_netsolin(objdvisiact,objlistact,objpedidos,objfacturas,objrecibos) {
+    return new Promise((resolve, reject) => {
+      let paramgrab = {
+        // datos_gen: this._visitas.visita_activa_copvdet.datosgen,
+        dvisita: objdvisiact,
+        actividades: objlistact,
+        pedidos: objpedidos,
+        facturas: objfacturas,
+        recibos: objrecibos,
+        usuario: this._parempre.usuario
+      };
+      NetsolinApp.objenvrest.filtro = "";
+      NetsolinApp.objenvrest.parametros = paramgrab;
+      let url =this._parempre.URL_SERVICIOS +"netsolin_servirestgo.csvc?VRCod_obj=APPCIERREVISITA";
+      this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
+        console.log(" genera_cierrevisita_netsolin data:", data);
+        if (data.error) {
+          this.error_cierrevisnetsolin = true;
+          this.men_errocierrevisnetsolin = data.men_error;
+          console.error(" genera_cierrevisita_netsolin ", data.men_error);
+          resolve(false);
+        } else {
+          if (data.isCallbackError || data.error) {
+            this.error_cierrevisnetsolin = true;
+            this.men_errocierrevisnetsolin =data.messages[0].menerror;
+            console.error(" Error genera_cierrevisita_netsolin ",data.messages[0].menerror);
+            resolve(false);
+          } else {
+            this.error_cierrevisnetsolin = false;
+            this.men_errocierrevisnetsolin ='';
+          }
+        }
+        console.log(" genera_cierrevisita_netsolin 4");
+      });
+    });
+  }    
     public actualizarUbicaVisitaAct(longitud, latitud){
         console.log('actualizarUbicaVisitaAct id_ruta, id_periodo, this.visita_activa_copvdet.id_visita ',
             this.id_ruta, this.id_periodo, this.visita_activa_copvdet.id_visita);
@@ -582,6 +619,32 @@ cargaPeriodoUsuar(pcod_usuar){
             item.data.nombre.toLowerCase().indexOf(searchKey.toLowerCase()) > -1 
             || item.data.cod_tercer.toLowerCase().indexOf(searchKey.toLowerCase()) > -1));
     }
+
+       //Obtiene pedidos del  clente de la visita actual
+       public getPedidosVisitaActual() {
+        // tslint:disable-next-line:max-line-length
+        console.log('getedidosVisitaActual:', `/clientes/${this.visita_activa_copvdet.cod_tercer}/pedidos`);
+        console.log(this.visita_activa_copvdet.id_visita)
+            return this.fbDb.collection(`/clientes/${this.visita_activa_copvdet.cod_tercer}/pedidos`, ref => 
+              ref.where('id_visita', '==', this.visita_activa_copvdet.id_visita))
+              .valueChanges();      
+          }
+       //Obtiene facturas del  clente de la visita actual
+       public getFacturasVisitaActual() {
+        // tslint:disable-next-line:max-line-length
+        console.log('getFacturasVisitaActual:', `/clientes/${this.visita_activa_copvdet.cod_tercer}/facturas`);
+            return this.fbDb.collection(`/clientes/${this.visita_activa_copvdet.cod_tercer}/facturas`, ref => 
+              ref.where('id_visita', '==', this.visita_activa_copvdet.id_visita))
+              .valueChanges();      
+          }
+       //Obtiene facturas del  clente de la visita actual
+       public getRecibosVisitaActual() {
+        // tslint:disable-next-line:max-line-length
+        console.log('getRecibosVisitaActual:', `/clientes/${this.visita_activa_copvdet.cod_tercer}/recibos`);
+            return this.fbDb.collection(`/clientes/${this.visita_activa_copvdet.cod_tercer}/recibos`, ref => 
+              ref.where('id_visita', '==', this.visita_activa_copvdet.id_visita))
+              .valueChanges();      
+          }
 
 
     // getFactura() {
