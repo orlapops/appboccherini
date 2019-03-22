@@ -234,7 +234,7 @@ export class ProdsService implements OnInit {
     return new Promise((resolve, reject) => {
     for (let i = 0; i < this.inventario.length; i++) {  
       let lcodref = this.inventario[i].cod_refinv;
-      let larchivo = '/imagenes/' + lcodref.trim() + '.jpg';
+      let larchivo = '/imagenes/' + lcodref.trim() + '.png';
       const ref = this.afStorage.ref(larchivo);
       // console.log('En traer imagenes ducha prueba ref:' + larchivo, ref);
       // console.log('En traer imagenes ducha prueba ref:' + larchivo, ref.getDownloadURL.length);
@@ -256,7 +256,7 @@ export class ProdsService implements OnInit {
     return new Promise((resolve, reject) => {
       for (let i = 0; i < this.inventarioPed.length; i++) {  
       let lcodref = this.inventarioPed[i].cod_refinv;
-      let larchivo = '/imagenes/' + lcodref.trim() + '.jpg';
+      let larchivo = '/imagenes/' + lcodref.trim() + '.png';
       const ref = this.afStorage.ref(larchivo);
       // console.log('En traer imagenes ducha prueba ref:' + larchivo, ref);
       // console.log('En traer imagenes ducha prueba ref:' + larchivo, ref.getDownloadURL.length);
