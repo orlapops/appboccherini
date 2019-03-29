@@ -71,12 +71,19 @@ export class ModalActClientePage implements OnInit {
       // ])],
       'contacto': [null, Validators.compose([
         Validators.required
-      ])]
+      ])],
+      'telefono': [null, Validators.compose([
+        Validators.required
+      ])],
+      'celular': [null]
+
     });
     // asignar valores al formulario
     this.onActclieForm.controls['direccion'].setValue(this._visitas.direc_actual.direccion);
     this.onActclieForm.controls['email'].setValue(this._visitas.direc_actual.email);
     this.onActclieForm.controls['contacto'].setValue(this._visitas.direc_actual.contacto);
+    this.onActclieForm.controls['telefono'].setValue(this._visitas.direc_actual.telefono);
+    this.onActclieForm.controls['celular'].setValue(this._visitas.direc_actual.celular);
     // this.coords.lat = this.navParams.get('lat');
     // this.coords.lng = this.navParams.get('lng');
 
@@ -169,11 +176,19 @@ export class ModalActClientePage implements OnInit {
     const adireccion = this.onActclieForm.controls['direccion'].value;
     const aemail = this.onActclieForm.controls['email'].value;
     const acontacto = this.onActclieForm.controls['contacto'].value;
-    console.log('Datos act:', adireccion, aemail, acontacto);
+    let atelefono = this.onActclieForm.controls['telefono'].value;
+    let acelular = this.onActclieForm.controls['celular'].value;
+    if (typeof atelefono == "undefined") {
+      atelefono = "";
+    }
+    if (typeof acelular == "undefined") {
+      acelular = "";
+    }
+    console.log('Datos act:', adireccion, aemail, acontacto,atelefono,acelular);
     this._clientes.actualizaubicafirebase(this._visitas.visita_activa_copvdet.cod_tercer, 
       this._visitas.visita_activa_copvdet.id_dir,
       this.coords.lng, this.coords.lat,
-      adireccion, aemail, acontacto);
+      adireccion, aemail, acontacto,atelefono,acelular);
      // Actualizar ubicacion visita actual
     //  this._visitas.direc_actual.direccion = adireccion;
     //  this._visitas.direc_actual.email = aemail;

@@ -192,7 +192,7 @@ export class ClienteProvider {
             let id_direc = iddirec.toString();
             // console.log(id_direc);
             // this._parempre.reg_log('a actualizar img fb id_direc: ' , id_direc);
-            this.actualizaimagenDirclienteNetsolin(idclie, iddirec, 0, 0, linkref,'','','');
+            this.actualizaimagenDirclienteNetsolin(idclie, iddirec, 0, 0, linkref,'','','','','');
             this.fbDb.collection(`/clientes/${idclie}/direcciones/`).doc(id_direc).update({link_foto: linkref});
             const toast = await this.toastCtrl.create({
               showCloseButton: true,
@@ -208,7 +208,7 @@ export class ClienteProvider {
     });
   }
 
-  actualizaubicafirebase(idclie, iddirec, longitud, latitud, pdireccion, pemail, pcontacto) {
+  actualizaubicafirebase(idclie, iddirec, longitud, latitud, pdireccion, pemail, pcontacto,ptelefono,pcelular) {
     // const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_clientes/${idclie}/direcciones/${iddirec}`);
     // this._parempre.reg_log('a actualizar ubi fb clie: ' , idclie);
     console.log('en actualizaubicafirebase idclie,iddirec: ', idclie, iddirec);    
@@ -218,14 +218,14 @@ export class ClienteProvider {
 
   //  console.log(id_direc);
   //  this._parempre.reg_log('a actualizar ubi fb id_direc: ' , id_direc);
-  this.actualizaimagenDirclienteNetsolin(idclie, iddirec, longitud, latitud, '', pdireccion, pemail, pcontacto);
+  this.actualizaimagenDirclienteNetsolin(idclie, iddirec, longitud, latitud, '', pdireccion, pemail, pcontacto,ptelefono,pcelular);
   this.fbDb.collection(`/clientes/${idclie}/direcciones/`).doc(id_direc).update({latitud: latitud, longitud: longitud,
-    direccion: pdireccion, email: pemail, contacto: pcontacto});
+    direccion: pdireccion, email: pemail, contacto: pcontacto,telefono: ptelefono,celular: pcelular});
   }
 
   // Actualiza url firestorage en Netsolin DIRECCION DE UN CLIENTE, para cuando se traiga sea màs rapido
-    actualizaimagenDirclienteNetsolin(idclie, iddirec, longitud, latitud, imageURL: string, pdireccion, pemail, pcontacto) {
-      console.log('Datos actualizaimagenDirclienteNetsolin act:', pdireccion, pemail, pcontacto);
+    actualizaimagenDirclienteNetsolin(idclie, iddirec, longitud, latitud, imageURL: string, pdireccion, pemail, pcontacto,ptelefono,pcelular) {
+      console.log('Datos actualizaimagenDirclienteNetsolin act:', pdireccion, pemail, pcontacto,ptelefono,pcelular);
       return new Promise((resolve, reject) => {
         const paramgrab = {
           id_dir: iddirec,
@@ -234,7 +234,9 @@ export class ClienteProvider {
           latitud: latitud,
           direccion: pdireccion,
           email: pemail,
-          contacto: pcontacto
+          contacto: pcontacto,
+          telefono: ptelefono,
+          celular: pcelular
         };
         NetsolinApp.objenvrest.parametros = paramgrab;
         console.log("  1");

@@ -83,12 +83,12 @@
                                         Id: {{visita.data.cod_tercer}}
                                     </h5>
                                     <h4 class="background fechahorahora">
-                                        <div class="fechavisita" class="hour">
+                                        <div class="hour fechahora">
                                             <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
                                             <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon>
                                             <ion-text color="primary">{{ _parEmpre.cadafecha(visitaAct.fecha_in) | date: 'shortDate'}}</ion-text>
                                         </div>
-                                        <div class="horavisita" class="position">
+                                        <div class="position fechahora">
                                             <ion-icon name="time" slot="end" color="tertiary" *ngIf="true"></ion-icon>
                                             <ion-text color="primary"> {{ _parEmpre.cadhoramil(visitaAct.hora_in) }}</ion-text>
                                         </div>

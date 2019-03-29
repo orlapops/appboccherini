@@ -78,11 +78,36 @@
                 </ion-label>
                 <ion-input color="secondary" type="email" formControlName="contacto"></ion-input>
             </ion-item>
-            <p ion-text class="text08" *ngIf="onActclieForm.get('contacto').touched && onActclieForm.get('email').hasError('contacto')">
+            <p ion-text class="text08" *ngIf="onActclieForm.get('contacto').touched && onActclieForm.get('contacto').hasError('required')">
                 <ion-text color="danger">
                     Este campo es obligatorio
                 </ion-text>
             </p>
+            <ion-item no-padding class="itemcaptura animated fadeInUp">
+                <ion-label position="floating">
+                    <ion-icon name="telefono" item-start></ion-icon>
+                    Teléfono
+                </ion-label>
+                <ion-input color="secondary" type="phone" formControlName="telefono"></ion-input>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="onActclieForm.get('telefono').touched && onActclieForm.get('telefono').hasError('required')">
+                <ion-text color="danger">
+                    Este campo es obligatorio
+                </ion-text>
+            </p>
+            <ion-item no-padding class="itemcaptura animated fadeInUp">
+                <ion-label position="floating">
+                    <ion-icon name="celular" item-start></ion-icon>
+                    Celular
+                </ion-label>
+                <ion-input color="secondary" type="phone" formControlName="celular"></ion-input>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="onActclieForm.get('celular').touched && onActclieForm.get('celular').hasError('required')">
+                <ion-text color="danger">
+                    Este campo es obligatorio
+                </ion-text>
+            </p>
+
         </form>
         <ion-button *ngIf="cargo_posicion" icon-left size="small" shape="round" [disabled]="!onActclieForm.valid" color="tertiary" (click)="actualiza_ubicaciongps()">
             Actualizar
