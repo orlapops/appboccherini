@@ -1,0 +1,75 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Clientes potenciales</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="animated fadeIn">
+    <ion-grid>
+        <ion-row>
+            <ion-col size="9">
+                <ion-text color="primary">
+                    <h4 class="h4">
+                        <ion-icon size="medium" color="dark" name="clipboard"></ion-icon> Reportados</h4>
+                </ion-text>
+            </ion-col>
+            <ion-col size="3">
+                <ion-button icon-left color="tertiary" routerLink="/regcliepoten/0" shape="round" fill="solid">
+                    <ion-icon name="add"></ion-icon>
+                </ion-button>
+            </ion-col>
+        </ion-row>
+
+        <ion-row>
+            <ion-col size="12" margin-bottom>
+                <ion-card *ngIf="!clientespoten.length" class="bg-white" margin-top>
+                    <ion-card-content>
+                        <p text-center>
+                            <ion-text color="primary">No tiene clientes potenciales reportados.</ion-text>
+                        </p>
+                    </ion-card-content>
+                </ion-card>
+
+                <ion-list>
+                    <ion-item-sliding *ngFor="let clienpoten of clientespoten">
+                        <ion-item tappable routerLink="/regcliepoten/{{clienpoten.id}}">
+                            <ion-label>
+                                <h3 [ngClass]="{'fw700 text-white': !clienpoten.data.verificado}">
+                                    <div class="codigo">
+                                        <ion-icon name="checkmark" slot="start" color="primary" *ngIf="!clienpoten.data.verificado"></ion-icon>
+                                        <ion-icon name="done-all" slot="start" color="tertiary" *ngIf="clienpoten.data.verificado"></ion-icon>
+                                        <ion-text color="primary">{{clienpoten.data.codigo}}</ion-text>
+                                    </div>
+                                    <div class="fecha">
+                                        <ion-icon name="calendar" slot="end" color="tertiary" *ngIf="true"></ion-icon>
+                                        <ion-text color="primary"> {{clienpoten.data.fecha_reporta | date: 'mediumDate'}}</ion-text>
+                                    </div>
+                                </h3>
+                                <hr>
+                                <h3 class="datos">
+                                    <ion-text color="dark">{{clienpoten.data.nombre}}</ion-text>
+                                </h3>
+                                <h3 class="datos">
+                                    <ion-icon name="pin" slot="start" color="tertiary"></ion-icon>
+                                    <ion-text color="dark">{{clienpoten.data.direccion}}</ion-text>
+                                </h3>
+                                <h4 class="notavisita">
+                                    <p [ngClass]="{'text-light': !clienpoten.data.verificado}">
+                                        <ion-text color="dark">{{clienpoten.data.notas}}</ion-text>
+                                    </p>
+                                </h4>
+                            </ion-label>
+                        </ion-item>
+                        <ion-item-options *ngIf="!clienpoten.data.verificado" side="end">
+                            <ion-item-option color="danger" (click)="deleteItem(clienpoten)">Quitar</ion-item-option>
+                        </ion-item-options>
+                    </ion-item-sliding>
+                </ion-list>
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

@@ -12,8 +12,8 @@ export class UbicacionProvider {
   private watch: Subscription;
   lastUpdateTime = null;
   minFrequency = 60 * 5 * 1000 ;
-  ultlatitud = 0;
-  ultlongitud = 0;
+  ultlatitud = 4.625749001284896;
+  ultlongitud = -74.078441;
 
   constructor( private afDB: AngularFirestore,
                private geolocation: Geolocation,
@@ -30,6 +30,9 @@ export class UbicacionProvider {
     resolve(true);
     });
   }
+  public getUbicaUsuarFb(){
+    return this.afDB.collection(`/personal/`).doc(this._parEmpre.usuario.cod_usuar).valueChanges();
+}
 
   iniciarGeoLocalizacion() {
  console.log('inicia geoloca');

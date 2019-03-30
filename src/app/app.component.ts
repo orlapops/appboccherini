@@ -51,6 +51,12 @@ export class AppComponent {
         direct: 'forward',
         icon: 'book'
       },
+      {
+        title: 'Clientes Potenciales',
+        url: '/clientespoten',
+        direct: 'forward',
+        icon: 'business'
+      },
       // {
       //   title: 'Factura',
       //   url: '/factura',

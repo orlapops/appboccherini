@@ -11,6 +11,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment'
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UbicacionProvider } from '../../../providers/ubicacion/ubicacion.service';
 
 declare var google:any;
 
@@ -45,13 +46,17 @@ export class ModalActClientePage implements OnInit {
     public loadingCtrl: LoadingController,
     public _DomSanitizer: DomSanitizer,
     private formBuilder: FormBuilder,
+    public _ubicacionService: UbicacionProvider,
     private camera: Camera) { 
       console.log('llega coords:',  this.coords);
       platform.ready().then(() => {
         // La plataforma esta lista y ya tenemos acceso a los plugins.
-        this.cargo_posicion = false;
-        console.log('platfom lista');
-        this.obtenerPosicion();
+        this.cargo_posicion = true;
+        // this.coords.lat = this._ubicacionService.ultlatitud;
+        // this.coords.lng = this._ubicacionService.ultlongitud;
+          console.log('platfom lista');
+        // this.obtenerPosicion();
+
       });
     }  
 
@@ -86,15 +91,25 @@ export class ModalActClientePage implements OnInit {
     this.onActclieForm.controls['celular'].setValue(this._visitas.direc_actual.celular);
     // this.coords.lat = this.navParams.get('lat');
     // this.coords.lng = this.navParams.get('lng');
-
-    this.getAddress(this.coords).then(results=>{
-      console.log('ngoninit nueva visita modal');
-      console.log(results);
-      this.address = results[0]['formatted_address'];      
-    },errStatus=>{
-      //Aqui codigo manejo error
-    })
-
+    this._ubicacionService.getUbicaUsuarFb().subscribe((datosc: any) => {
+      console.log('susc usuar para localiza fb ', datosc);
+      this.coords.lat = datosc.latitud;
+      this.coords.lng = datosc.longitud;  
+      this.cargo_posicion = true;
+      this.getAddress(this.coords).then(results=>{
+        console.log('getAddress');
+        console.log(results);
+        this.address = results[0]['formatted_address'];      
+        const ldiract = this.onActclieForm.controls['direccion'].value;
+        console.log(ldiract);
+        if (ldiract==undefined || ldiract==''){
+          console.log('a act direccion');
+          this.onActclieForm.controls['direccion'].setValue(this.address);
+        }
+      },errStatus=>{
+        //Aqui codigo manejo error
+      })   
+    });
   }
   async presentLoading(pmensaje) {
     const loading = await this.loadingCtrl.create({
@@ -232,24 +247,22 @@ export class ModalActClientePage implements OnInit {
 guardarNuevaVisita(){
 
 }
-obtenerPosicion(): any {
-  console.log('en obtener posicion', this.coords);
-  this.geolocation
-    .getCurrentPosition()
-    .then(res => {
-      this.coords.lat = res.coords.latitude;
-      this.coords.lng = res.coords.longitude;
-      this.cargo_posicion = true;
-      console.log('res ok obtener posicion', this.coords);
-      // this.loadMap();
-    })
-    .catch(error => {
-      console.log(error.message);
-      this.coords.lat = 4.625749001284896;
-      this.coords.lng = -74.078441;
-      this.cargo_posicion = true;
-      console.log('res error obtener posicion', this.coords);
-      // this.loadMap();
-    });
-}
+// obtenerPosicion(): any {
+//   console.log('en obtener posicion', this.coords);
+//   this.geolocation
+//     .getCurrentPosition()
+//     .then(res => {
+//       this.coords.lat = res.coords.latitude;
+//       this.coords.lng = res.coords.longitude;
+//       this.cargo_posicion = true;
+//       console.log('res ok obtener posicion', this.coords);
+//     })
+//     .catch(error => {
+//       console.log(error.message);
+//       this.coords.lat = 4.625749001284896;
+//       this.coords.lng = -74.078441;
+//       this.cargo_posicion = true;
+//       console.log('res error obtener posicion', this.coords);
+//     });
+// }
 }

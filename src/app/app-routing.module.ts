@@ -30,8 +30,11 @@ const routes: Routes = [
   { path: 'support', loadChildren: './pages/support/support.module#SupportPageModule' },
   { path: 'messages', loadChildren: './pages/messages/messages.module#MessagesPageModule' },
   { path: 'message/:id', loadChildren: './pages/message/message.module#MessagePageModule' },
+  { path: 'clientespoten', loadChildren: './pages/clientespoten/clientespoten.module#ClientepotenPageModule' },
+  { path: 'regcliepoten/:id', loadChildren: './pages/regcliepoten/regcliepoten.module#RegCliepotenPageModule' },
   { path: 'location', loadChildren: './pages/modal/location/location.module#LocationPageModule' },
   { path: 'tabs', loadChildren: './tabs/tabs.module#TabsPageModule' },
+  
   // { path: 'modalNuevaVisita', loadChildren: './modal/modal-nueva-visita/modal-nueva-visita.module#ModalNuevaVisitaPageModule' },
   // { path: 'modalNuevaVisita', loadChildren: './pages/modal/modal-nueva-visita/modal-nueva-visita.module#ModalNuevaVisitaPageModule' }
   // { path: 'walkthrough', loadChildren: './pages/walkthrough/walkthrough.module#WalkthroughPageModule' }
