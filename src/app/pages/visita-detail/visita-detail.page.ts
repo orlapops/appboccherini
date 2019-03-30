@@ -307,7 +307,7 @@ export class VisitaDetailPage implements OnInit {
       estado : 'C'
     };
     if (this.validaCierreVisita()) {
-      this.presentLoading('Cerrando visita y enviando Eamil');
+      this.presentLoading('Cerrando visita y enviando Email');
       console.log('a cerrar visita');
       //Recaudar todos datos visita para al cerrar enviar resumen a netsolin, para que puede generar email
       //visita
@@ -320,15 +320,19 @@ export class VisitaDetailPage implements OnInit {
             this._visitas.getRecibosVisitaActual().subscribe((datosvr: any) => {
               console.log('Recibos visita act: ',datosvr);  
               const dvis_act = {
-                cod_tercer: this._visitas.visita_activa_copvdet.cod_tercer,
+                cod_tercer: this._visitas.visita_activa_copvdet.cod_tercer,                
                 nombre: this._visitas.visita_activa_copvdet.nombre,
                 direccion: this._visitas.visita_activa_copvdet.direccion,
-                fechaing: this._visitas.visita_activa_copvdet.cod_tercer,
+                id_dir:  this._visitas.visita_activa_copvdet.id_dir,
+                id_visita:  this._visitas.visita_activa_copvdet.id_visita,
+                id_ruta:  this._visitas.visita_activa_copvdet.id_ruta,
+                fechaing: this._visitas.visita_activa_copvdet.fechahora_ingreso,
                 fechacierre: datactvisita.fechahora_cierre
               };
-              this._visitas.genera_cierrevisita_netsolin(dvis_act,this.listaactividades,datosvp,datosvf,datosvr)
+             this._visitas.genera_cierrevisita_netsolin(dvis_act,this.listaactividades,datosvp,datosvf,datosvr)
               .then(result =>{
                 if (result){
+                  datactvisita.envio_email = true;
                 } else {
                   datactvisita.envio_email = false;
                   datactvisita.error_envemail = this._visitas.men_errocierrevisnetsolin;
@@ -344,6 +348,17 @@ export class VisitaDetailPage implements OnInit {
             });
             });
               this._visitas.actualizarVisita(this.visitaID, datactvisita);
+              const dvis_cierre = {
+                cod_tercer: this._visitas.visita_activa_copvdet.cod_tercer,                
+                nombre: this._visitas.visita_activa_copvdet.nombre,
+                direccion: this._visitas.visita_activa_copvdet.direccion,
+                id_dir:  this._visitas.visita_activa_copvdet.id_dir,
+                id_visita:  this._visitas.visita_activa_copvdet.id_visita,
+                id_ruta:  this._visitas.visita_activa_copvdet.id_ruta,
+                fechaing: this._visitas.visita_activa_copvdet.fechahora_ingreso,
+                fechacierre: datactvisita.fechahora_cierre
+              };
+              this._visitas.guardarcierrevisitaFb(this.visitaID, dvis_cierre);
               this._visitas.visitaabierta = null;
 
             });
