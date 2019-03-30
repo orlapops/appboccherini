@@ -25,6 +25,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ActividadesService } from '../../providers/actividades/actividades.service';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
+import { UbicacionProvider } from '../../providers/ubicacion/ubicacion.service';
 
 
 @Component({
@@ -88,6 +89,7 @@ export class VisitaDetailPage implements OnInit {
     public router: Router,
     private camera: Camera,
     public loadingCtrl: LoadingController,
+    public _ubicacionService: UbicacionProvider,
     public alertCtrl: AlertController,
     private impresora: BluetoothSerial
   ) {   
@@ -95,9 +97,14 @@ export class VisitaDetailPage implements OnInit {
       // La plataforma esta lista y ya tenemos acceso a los plugins.
       this.cargo_posicion = false;
       console.log('platfom lista');
-      this.obtenerPosicion();
-            // console.log('envando a pruba impresora');
-            // this.impresora.write('Hola mundo').then(() => {} );
+      this._ubicacionService.getUbicaUsuarFb().subscribe((datosc: any) => {
+        console.log('susc usuar para localiza fb ', datosc);
+        this.coords.lat = datosc.latitud;
+        this.coords.lng = datosc.longitud;  
+        this.cargo_posicion = true;
+      });
+
+      // this.obtenerPosicion();
           });
     // console.log('constructor detalle visita');
     // console.log(this.visitaID);
@@ -190,26 +197,26 @@ export class VisitaDetailPage implements OnInit {
     this._recibos.cargar_storage_formpago(this.visita.data.id_ruta, this.visita.id);
   }
 
-  obtenerPosicion(): any {
-    console.log('en obtener posicion', this.coords);
-    this.geolocation
-      .getCurrentPosition()
-      .then(res => {
-        this.coords.lat = res.coords.latitude;
-        this.coords.lng = res.coords.longitude;
-        this.cargo_posicion = true;
-        console.log('res ok obtener posicion', this.coords);
-        // this.loadMap();
-      })
-      .catch(error => {
-        console.log(error.message);
-        this.coords.lat = 4.625749001284896;
-        this.coords.lng = -74.078441;
-        this.cargo_posicion = true;
-        console.log('res error obtener posicion', this.coords);
-        // this.loadMap();
-      });
-  }
+  // obtenerPosicion(): any {
+  //   console.log('en obtener posicion', this.coords);
+  //   this.geolocation
+  //     .getCurrentPosition()
+  //     .then(res => {
+  //       this.coords.lat = res.coords.latitude;
+  //       this.coords.lng = res.coords.longitude;
+  //       this.cargo_posicion = true;
+  //       console.log('res ok obtener posicion', this.coords);
+  //       // this.loadMap();
+  //     })
+  //     .catch(error => {
+  //       console.log(error.message);
+  //       this.coords.lat = 4.625749001284896;
+  //       this.coords.lng = -74.078441;
+  //       this.cargo_posicion = true;
+  //       console.log('res error obtener posicion', this.coords);
+  //       // this.loadMap();
+  //     });
+  // }
 
   async actualizarCliente() {
     console.log('a actualizar cliente modal coords:', this.coords);
