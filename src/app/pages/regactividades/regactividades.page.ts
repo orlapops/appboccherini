@@ -70,9 +70,9 @@ export class RegActividadesPage implements OnInit {
     return rfiltro[0].descrip;
   }
   grabarActividad(){
-    const fh = Date.now();
+    const now = new Date();    
     const activigrab = {
-      registro: fh,
+      registro: now,
       tipo_act: this.cod_tipoact,
       nom_tipoact: this.nom_tipoact,
       notas: this.notaAct
@@ -93,9 +93,9 @@ export class RegActividadesPage implements OnInit {
   }
   
   modificarActividad(){
-    const fh = Date.now();
+    const now = new Date();
     const activigrab = {
-      registro: fh,
+      registro: now,
       tipo_act: this.cod_tipoact,
       nom_tipoact: this.nom_tipoact,
       notas: this.notaAct

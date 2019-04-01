@@ -152,7 +152,7 @@ export class RegPagosxtipoPage implements OnInit {
   }
 
   async  modificarFormapago() {
-    const fh = Date.now();
+    const fh = new Date();
     //validar campos minimos
     let validado = false;
     console.log("validando ", this.regpago);

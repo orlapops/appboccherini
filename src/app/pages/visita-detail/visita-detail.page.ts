@@ -148,6 +148,11 @@ export class VisitaDetailPage implements OnInit {
         // });
       this._visitas.getVisitaActual(this.visitaID).subscribe((datos: any) => {
           console.log('constructor detalle visita getVisitaActual datos:', datos, this._visitas.visitaabierta);                
+          //si latitud esta en cero dejar la de boccherini para el mapa
+          if (datos.latitud==0){
+            datos.latitud = 4.6529392;
+            datos.longitud = -74.1230245;
+          }
           this.visitaAct = datos;
           this._visitas.visita_activa_copvdet = datos;
           this.cargoVisitaActual = true;

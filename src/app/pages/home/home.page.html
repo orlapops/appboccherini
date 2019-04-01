@@ -193,8 +193,8 @@
                             <div class="fechavisita">
                                 <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
                                 <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon>
-                                <!-- <ion-text color="primary">{{visita.fecha_in.toDate() | date: 'shortDate'}}</ion-text> -->
                                 <ion-text color="primary">{{ _parEmpre.cadafecha(visita.data.fecha_in) | date: 'shortDate'}}</ion-text>
+                                <!-- <ion-text color="primary">{{ visita.data.fecha_in | date: 'shortDate'}}</ion-text> -->
                             </div>
                             <div class="horavisita">
                                 <ion-icon name="time" slot="end" color="tertiary" *ngIf="true"></ion-icon>

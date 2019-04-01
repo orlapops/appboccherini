@@ -515,6 +515,13 @@ cargaPeriodoUsuar(pcod_usuar){
                               this.visitaabierta = datos;
                             }
                           });   
+                            //recorrer visitas si latitud y longitud estan en 0 dejar la de boccherini
+                            this.visitaTodas.map(function(dato){
+                              if(dato.latitud == 0){
+                                  dato.latitud = 4.6529392;
+                                  dato.longitud = -74.1230245;
+                              }  
+                          });
                         //   console.log('Todas las visitas con id');
                         //   console.log(this.visitaTodas);                     
                           this.clasificaVisitas();

@@ -63,9 +63,9 @@ export class ActUbicacionPage implements OnInit {
   }
   
   grabarActividad(){
-    const fh = Date.now();
+    const now = new Date();
     const activigrab = {
-      registro: fh,
+      registro: now,
       tipo_act: this.cod_tipoact,
       nom_tipoact: this.nom_tipoact,
       notas: this.notaAct

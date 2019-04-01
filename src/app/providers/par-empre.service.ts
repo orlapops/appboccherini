@@ -505,7 +505,7 @@ cadafecha(cfecha){
   let mes = cfecha.slice(4,6);
   let dia = cfecha.slice(6,8);
 
-  let dfecha = new Date(ano,mes,dia,0,0,0);
+  let dfecha = new Date(ano,mes-1,dia,0,0,0);
   return dfecha;
 }
 

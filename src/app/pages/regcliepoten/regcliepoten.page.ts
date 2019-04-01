@@ -162,7 +162,7 @@ export class RegCliepotenPage implements OnInit {
   }
 
   grabarClienpoten(){
-    const fh = Date.now();
+    const now = new Date();    
     const cliepotengrab = {
       codigo: this.onActclieForm.controls['codigo'].value,
       nombre: this.onActclieForm.controls['nombre'].value,
@@ -172,7 +172,7 @@ export class RegCliepotenPage implements OnInit {
       telefono: this.onActclieForm.controls['telefono'].value,
       celular: this.onActclieForm.controls['celular'].value,
       notas: this.onActclieForm.controls['notas'].value,
-      fecha_reporta: fh,
+      fecha_reporta: now,
       verificado: false,
       usuar_crea: this._parEmpre.usuario.cod_usuar,
       num_usuar: this._parEmpre.usuario.nombre
