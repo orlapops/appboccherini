@@ -155,7 +155,8 @@ export class ProdsService implements OnInit {
       console.log('NetsolinApp.objenvrest:', NetsolinApp.objenvrest);
       let copiaobjrest = Object.assign(NetsolinApp.objenvrest);
       console.log('copiaobjrest 1:',copiaobjrest);
-      copiaobjrest.filtro = 'PTR';
+      // copiaobjrest.filtro = 'PTR';
+      copiaobjrest.filtro = this._parempre.usuario.bod_pedido;
       console.log('copiaobjrest.filtro 2:',copiaobjrest.filtro);
       console.log('copiaobjrest 2:',copiaobjrest);
 
@@ -658,7 +659,7 @@ export class ProdsService implements OnInit {
   }
 
   
-  genera_pedido_netsolin() {
+  genera_pedido_netsolin(pid_dir) {
     console.log('dataos para generar pedido this._visitas.visita_activa_copvdet:', this._visitas.visita_activa_copvdet);
     console.log('Pedido a genera this.pedido): ', this.pedido);
     // return new Promise((resolve, reject) => {
@@ -672,6 +673,7 @@ export class ProdsService implements OnInit {
       let paramgrab = {
         // datos_gen: this._visitas.visita_activa_copvdet.datosgen,
         datos_gen: this._visitas.visita_activa_copvdet,
+        id_dirdespa: pid_dir,
         items_pedido: this.pedido,
         usuario: this._parempre.usuario
       };

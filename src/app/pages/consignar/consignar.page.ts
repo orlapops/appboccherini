@@ -17,6 +17,7 @@ export class ConsignarPage implements OnInit {
   formpagefec: Array<any> = [];
   formpagcheq: Array<any> = [];
   consignadas: Array<any> = [];
+  ultconsigna: Array<any> = [];
   formaspago: Array<any> = [];
   cargoformpago = false;
   totefectivo = 0;
@@ -64,10 +65,28 @@ export class ConsignarPage implements OnInit {
 
   ngOnInit() {
     this.getFormPagodia();
+    this.getUltConsignaPersona();
     // this.totalpago();
     console.log('for pagos: ');
   }
 
+
+  getUltConsignaPersona() {
+    this.ultconsigna = [];
+    return new Promise((resolve, reject) => {
+      this._consigna.getUltConsignaPersona()
+      .subscribe((datos: any) =>{
+        datos.forEach((itemcons: any) => {
+          this.ultconsigna.push({
+            id: itemcons.payload.doc.id,
+            data: itemcons.payload.doc.data()
+          });
+        });
+        console.log('ultconsigna:',this.ultconsigna);
+        return resolve(true);
+      });
+    });
+  }
   getFormPagodia() {
     this.formaspago = [];
     return new Promise((resolve, reject) => {
@@ -122,6 +141,30 @@ export class ConsignarPage implements OnInit {
         this.mostrandoresulado = true;
         this.grabo_consigna = true;
         console.log('retorna genera_consigna_netsolin res:', res);
+        console.log('Grabo consig netsolin de efectivo:',obj_graba.efectivo);
+        console.log('Grabo consig netsolin de cheques:',obj_graba.cheques);
+        console.log('Grabo consig netsolin de this.formaspago:',this.formaspago);        
+        obj_graba.efectivo.forEach(element => {
+          let idreg = element.cod_docume.trim()+element.num_docume.trim()+element.formpago.trim();
+          let objact = {
+            consignado: true,
+            cod_consig: this._consigna.consig_grabada.cod_docume,
+            num_dconsig: this._consigna.consig_grabada.num_docume,
+            link_imgfb: ''
+          };
+          this._consigna.actconsignacion(idreg,objact);
+        });
+        obj_graba.cheques.forEach(element => {
+          let idreg = element.cod_docume.trim()+element.num_docume.trim()+element.formpago.trim();
+          let objact = {
+            consignado: true,
+            cod_consig: this._consigna.consig_grabada.cod_docume,
+            num_dconsig: this._consigna.consig_grabada.num_docume,
+            link_imgfb: ''
+          };
+          this._consigna.actconsignacion(idreg,objact);
+        });
+
       } else {
         this.mostrandoresulado = true;
         this.grabo_consigna = false;

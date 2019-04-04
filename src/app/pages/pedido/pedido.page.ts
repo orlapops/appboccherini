@@ -21,6 +21,7 @@ export class PedidoPage implements OnInit {
   grabo_pedido = false;
   mostrandoresulado = false;
   itemprodaped: any;
+  direcdespa:any;
   constructor(
     public navCtrl: NavController,
     public btCtrl: BluetoothSerial,
@@ -45,11 +46,19 @@ export class PedidoPage implements OnInit {
       })
       .catch(error => alert(JSON.stringify(error)));
   }
+  changedirec(e) {
+    console.log("changedirec e: ", e);
+    console.log("e.detail.value", e.detail.value);
+    console.log("this.direcdespa: ", this.direcdespa);
+  }
 
   getPedido() {
     this._prods.getPedido()
       .then(data => {
-        // console.log('getfavoritos data', data);
+        console.log('getPedido data', data);
+        console.log('getPedido _cliente.clienteActual', this._cliente.clienteActual);
+        console.log('getPedido this._visitas.visita_activa_copvdet', this._visitas.visita_activa_copvdet);
+         this.direcdespa = this._visitas.visita_activa_copvdet.id_dir;
          this.pedido = data; 
          this.actualizar_totalped();
         });
@@ -81,7 +90,7 @@ export class PedidoPage implements OnInit {
   }
   realizar_pedido(){
     this.grabando_pedido = true;
-    this._prods.genera_pedido_netsolin()
+    this._prods.genera_pedido_netsolin(this.direcdespa)
     .then(res => {
       if (res){
         this.mostrandoresulado = true;

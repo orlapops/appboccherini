@@ -199,4 +199,17 @@ export class ConsignacionesService implements OnInit {
       .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`)
       .valueChanges();
   }
+  public actconsignacion(id,objact) {
+    console.log("en getFormPagodia");
+    const now = new Date();
+    //extraemos el día mes y año
+    const dia = now.getDate();
+    const mes = now.getMonth() + 1;
+    const ano = now.getFullYear();
+    console.log(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`);
+    return this.fbDb
+      .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`)
+      .doc(id)
+      .update(objact);
+  }
 }

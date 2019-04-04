@@ -77,9 +77,17 @@
                 </ion-col>
             </ion-row>
         </ion-grid>
-        <ion-button *ngIf="!grabando_pedido && !mostrandoresulado" slot="end" shape="round" color="success" (click)="realizar_pedido()">
-            Realizar Pedido
-        </ion-button>
+        <div *ngIf="!grabando_pedido && !mostrandoresulado">
+            <ion-item class="bg-white">
+                <ion-label color="dark">Local:</ion-label>
+                <ion-select placeholder="Seleccione un local" [(ngModel)]="direcdespa" (ionChange)="changedirec($event)">
+                    <ion-select-option *ngFor="let local of _cliente.direcciones" [value]="local.id_dir">{{local.direccion+' - '+local.ciudad}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-button *ngIf="!grabando_pedido && !mostrandoresulado" slot="end" shape="round" color="success" (click)="realizar_pedido()">
+                Realizar Pedido
+            </ion-button>
+        </div>
     </div>
     <ion-card *ngIf="grabando_pedido && !mostrandoresulado">
         <ion-item padding class="animated fadeIn fast">

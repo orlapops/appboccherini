@@ -47,6 +47,7 @@ export class HomePage implements OnInit {
   visitas: any;
   cargovisitas = false;
   visitalocation: string;
+  cargocoordenadas = false;
 
   agmStyles: any[] = environment.agmStyles;
   user: any = {};
@@ -85,13 +86,16 @@ export class HomePage implements OnInit {
       console.log("En constructor home usuario: " + _parEmpre.usuario.cod_usuar);
       // La plataforma esta lista y ya tenemos acceso a los plugins.
       // this._parEmpre.reg_log('Home', 'Dispositivo listo');
-      this.obtenerPosicion();
+      // this.obtenerPosicion();
       this._ubicacionService.iniciarGeoLocalizacion();
       this._ubicacionService.inicializarUsuario()
         .then(()=>{
           this._ubicacionService.usuario.valueChanges()
             .subscribe( data => {
-            this.user = data;
+              this.user = data;
+              this.coords.lat = data.latitud;
+              this.coords.lng = data.longitud;
+              this.cargocoordenadas = true;  
             });
         });
     });

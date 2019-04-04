@@ -42,7 +42,14 @@ export class UbicacionProvider {
         // resp.coords.latitude
       // resp.coords.longitude
 
-      this.usuario.update({
+      // this.usuario.update({
+      //   latitud: resp.coords.latitude,
+      //   longitud: resp.coords.longitude
+      // });
+      //Actualizar o crear 
+      this.usuario.set({
+        cod_person: this._parEmpre.usuario.cod_usuar,
+        nombre: this._parEmpre.usuario.nombre,
         latitud: resp.coords.latitude,
         longitud: resp.coords.longitude
       });
