@@ -1,8 +1,10 @@
 import { Component, OnInit } from "@angular/core";
+import { NavController, ToastController } from '@ionic/angular';
 import { Injectable } from "@angular/core";
 import { NetsolinApp } from "../../shared/global";
 import { ParEmpreService } from "../par-empre.service";
 import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireStorageReference, AngularFireStorage } from '@angular/fire/storage';
 import {
   HttpClient,
   HttpHeaders,
@@ -30,7 +32,9 @@ export class ConsignacionesService implements OnInit {
   consig_grabada: any;
   constructor(
     public _parempre: ParEmpreService,
+    public toastCtrl: ToastController,
     private fbDb: AngularFirestore,
+    private afStorage: AngularFireStorage,
     private platform: Platform,
     private storage: Storage,
     private http: HttpClient,
@@ -43,6 +47,12 @@ export class ConsignacionesService implements OnInit {
     // this.cartera = this._cliente.clienteActual.cartera;
     // console.log('cartera:', this.cartera);
   }
+  public getconsigna(id){
+    return this.fbDb
+    .collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones`)
+    .doc(id).valueChanges();
+}
+
   genera_consigna_netsolin(obj_graba){
     console.log("dataos para generar consigna:",obj_graba);
     return new Promise((resolve, reject) => {
@@ -212,4 +222,30 @@ export class ConsignacionesService implements OnInit {
       .doc(id)
       .update(objact);
   }
+
+  actualizaFotoConsignafirebase(idconsig, imageURL): Promise<any> {
+    const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_consigna/${this._parempre.usuario.cod_usuar}/consignacion/${idconsig}`);
+    return storageRef
+      .putString(imageURL, 'base64', {
+        contentType: 'image/png',
+      })
+      .then(() => {
+        // this._parempre.reg_log('a actualizar img fb clie 2 then: ' , idclie);
+        // console.log('a a ctualizar foto cliente ', idclie);          
+        return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
+            this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones/`).doc(idconsig).update({link_imgfb: linkref});
+            const toast = await this.toastCtrl.create({
+              showCloseButton: true,
+              message: 'Se actualizo la foto consignación.',
+              duration: 2000,
+              position: 'bottom'
+            });
+            toast.present();
+        }); 
+    })
+    .catch((error) => {
+      console.log('Error actualizaFotoConsignafirebase putString img:', error);
+    });
+  }
+
 }

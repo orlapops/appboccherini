@@ -36,6 +36,7 @@ import { CarritoFacturaService } from './providers/carrito.factura.service';
 import { ClienteProvider } from './providers/cliente.service';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { ModalActClientePageModule } from './pages/modal/modal-actcliente/modal-actcliente.module';
+import { ModalActConsigPageModule } from './pages/modal/modal-actconsig/modal-actconsig.module';
 import { UbicacionProvider } from './providers/ubicacion/ubicacion.service';
 import { ActividadesService } from './providers/actividades/actividades.service';
 import { MessageService } from './providers/message/message.service';
@@ -61,6 +62,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ImagePageModule,
     LocationPageModule,
     ModalActClientePageModule,
+    ModalActConsigPageModule,
     AngularFireModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,

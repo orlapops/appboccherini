@@ -156,6 +156,8 @@ reg_log(titulo, mensaje){
 });
 }
 
+
+
   //Obtiene tipos actividades de FB
   public getbancosFB() {
     return this.fbDb

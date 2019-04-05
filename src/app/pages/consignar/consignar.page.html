@@ -4,7 +4,7 @@
             <ion-back-button defaultHref="home"></ion-back-button>
         </ion-buttons>
         <!-- <ion-title>Items Recibo de Caja</ion-title> -->
-        <ion-title class="headercliente">Por Consignar</ion-title>
+        <ion-title class="headercliente">Consignaciones</ion-title>
         <!-- <ion-title class="headercliente">{{_visitas.clienteAct.cliente}}</ion-title> -->
 
     </ion-toolbar>
@@ -20,7 +20,7 @@
         <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
         <br> No tiene items por consignar
     </div>
-    <div *ngIf="!grabando_consigna && !mostrandoresulado && (formpagefec.length != 0 || formpagcheq.length != 0 || consignadas.length != 0)" class="bg-white">
+    <div *ngIf="!grabando_consigna && !mostrandoresulado && (formpagefec.length != 0 || formpagcheq.length != 0 || ultconsigna.length != 0)" class="bg-white">
         <!-- <ion-card class="bg-primary" no-margin> -->
         <ion-card no-margin>
             <ion-card-content>
@@ -28,16 +28,16 @@
                 <ion-segment [(ngModel)]="vistapagos" color="light" margin-bottom>
                     <!-- <ion-segment [(ngModel)]="vistapagos" color="light"> -->
                     <ion-segment-button value="verefec">
-                        <ion-label color="tertiary">Efect</ion-label>
+                        <ion-label color="tertiary">Efectivo</ion-label>
                     </ion-segment-button>
                     <ion-segment-button value="vercheques">
-                        <ion-label color="tertiary">Cheq</ion-label>
+                        <ion-label color="tertiary">Cheques</ion-label>
                     </ion-segment-button>
                     <ion-segment-button value="verpagar">
                         <ion-label color="tertiary">Consignar</ion-label>
                     </ion-segment-button>
                     <ion-segment-button value="verconsignadas">
-                        <ion-label color="tertiary">Realizadas</ion-label>
+                        <ion-label color="tertiary">Efectuadas</ion-label>
                     </ion-segment-button>
                 </ion-segment>
                 <div class="ccFlags" [ngSwitch]="vistapagos">
@@ -170,32 +170,54 @@
                     </ion-grid>
                     <ion-grid *ngSwitchCase="'verconsignadas'">
                         <ion-row>
-                            <ion-col size="12" margin-bottom>
-                                <ion-card no-margin margin-vertical class="bg-white margin-top margin-bottom" *ngFor="let item of ultconsigna">
+                            <ion-col size="12" no-margin>
+                                <ion-card no-margin class="bg-white margin-top margin-bottom" *ngFor="let item of ultconsigna">
                                     <ion-grid>
                                         <ion-row>
                                             <ion-col size="5">
                                                 <div>
-                                                    <!-- <p class="text-align">{{item.data.cod_docume + ' - ' + item.data.cod_docume}}</p> -->
-                                                    <a routerLink="/prod-detail/{{item.cod_refinv}}">
-                                                        <img *ngIf="item.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(item.link_imgfb)" />
-                                                        <img *ngIf="!item.link_imgfb" src="assets/img/imagennodisponible.jpg" />
+                                                    <a (click)="presentImage(item.data.link_imgfb)">
+                                                        <img *ngIf="item.data.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(item.data.link_imgfb)" />
+                                                        <img *ngIf="!item.data.link_imgfb" src="assets/img/imagennodisponible.jpg" />
                                                     </a>
                                                 </div>
                                             </ion-col>
                                             <ion-col size="7">
-                                                <div>
-                                                    <ion-item>
+                                                <ion-row>
+                                                    <ion-col size="8">
+                                                        {{item.data.cod_docume+'/'+item.data.num_docume}}
+                                                    </ion-col>
+                                                    <ion-col size="4">
+                                                        {{item.data.fecha | date: 'shortDate'}}
+                                                    </ion-col>
+                                                </ion-row>
+                                                <ion-row>
+                                                    <ion-col size="12">
+                                                        Número: {{ item.data.referencia }}
+                                                    </ion-col>
+                                                </ion-row>
+
+                                                <ion-row>
+                                                    <ion-col size="12">
+                                                        <p class="saldo-cartera">Valor:{{item.data.valor | currency }}</p>
+                                                    </ion-col>
+
+                                                </ion-row>
+                                                <ion-row>
+                                                    <ion-col>
+                                                        <ion-button size="small" shape="round" expand="full" color="warning" (click)="actualizarFotoconsigna(item.id)">
+                                                            <ion-icon slot="start" name="book"></ion-icon>
+                                                            Act. Foto
+                                                        </ion-button>
+                                                    </ion-col>
+                                                </ion-row>
+                                                <!-- <div>
+                                                    <ion-item tappable (click)="actualizarFotoconsigna(item.id)">
                                                         <p text-capitalize>
                                                             {{item.data.cod_docume + ' - ' + item.data.num_docume}} {{item.data.fecha | date: 'short'}}
-                                                            <!-- <br> Existencias: {{item.existencia}} Precio: {{item.precio_ven | currency}} -->
                                                         </p>
                                                     </ion-item>
-                                                    <!-- <ion-button size="small" shape="round" expand="full" color="success" routerLink="/prod-detail/{{item.cod_refinv}}">
-                                                    <ion-icon slot="start" name="cart"></ion-icon>
-                                                    Detalle Producto
-                                                </ion-button> -->
-                                                </div>
+                                                </div> -->
                                             </ion-col>
                                         </ion-row>
                                     </ion-grid>

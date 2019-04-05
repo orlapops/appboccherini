@@ -4,6 +4,7 @@ import { NavController, MenuController, LoadingController } from '@ionic/angular
 import { AngularFireModule } from '@angular/fire';
 import { AlertController } from '@ionic/angular';
 import { ParEmpreService } from '../../providers/par-empre.service';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-licencia',
@@ -18,10 +19,16 @@ export class LicenciaPage implements OnInit {
     public menuCtrl: MenuController,
     public loadingCtrl: LoadingController,
     private formBuilder: FormBuilder,
-    
+    private fbDbNets: AngularFirestore,    
     public _parEmpreProv: ParEmpreService,
     public alertCtrl: AlertController,
-      ) { }
+      ) {
+        console.log('constructor licencia ');
+        this.getconsultoresFBnetsolin()
+        .subscribe( (data:any) =>{
+          console.log('data leida consultores: ', data);
+        });
+       }
       ionViewWillEnter() {
         this.menuCtrl.enable(false);
       }
@@ -33,6 +40,13 @@ export class LicenciaPage implements OnInit {
       ])]
     });    
   }
+
+    //Obtiene tipos consultores FB Netsolin
+    public getconsultoresFBnetsolin() {
+      return this.fbDbNets
+        .collection("bancos")
+        .valueChanges();
+    }
   registrar(){
     console.log('evento registrar click');
     console.log(this.onRegisterForm.get('nitEmpre').value);

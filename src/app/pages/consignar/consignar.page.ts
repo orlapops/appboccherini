@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, ActionSheetController, ToastController, ModalController, Platform, LoadingController, AlertController } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
 import { VisitasProvider } from '../../providers/visitas/visitas.service';
 import { ParEmpreService } from '../../providers/par-empre.service';
@@ -7,6 +7,8 @@ import { ClienteProvider } from '../../providers/cliente.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 import { ConsignacionesService } from '../../providers/consignaciones/consignaciones.service';
+import { ImagePage } from './../modal/image/image.page';
+import { ModalActConsigPage } from '../modal/modal-actconsig/modal-actconsig.page';
 
 @Component({
   selector: 'app-consignacion',
@@ -53,6 +55,9 @@ export class ConsignarPage implements OnInit {
     public _visitas: VisitasProvider,
     public _cliente: ClienteProvider,
     public _consigna: ConsignacionesService,
+    public toastCtrl: ToastController,
+    public modalCtrl: ModalController,
+    public loadingCtrl: LoadingController,
     public _DomSanitizer: DomSanitizer,
     ) {
           //cargar bancos de firebase
@@ -69,7 +74,43 @@ export class ConsignarPage implements OnInit {
     // this.totalpago();
     console.log('for pagos: ');
   }
+  async actualizarFotoconsigna(idconsig) {
+    console.log('a actualizar actualizarFotoconsigna  modal idconsig:', idconsig);
+    const modal = await this.modalCtrl.create({
+      component: ModalActConsigPage,
+      // componentProps: { fromto: fromto, search: this.search }
+      componentProps: { idcs: idconsig }
+    });
+    return await modal.present();
+  }
 
+
+  async presentImage(image: any) {
+    const modal = await this.modalCtrl.create({
+      component: ImagePage,
+      componentProps: { value: image }
+    });
+    return await modal.present();
+  }
+
+  async presentLoading(pmensaje) {
+    const loading = await this.loadingCtrl.create({
+      message: pmensaje,
+      spinner: 'dots',
+      duration: 3000
+    });
+    return await loading.present();
+  }
+
+  async presentError(pmensaje) {
+    const alert2 = await this.alertCtrl.create({
+      header: 'Error',
+      message: pmensaje,
+      buttons: ['Enterado'],
+      cssClass: 'alerterror'
+    });
+    return await alert2.present();
+  }
 
   getUltConsignaPersona() {
     this.ultconsigna = [];

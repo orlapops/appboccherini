@@ -1,0 +1,38 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Actualizar Foto Consignación</ion-title>
+        <ion-buttons slot="end">
+            <ion-button size="small" shape="round" (click)="cerrarModal()" color="tertiary">
+                <ion-icon slot="start" name="close"></ion-icon> Cerrar
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <!-- <ion-toolbar color="primary">
+        <ion-searchbar type="text" placeholder="Find location" animated="true" (ionInput)="setFilteredItems($event)"></ion-searchbar>
+    </ion-toolbar> -->
+</ion-header>
+
+<ion-content padding>
+    <ion-card>
+        <ion-card-header>
+            <ion-text color="primary text-align">
+                <h6 class="headerdirec">
+                    <ion-icon size="medium" color="dark" name="key"></ion-icon>{{idcs +'-'+ consignacion.referencia }}</h6>
+                <h6 class="headerdirec">
+                    <ion-icon size="medium" color="dark" name="pricetag"></ion-icon>{{consignacion.valor | currency }}</h6>
+            </ion-text>
+
+            <!-- {{ _clientes.clienteActual.cliente }}! -->
+            <!-- <img [src]="imagenPreview" /> -->
+        </ion-card-header>
+        <ion-card-content>
+            <!-- <ion-item> -->
+            <img *ngIf="consignacion.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(consignacion.link_imgfb)" />
+            <img *ngIf="!consignacion.link_imgfb" src="assets/img/imagennodisponible.jpg" />
+            <ion-button icon-left size="small" shape="round" color="tertiary" (click)="mostrar_camara()">
+                Actualizar Foto
+                <ion-icon name="camera"></ion-icon>
+            </ion-button>
+        </ion-card-content>
+    </ion-card>
+</ion-content>

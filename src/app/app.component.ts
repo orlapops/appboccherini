@@ -194,7 +194,10 @@ export class AppComponent {
 
   logout() {
     this.ubicacionService.detenerUbicacion();
-    this.navCtrl.navigateRoot('login');
+    this._parEmpreProv.borrarUsuarioStorage();
+    this._parEmpreProv.borrarLicenciaStorage();
+    this.navCtrl.navigateRoot('/licencia');
+    // this.navCtrl.navigateRoot('login');
   }
 
 }
