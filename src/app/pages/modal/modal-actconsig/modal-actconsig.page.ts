@@ -78,7 +78,7 @@ export class ModalActConsigPage implements OnInit {
       console.log('en mostrar camara2 imageData:',imageData);
       this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
       console.log('this.imagenPreview:', this.imagenPreview);
-      this._consigna.actualizaFotoConsignafirebase(this.idcs,imageData)
+      this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData)
      }, (err) => {
       console.log('Error en camara', JSON.stringify(err));
      });

@@ -223,7 +223,11 @@ export class ConsignacionesService implements OnInit {
       .update(objact);
   }
 
-  actualizaFotoConsignafirebase(idconsig, imageURL): Promise<any> {
+  actualizaFotoConsignafirebase(idconsig,fecha, imageURL): Promise<any> {
+    //extraemos el día mes y año
+    const dia = fecha.getDate();
+    const mes = fecha.getMonth() + 1;
+    const ano = fecha.getFullYear();
     const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_consigna/${this._parempre.usuario.cod_usuar}/consignacion/${idconsig}`);
     return storageRef
       .putString(imageURL, 'base64', {
@@ -233,7 +237,10 @@ export class ConsignacionesService implements OnInit {
         // this._parempre.reg_log('a actualizar img fb clie 2 then: ' , idclie);
         // console.log('a a ctualizar foto cliente ', idclie);          
         return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
-            this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones/`).doc(idconsig).update({link_imgfb: linkref});
+            this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/consignaciones/`)
+              .doc(idconsig).update({link_imgfb: linkref});
+            this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones/`)
+              .doc(idconsig).update({link_imgfb: linkref});
             const toast = await this.toastCtrl.create({
               showCloseButton: true,
               message: 'Se actualizo la foto consignación.',
