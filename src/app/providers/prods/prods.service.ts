@@ -369,7 +369,7 @@ export class ProdsService implements OnInit {
     // console.log("buscarProductoPed searchKey:", searchKey);
     let key: string = searchKey.toUpperCase();
     // console.log("buscarProductoPed key:", key);
-    console.log(this.inventarioPed);
+    // console.log(this.inventarioPed);
     return Promise.resolve(
       this.inventarioPed.filter(
         (item: any) =>

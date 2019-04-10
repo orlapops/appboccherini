@@ -410,29 +410,41 @@ export class VisitaDetailPage implements OnInit {
   buscar_productos($event){
 
     this.q = $event.target.value;
-    // console.log('buscar_productos: ', this.q );
+    console.log('a buscar producto ',this.q);
+    if (this.q ==''){
+      console.log('no buscar por vacio');
+    } else {
+  // console.log('buscar_productos: ', this.q );
     this.searching = true;
     // this._visitas.buscarProducto(this.q).then(lbusq => {
     this._prods.buscarProducto(this.q).then(lbusq => {
       // console.log('lo buscado por producto: ' , lbusq);
       this.productos_bus = lbusq;
+      console.log('resultado busqueda ',this.productos_bus);
       this.searching = false;
       // console.log('lo buscado por producto  this.productos_bus: ' ,  this.productos_bus);
 
     });    
   }
-    buscar_productosped($event){
+}
+    buscar_productosped($event){      
       this.qped = $event.target.value;
-      // console.log('buscar_productos ped: ', this.qped );
+      console.log('a buscar producto ',this.qped);
+      if (this.qped==''){
+        console.log('no buscar por vacio');
+      } else {
+      console.log('buscar_productos ped: ', this.qped );
       this.searchingped = true;
       // this._visitas.buscarProducto(this.q).then(lbusq => {
       this._prods.buscarProductoPed(this.qped).then(lbusq => {
         // console.log('lo buscado por producto: ' , lbusq);
         this.productos_busped = lbusq;
+        console.log('resultado busqueda ',this.productos_busped);
         this.searchingped = false;
         // console.log('lo buscado por producto  this.productos_bus: ' ,  this.productos_busped);
   
       });    
+    }
     //     if (this.q != '') {
   //       this.startAt.next(this.q);
   //       this.endAt.next(this.q + "\uf8ff");

@@ -323,7 +323,7 @@
                     <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
                     <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
                     <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
-                    <ion-searchbar [(ngModel)]="buscar_item" (ionInput)="buscar_productos($event)" placeholder="Buscar Producto"></ion-searchbar>
+                    <ion-searchbar [(ngModel)]="buscar_item" debounce="4000" (ionChange)="buscar_productos($event)" placeholder="Buscar Producto"></ion-searchbar>
                     <div *ngIf="searching" class="spinner-container">
                         <ion-spinner></ion-spinner>
                     </div>
@@ -374,7 +374,7 @@
                     <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
                     <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
                     <!-- <hr class="bg-tertiary"> -->
-                    <ion-searchbar class="margin-top" [(ngModel)]="buscar_itemped" (ionInput)="buscar_productosped($event)" placeholder="Buscar producto"></ion-searchbar>
+                    <ion-searchbar class="margin-top" debounce="4000" [(ngModel)]="buscar_itemped" (ionChange)="buscar_productosped($event)" placeholder="Buscar producto"></ion-searchbar>
                     <div *ngIf="searchingped" class="spinner-container">
                         <ion-spinner></ion-spinner>
                     </div>
