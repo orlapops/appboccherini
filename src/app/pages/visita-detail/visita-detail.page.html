@@ -107,6 +107,11 @@
                             <ion-icon name="log-in"></ion-icon>
                         </ion-fab-button>
                     </ion-fab>
+                    <ion-fab *ngIf="visitaAct.estado == 'C'" vertical="top" horizontal="end" slot="fixed">
+                        <ion-fab-button color="warning" (click)="registrarReingresoVisita()">
+                            <ion-icon name="log-in"></ion-icon>
+                        </ion-fab-button>
+                    </ion-fab>
                     <ion-fab *ngIf="visitaAct.estado == 'A' && cargo_posicion" vertical="center" horizontal="start" slot="fixed">
                         <ion-fab-button color="warning" (click)="actualizarCliente()">
                             <ion-icon name="pin"></ion-icon>
@@ -131,6 +136,12 @@
         <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon> -->
                                     Ingreso:
                                     <ion-text color="primary">{{ visitaAct.fechahora_ingreso | date: 'short'}}</ion-text>
+                                </div>
+                                <div *ngIf="visitaAct.fechahora_reingreso && (visitaAct.estado == 'A' || visitaAct.estado == 'C')">
+                                    <!-- <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
+        <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon> -->
+                                    Reingreso:
+                                    <ion-text color="primary">{{ visitaAct.fechahora_reingreso | date: 'short'}}</ion-text>
                                 </div>
                                 <div *ngIf="visitaAct.estado == 'C'">
                                     Salio:

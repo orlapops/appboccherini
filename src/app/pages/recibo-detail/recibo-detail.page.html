@@ -114,6 +114,11 @@
                 {{oblshop.dias_venci }} Días Vencido
             </ion-badge>
         </ion-item>
+        <ion-item *ngIf="!paga_efectivo" class="bg-white">
+            <ion-label color="dark">Fecha Base:</ion-label>
+            <ion-datetime slot="end" no-padding no-margin class="text-primary fechacons" displayFormat="MM/DD/YYYY" pickerFormat="YYYY-MM-DD" min="2019" max="2032" (ionChange)="total()" [(ngModel)]="fecha_base"></ion-datetime>
+        </ion-item>
+
         <ion-item class="bg-white">
             <ion-label>Pago en Efectivo</ion-label>
             <ion-checkbox (ionChange)="total()" [(ngModel)]="paga_efectivo"></ion-checkbox>

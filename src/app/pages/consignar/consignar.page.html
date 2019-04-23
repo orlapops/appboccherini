@@ -51,10 +51,9 @@
                                                 <h3>
                                                     <div class="enviadomsg">
                                                         <ion-icon name="document" slot="start" color="secondary"></ion-icon>
-                                                        <ion-text color="primary">{{iteme.cod_docume+'/'+iteme.num_docume }}</ion-text>
+                                                        <ion-text color="primary">{{iteme.cod_docume+'/'+iteme.num_docume +' ' }} {{ iteme.fecha | date: 'mediumDate'}} </ion-text>
                                                     </div>
                                                     <div class="fechamsg">
-                                                        <ion-icon name="calendar" slot="end" color="tertiary" *ngIf="true"></ion-icon>
                                                         <ion-text color="primary"> {{iteme.valor | currency}}</ion-text>
                                                     </div>
                                                 </h3>
@@ -75,10 +74,10 @@
                                                 <h3>
                                                     <div class="enviadomsg">
                                                         <ion-icon name="document" slot="start" color="secondary"></ion-icon>
-                                                        <ion-text color="primary">{{itemc.cod_docume+'/'+itemc.num_docume }}</ion-text>
+                                                        <ion-text color="primary">{{itemc.cod_docume+'/'+itemc.num_docume +' ' }} {{ itemc.fecha | date: 'mediumDate'}} </ion-text>
                                                     </div>
                                                     <div class="fechamsg">
-                                                        <ion-icon name="calendar" slot="end" color="tertiary" *ngIf="true"></ion-icon>
+                                                        <!-- <ion-icon name="calendar" slot="end" color="tertiary" *ngIf="true"></ion-icon> -->
                                                         <ion-text color="primary"> {{itemc.valor | currency}}</ion-text>
                                                     </div>
                                                 </h3>
@@ -258,4 +257,6 @@
             Continuar
         </ion-button>
     </ion-card>
+</ion-content>>
+</ion-content>>
 </ion-content>

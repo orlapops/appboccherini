@@ -169,7 +169,7 @@ export class RecibosService implements OnInit {
             localStorage.getItem("reciboforpago" + idirecibo)
           );
           // console.log(this.formpago.length, this.formpago[this.formpago.length - 1]);
-          if (this.formpago.length > 0) {
+          if (this.formpago && this.formpago.length > 0) {
             this.formpagoCounter =
               this.formpago[this.formpago.length - 1].id + 1;
           }

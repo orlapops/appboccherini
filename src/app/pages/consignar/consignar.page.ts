@@ -69,7 +69,11 @@ export class ConsignarPage implements OnInit {
      }
 
   ngOnInit() {
-    this.getFormPagodia();
+    this.getFormPagodia()
+      .then(res => {
+        this.getFormPagoantdia();
+      });
+
     this.getUltConsignaPersona();
     // this.totalpago();
     console.log('for pagos: ');
@@ -160,7 +164,42 @@ export class ConsignarPage implements OnInit {
       });
     });
   }
-
+//formas pago dia anterior para consignaciones
+  getFormPagoantdia() {
+    return new Promise((resolve, reject) => {
+      this._consigna.getFormPagoantdia()
+      .subscribe((datos: any) =>{
+        console.log('datos dia ant',datos);
+        for (let itemp of datos) {
+          this.formaspago.push(itemp);
+        }
+        console.log('this.formaspago',this.formaspago);
+        this.cargoformpago = true;
+        for (let item of datos) {
+          if (item.formpago === "EFE" || item.formpago === "CHD") {
+            if (item.consignado){
+              this.totalconsignadas += item.valor;
+              this.consignadas.push(item);
+            } else {
+              if (item.formpago === 'EFE') {
+                this.totefectivo += item.valor;
+                this.formpagefec.push(item);
+              } else {
+                this.totalcheques += item.valor;
+                this.formpagcheq.push(item);
+              }
+            }            
+          } 
+        }
+        this.regconsig.valor = this.totefectivo + this.totalcheques;
+        console.log('Datos de formas de pago del dia leidas', datos);
+        console.log('Datos Efectivo',this.totefectivo, this.formpagefec);
+        console.log('Datos cheques',this.totalcheques, this.formpagcheq);
+        console.log('Datos Consignadas',this.totalconsignadas, this.consignadas);
+        return resolve(true);
+      });
+    });
+  }
 
 
   realizar_consigna(){

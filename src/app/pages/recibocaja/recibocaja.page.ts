@@ -160,6 +160,11 @@ export class RecibocajaPage implements OnInit {
     }
     console.log('totale actualizar_totalrecibo 2', this.tneto_recibirban, this.tneto_recibirefe);
     console.log('En promesa actualizar_totalformaspago retur');
+    console.log('this.tneto_recibirban',this.tneto_recibirban);
+    console.log('this._recibos.totformpagban',this._recibos.totformpagban);
+    console.log('this.tneto_recibirban - (this._recibos.totformpagban)',this.tneto_recibirban - (this._recibos.totformpagban));
+    
+
     return resolve(true);
   });
   }

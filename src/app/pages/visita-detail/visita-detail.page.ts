@@ -289,7 +289,22 @@ export class VisitaDetailPage implements OnInit {
       this._visitas.actualizarVisita(this.visitaID, datactvisita);      
     }
   }
-
+  registrarReingresoVisita() {
+    const datactvisita = {
+      fechahora_reingreso : Date(),
+      estado : 'A'
+    };
+    console.log('registrarIngresoVisita ', this._visitas.visitaabierta);
+    if (this._visitas.visitaabierta){
+      console.error('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre, this._visitas.visitaabierta);
+      this.presentError('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre);
+    } else {
+      console.log('No Hay visitas abiertas establece esta como abierta');
+      //dejar como visita abierta esta
+      this._visitas.visitaabierta = this.visita;
+      this._visitas.actualizarVisita(this.visitaID, datactvisita);      
+    }
+  }
   validaCierreVisita() {
     let retorna = false;
     //valida si puede cerrar visita

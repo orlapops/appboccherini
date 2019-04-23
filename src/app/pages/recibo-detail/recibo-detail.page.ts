@@ -23,6 +23,7 @@ export class ReciboDetailPage implements OnInit {
   otros_desc = 0;
   retencion = 0;
   paga_efectivo = false;
+  fecha_base = new Date().toISOString();
   abono_total = true;
   apli_desc = false;
   total_t: number;
@@ -49,9 +50,11 @@ export class ReciboDetailPage implements OnInit {
     this.oblenRecibo = this._recibo.getitemRecibo(this.num_obliga);
     //verficiar si tiene derecho a descuento
     const now = new Date();
+    this.fecha_base = new Date().toISOString();
     const fechaobli = new Date(this.oblshop.fecha_obl);
-    const diasdifechas = this._parEmpre.diferenciaEntreDiasEnDias(fechaobli, now);
-    console.log('Diferencia entre fechas:', diasdifechas, now,fechaobli, this.oblshop.dias_desc);
+    const fechabase = new Date(this.fecha_base);
+    const diasdifechas = this._parEmpre.diferenciaEntreDiasEnDias(fechaobli, fechabase);
+    console.log('Diferencia entre fechas:', diasdifechas, this.fecha_base,fechabase,fechaobli, this.oblshop.dias_desc);
     if (diasdifechas <= this.oblshop.dias_desc) {
       this.apli_desc = true;
     }
@@ -63,14 +66,21 @@ export class ReciboDetailPage implements OnInit {
         this.valor_abono = this.oblenRecibo.saldo;
         if (this.apli_desc) {
           if ( this.paga_efectivo) {
+// *            this.dcto_dchef = Math.round(this.oblshop.tot_duchas * this.oblshop.pord_duefec / 100)/100;
             this.dcto_dchef = this.oblshop.tot_duchas * this.oblshop.pord_duefec / 100;
+            this.dcto_dchef = Math.round(this.dcto_dchef * 100)/100;
             this.dcto_dchban = 0;
             this.dcto_otref = this.oblshop.tot_otros * this.oblshop.pord_otrefe / 100;
+            this.dcto_otref = Math.round(this.dcto_otref * 100)/100;
             this.dcto_otrban = 0;
           } else {
+            // this.dcto_dchban = Math.round(this.oblshop.tot_duchas * this.oblshop.pord_duban / 100)/100;
             this.dcto_dchban = this.oblshop.tot_duchas * this.oblshop.pord_duban / 100;
+            this.dcto_dchban = Math.round(this.dcto_dchban * 100)/100;
             this.dcto_dchef = 0;
+            // this.dcto_otrban = Math.round(this.oblshop.tot_otros * this.oblshop.pord_otrban / 100)/100;
             this.dcto_otrban = this.oblshop.tot_otros * this.oblshop.pord_otrban / 100;
+            this.dcto_otrban = Math.round(this.dcto_otrban * 100)/100;
             this.dcto_otref = 0;
           }
         }
@@ -92,16 +102,22 @@ export class ReciboDetailPage implements OnInit {
       if (this.apli_desc) {
         if ( this.paga_efectivo) {
           this.dcto_dchef = this.oblshop.tot_duchas * this.oblshop.pord_duefec / 100;
+          this.dcto_dchef = Math.round(this.dcto_dchef * 100)/100;
           this.dcto_dchban = 0;
-          this.dcto_otref = this.oblshop.tot_otros * this.oblshop.pord_duefec / 100;
+          this.dcto_otref = this.oblshop.tot_otros * this.oblshop.pord_otrefe / 100;
+          this.dcto_otref = Math.round(this.dcto_otref * 100)/100;
           this.dcto_otrban = 0;
         } else {
           this.dcto_dchban = this.oblshop.tot_duchas * this.oblshop.pord_duban / 100;
+          this.dcto_dchban = Math.round(this.dcto_dchban * 100)/100;
           this.dcto_dchef = 0;
           this.dcto_otrban = this.oblshop.tot_otros * this.oblshop.pord_otrban / 100;
+          this.dcto_otrban = Math.round(this.dcto_otrban * 100)/100;
           this.dcto_otref = 0;
         }
       }
+      console.log('this.dcto_dchban',this.dcto_dchban);
+      console.log('this.dcto_otrban',this.dcto_otrban);
       this.otros_desc = 0;
       this.retencion = 0;
       // this.total_t = this.oblshop.saldo;
@@ -114,18 +130,45 @@ export class ReciboDetailPage implements OnInit {
 
   total() {
     this.total_t = 0;
+    const fechaobli = new Date(this.oblshop.fecha_obl);
+    if (this.paga_efectivo) {
+      //si paga efectivo la fecha base es hoy
+      this.fecha_base = new Date().toISOString();
+    }
+    const fechabase = new Date(this.fecha_base);
+    console.log('fecha_base',this.fecha_base,fechabase);
+    console.log('fechaobli',fechaobli);
+    const diasdifechas = this._parEmpre.diferenciaEntreDiasEnDias(fechaobli, fechabase);
+    console.log('Diferencia entre fechas:', diasdifechas, this.fecha_base,fechabase,fechaobli, this.oblshop.dias_desc);
+    if (diasdifechas <= this.oblshop.dias_desc) {
+      this.apli_desc = true;
+    } else {
+      this.apli_desc = false;
+    }
+    console.log(this.apli_desc,this.abono_total,this.paga_efectivo);
     if (this.abono_total) {
       this.valor_abono = this.oblshop.saldo;
       if (this.apli_desc) {
         if ( this.paga_efectivo) {
           this.dcto_dchef = this.oblshop.tot_duchas * this.oblshop.pord_duefec / 100;
+          this.dcto_dchef = Math.round(this.dcto_dchef * 100)/100;
           this.dcto_dchban = 0;
           this.dcto_otref = this.oblshop.tot_otros * this.oblshop.pord_otrefe / 100;
+          this.dcto_otref = Math.round(this.dcto_otref * 100)/100;
           this.dcto_otrban = 0;
         } else {
-          this.dcto_dchban = this.oblshop.tot_duchas * this.oblshop.pord_duban / 100;
           this.dcto_dchef = 0;
+          // this.dcto_dchban = Math.round(this.oblshop.tot_duchas * this.oblshop.pord_duban / 100)/100;
+          this.dcto_dchban = this.oblshop.tot_duchas * this.oblshop.pord_duban / 100;
+          console.log('this.dcto_dchban',this.dcto_dchban);
+          this.dcto_dchban = Math.round(this.dcto_dchban*100)/100;
+          console.log('this.dcto_dchban',this.dcto_dchban);
+          this.dcto_dchef = 0;
+          // this.dcto_otrban = Math.round(this.oblshop.tot_otros * this.oblshop.pord_otrban / 100)/100;
           this.dcto_otrban = this.oblshop.tot_otros * this.oblshop.pord_otrban / 100;
+          console.log('this.dcto_otrban',this.dcto_otrban);
+          this.dcto_otrban = Math.round(this.dcto_otrban * 100)/100;
+          console.log('this.dcto_otrban',this.dcto_otrban);
           this.dcto_otref = 0;
         }
       }
@@ -136,7 +179,6 @@ export class ReciboDetailPage implements OnInit {
         this.dcto_otref = 0;
       }
     this.total_t = this.valor_abono;
-
     return this.total_t;
   }
 
