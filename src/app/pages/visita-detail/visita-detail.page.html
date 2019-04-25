@@ -395,7 +395,7 @@
                                 <ion-col size="5">
                                     <div>
                                         <p class="text-align">{{item.cod_refinv}}</p>
-                                        <a routerLink="/prod-detail.ped/{{item.cod_refinv}}">
+                                        <a routerLink="/prod-detail.ped/{{encodestring(item.cod_refinv)}}">
                                             <img *ngIf="item.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(item.link_imgfb)" />
                                             <img *ngIf="!item.link_imgfb" src="assets/img/imagennodisponible.jpg" />
                                         </a>
@@ -409,7 +409,7 @@
                                                 <br> Existencias: {{item.existencia}} Precio: {{item.precio_ven | currency}}
                                             </p>
                                         </ion-item>
-                                        <ion-button size="small" shape="round" expand="full" color="success" routerLink="/prod-detail.ped/{{item.cod_refinv}}">
+                                        <ion-button size="small" shape="round" expand="full" color="success" routerLink="/prod-detail.ped/{{encodestring(item.cod_refinv)}}">
                                             <ion-icon slot="start" name="cart"></ion-icon>
                                             Detalle Producto
                                         </ion-button>

@@ -88,6 +88,9 @@ export class FacturaPage implements OnInit {
     }
   }
   realizar_factura(){
+    if (this._prods.generando_factura){
+      console.log('Ya se esta generando una factura. Espere');
+    }
     this.grabando_factura = true;
     this._prods.genera_factura_netsolin()
     .then(res => {
@@ -181,6 +184,10 @@ export class FacturaPage implements OnInit {
     });
 
   }
+  public encodestring(pstring){
+    return encodeURIComponent(pstring);
+  }
+
 }
 
 

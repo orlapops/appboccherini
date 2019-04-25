@@ -30,6 +30,8 @@ export class ConsignacionesService implements OnInit {
   grb_consig = false;
   resgrb_consig = "";
   consig_grabada: any;
+  generando_consigna = false;
+
   constructor(
     public _parempre: ParEmpreService,
     public toastCtrl: ToastController,
@@ -55,6 +57,11 @@ export class ConsignacionesService implements OnInit {
 
   genera_consigna_netsolin(obj_graba){
     console.log("dataos para generar consigna:",obj_graba);
+    if (this.generando_consigna){
+      console.error('Ya se esta generando un recibo');
+      return;
+    }
+    this.generando_consigna = true;
     return new Promise((resolve, reject) => {
       let paramgrab = {
         // datos_gen: this._visitas.visita_activa_copvdet,
@@ -74,7 +81,8 @@ export class ConsignacionesService implements OnInit {
           this.errorgrb_consig = true;
           this.resgrb_consig = "No se grabo por error";
           console.error(" genera_consigna_netsolin ", data.men_error);
-         resolve(false);
+          this.generando_consigna = false;
+          resolve(false);
         } else {
           if (data.isCallbackError) {
             this.errorgrb_consig = true;
@@ -83,7 +91,8 @@ export class ConsignacionesService implements OnInit {
               this.menerrorgraba += element.menerror+' / ';  
             });            
               console.error(" Error genera_consigna_netsolin ", this.menerrorgraba);
-            resolve(false);
+              this.generando_consigna = false;
+              resolve(false);
           } else {
             this.errorgrb_consig = false;
             this.grb_consig = true;
@@ -117,10 +126,12 @@ export class ConsignacionesService implements OnInit {
             )
               .then(res => {
                 console.log("Recibo guardada res: ", res);
+                this.generando_consigna = false;
                 resolve(true);
               })
               .catch(err => {
                 console.log("Error guardando consigna en Fb", err);
+                this.generando_consigna = false;
                 resolve(false);
               });
             // resolve(true);

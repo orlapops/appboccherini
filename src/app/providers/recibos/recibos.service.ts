@@ -29,6 +29,7 @@ export class RecibosService implements OnInit {
   totformpagefec = 0;
   //total formas pago bancos consignacion y trasferencias
   totformpagban = 0;
+  generando_recibo = false;
 
   constructor(
     public _parempre: ParEmpreService,
@@ -523,6 +524,12 @@ export class RecibosService implements OnInit {
       this._visitas.visita_activa_copvdet
     );
     console.log("Recibo a genera this.recibo): ", this.recibocaja);
+    if (this.generando_recibo){
+      console.error('Ya se esta generando un recibo');
+      return;
+    }
+    this.generando_recibo = true;
+
     // return new Promise((resolve, reject) => {
     //   resolve(true);
     // });
@@ -574,6 +581,7 @@ export class RecibosService implements OnInit {
           console.error(" genera_recibo_netsolin ", data.men_error);
           // this.cargoInventarioNetsolinPed = false;
           // this.inventarioPed = null;
+          this.generando_recibo = false;
           resolve(false);
         } else {
           if (data.isCallbackError || data.error) {
@@ -586,6 +594,7 @@ export class RecibosService implements OnInit {
               " Error genera_recibo_netsolin ",
               data.messages[0].menerror
             );
+            this.generando_recibo = false;
             resolve(false);
           } else {
             this._visitas.visita_activa_copvdet.errorgrb_recibo = false;
@@ -629,10 +638,12 @@ export class RecibosService implements OnInit {
             )
               .then(res => {
                 console.log("Recibo guardada res: ", res);
+                this.generando_recibo = false;
                 resolve(true);
               })
               .catch(err => {
                 console.log("Error guardando recibo en Fb", err);
+                this.generando_recibo = false;
                 resolve(false);
               });
             // resolve(true);

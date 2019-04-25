@@ -22,8 +22,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     AgmCoreModule.forRoot({
-      // apiKey: 'AIzaSyD9BxeSvt3u--Oj-_GD-qG2nPr1uODrR0Y'
-      apiKey: 'AIzaSyBCxuyq-qQPZFoWSc7UYY1uCznmZnjfqGI'
+      // apiKey: 'AIzaSyBCxuyq-qQPZFoWSc7UYY1uCznmZnjfqGI'
+      //Abril 25 2019 habilitada facturacion
+      apiKey: 'AIzaSyBSC-DvlUcEskduxwr0LHzjTU_OS4Hea4g'      
     }),
     RouterModule.forChild(routes)
   ],

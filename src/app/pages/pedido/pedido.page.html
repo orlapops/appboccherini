@@ -1,9 +1,10 @@
 <ion-header>
     <ion-toolbar color="primary">
-        <ion-buttons slot="start">
+        <ion-buttons *ngIf="!_prods.generando_pedido" slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title class="headercliente">Items a Pedir</ion-title>
+        <ion-title *ngIf="!_prods.generando_pedido" class="headercliente">Items a Pedir</ion-title>
+        <ion-title *ngIf="_prods.generando_pedido" class="headercliente">Se esta generando un pedido</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -18,7 +19,7 @@
         <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
         <br> No tiene items a Pedir
     </div>
-    <div *ngIf="!grabando_pedido && !mostrandoresulado && pedido.length != 0" class="bg-white">
+    <div *ngIf="!_prods.generando_pedido && !grabando_pedido && !mostrandoresulado && pedido.length != 0" class="bg-white">
         <ion-grid class="btpedido-color">
             <ion-row *ngFor="let itemp of pedido; let i = index;">
                 <ion-col size="4">
@@ -29,7 +30,7 @@
                     <ion-row>
                         <ion-col>
                             <div>
-                                <ion-text color="primary" slot="start" tappable routerLink="/prod-detail.ped/{{itemp.item.cod_ref}}">
+                                <ion-text color="primary" slot="start" tappable routerLink="/prod-detail.ped/{{encodestring(itemp.item.cod_ref)}}">
                                     {{itemp.item.cod_ref}} {{itemp.item.nombre}}
                                 </ion-text>
                             </div>

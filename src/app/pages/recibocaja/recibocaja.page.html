@@ -1,10 +1,11 @@
 <ion-header>
     <ion-toolbar color="primary">
-        <ion-buttons slot="start">
+        <ion-buttons *ngIf="_recibos.generando_recibo" slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
         <!-- <ion-title>Items Recibo de Caja</ion-title> -->
-        <ion-title class="headercliente">Items Recibo de Caja</ion-title>
+        <ion-title *ngIf="!_recibos.generando_recibo" class="headercliente">Items Recibo de Caja</ion-title>
+        <ion-title *ngIf="_recibos.generando_recibo" class="headercliente">Se esta generando recibo</ion-title>
         <!-- <ion-title class="headercliente">{{_visitas.clienteAct.cliente}}</ion-title> -->
 
     </ion-toolbar>
@@ -21,7 +22,7 @@
         <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
         <br> No tiene items en Recibo de Caja
     </div>
-    <div *ngIf="!grabando_recibo && !mostrandoresulado && recibocaja.length != 0" class="bg-white">
+    <div *ngIf="!_recibos.generando_recibo && !grabando_recibo && !mostrandoresulado && recibocaja.length != 0" class="bg-white">
         <ion-card class="bg-primary" no-margin>
             <ion-card-content>
                 <!-- margin-top: -14px; -->

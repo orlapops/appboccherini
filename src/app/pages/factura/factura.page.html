@@ -1,9 +1,10 @@
 <ion-header>
     <ion-toolbar color="primary">
-        <ion-buttons slot="start">
+        <ion-buttons *ngIf="!_prods.generando_factura" slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title class="headercliente">Items a Facturar</ion-title>
+        <ion-title *ngIf="!_prods.generando_factura" class="headercliente">Items a Facturar</ion-title>
+        <ion-title *ngIf="!_prods.generando_factura" class="headercliente">Se esta generando factura</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -17,7 +18,7 @@
         <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
         <br> No tiene items a Facturar
     </div>
-    <div *ngIf="!grabando_factura && !mostrandoresulado && factura.length != 0" class="bg-white">
+    <div *ngIf="!!_prods.generando_factura && !grabando_factura && !mostrandoresulado && factura.length != 0" class="bg-white">
         <ion-grid class="btfactura-color">
             <ion-row *ngFor="let itemf of factura; let i = index;">
                 <ion-col size="4">
@@ -28,7 +29,7 @@
                     <ion-row>
                         <ion-col>
                             <div>
-                                <ion-text color="primary" slot="start" tappable routerLink="/prod-detail/{{itemf.item.cod_ref}}">
+                                <ion-text color="primary" slot="start" tappable routerLink="/prod-detail/{{encodestring(itemf.item.cod_ref)}}">
                                     {{itemf.item.cod_ref}} {{itemf.item.nombre}}
                                 </ion-text>
                             </div>

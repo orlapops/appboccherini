@@ -1,11 +1,11 @@
 <ion-header>
     <ion-toolbar color="primary">
-        <ion-buttons slot="start">
+        <ion-buttons *ngIf="!_consigna.generando_consigna" slot="start">
             <ion-back-button defaultHref="home"></ion-back-button>
         </ion-buttons>
         <!-- <ion-title>Items Recibo de Caja</ion-title> -->
-        <ion-title class="headercliente">Consignaciones</ion-title>
-        <!-- <ion-title class="headercliente">{{_visitas.clienteAct.cliente}}</ion-title> -->
+        <ion-title *ngIf="!_consigna.generando_consigna" class="headercliente">Consignaciones</ion-title>
+        <ion-title *ngIf="!_consigna.generando_consigna" class="headercliente">Se esta generando consignación</ion-title>
 
     </ion-toolbar>
 </ion-header>
@@ -20,7 +20,7 @@
         <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
         <br> No tiene items por consignar
     </div>
-    <div *ngIf="!grabando_consigna && !mostrandoresulado && (formpagefec.length != 0 || formpagcheq.length != 0 || ultconsigna.length != 0)" class="bg-white">
+    <div *ngIf="!_consigna.generando_consigna && !grabando_consigna && !mostrandoresulado && (formpagefec.length != 0 || formpagcheq.length != 0 || ultconsigna.length != 0)" class="bg-white">
         <!-- <ion-card class="bg-primary" no-margin> -->
         <ion-card no-margin>
             <ion-card-content>
@@ -258,5 +258,3 @@
         </ion-button>
     </ion-card>
 </ion-content>>
-</ion-content>>
-</ion-content>

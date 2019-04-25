@@ -170,6 +170,9 @@ export class RecibocajaPage implements OnInit {
   }
 
   realizar_recibo(){
+    if (this._recibos.generando_recibo){
+      console.log('Ya se esta generando recibo. Espere');
+    }
     this.grabando_recibo = true;
     console.log('a generar recibo ', this.recibocaja,  this._recibos.recibocaja ,  this._recibos.formpago);
     this._recibos.genera_recibo_netsolin(this.total_recibo, this.tdcto_dchban, this.tdcto_otrban, 

@@ -89,6 +89,9 @@ export class PedidoPage implements OnInit {
     }
   }
   realizar_pedido(){
+    if (this._prods.generando_pedido){
+      console.log('Ya se esta generando un pedido. Espere');
+    }
     this.grabando_pedido = true;
     this._prods.genera_pedido_netsolin(this.direcdespa)
     .then(res => {
@@ -179,6 +182,10 @@ export class PedidoPage implements OnInit {
     });
 
   }
+  public encodestring(pstring){
+    return encodeURIComponent(pstring);
+  }
+  
 }
 
 

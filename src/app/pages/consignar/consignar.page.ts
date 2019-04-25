@@ -203,6 +203,10 @@ export class ConsignarPage implements OnInit {
 
 
   realizar_consigna(){
+    if (this._consigna.generando_consigna){
+      console.log('Ya se esta generando un pedido. Espere');
+    }
+
     this.grabando_consigna = true;
     const obj_graba = {
       cta_banco: this.regconsig.cta_banco,

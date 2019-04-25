@@ -33,6 +33,8 @@ export class ProdsService implements OnInit {
   pedidoCounter: number = 0;
   pedido: Array<any> = [];
   itemPedido: ItemFact;
+  generando_pedido = false;
+  generando_factura = false;
 
   constructor(
     public _parempre: ParEmpreService,
@@ -665,6 +667,11 @@ export class ProdsService implements OnInit {
     // return new Promise((resolve, reject) => {
     //   resolve(true);
     // });
+    if (this.generando_pedido){
+      console.error('Ya se esta generando un pedido');
+      return;
+    }
+    this.generando_pedido = true;
     this._visitas.visita_activa_copvdet.grb_pedido = false;
     this._visitas.visita_activa_copvdet.resgrb_pedido = '';
     this._visitas.visita_activa_copvdet.pedido_grabado = null;
@@ -692,6 +699,7 @@ export class ProdsService implements OnInit {
           console.error(" genera_pedido_netsolin ", data.men_error);
           // this.cargoInventarioNetsolinPed = false;
           // this.inventarioPed = null;
+          this.generando_pedido = false;
           resolve(false);
         } else {
           if (data.isCallbackError || data.error) {
@@ -700,6 +708,7 @@ export class ProdsService implements OnInit {
             this._visitas.visita_activa_copvdet.resgrb_pedido = data.messages;      
             this._visitas.visita_activa_copvdet.menerrorgrb_pedido = data.messages[0].menerror;
             console.error(" Error genera_pedido_netsolin ", data.messages[0].menerror);
+            this.generando_pedido = false;
             resolve(false);
           } else {
           this._visitas.visita_activa_copvdet.errorgrb_pedido = false;
@@ -721,10 +730,12 @@ export class ProdsService implements OnInit {
             this.guardarpedidoFb(data.cod_tercer, data.cod_dpedidg.trim() + data.num_dpedidg.trim(), objpedidogfb).then(res => {
               console.log('Pedido guardada res: ', res);
               // console.log('Pedido guardada res id: ', res.id);
+              this.generando_pedido = false;
               resolve(true);
             })
             .catch((err) => {
                 console.log('Error guardando pedido en Fb', err);
+                this.generando_pedido = false;
                 resolve(false);
             });
             // resolve(true);
@@ -751,7 +762,12 @@ export class ProdsService implements OnInit {
     genera_factura_netsolin() {
       console.log('dataos para generar factura this._visitas.visita_activa_copvdet:', this._visitas.visita_activa_copvdet);
       console.log('Factura a genera this.pedido): ', this.factura);
-      this._visitas.visita_activa_copvdet.grb_factu = false;
+      if (this.generando_factura){
+        console.error('Ya se esta generando una factura');
+        return;
+      }
+      this.generando_factura = true;
+        this._visitas.visita_activa_copvdet.grb_factu = false;
       this._visitas.visita_activa_copvdet.resgrb_factu = '';
       this._visitas.visita_activa_copvdet.factura_grabada = null;
       this._visitas.visita_activa_copvdet.errorgrb_factu = false;
@@ -775,6 +791,7 @@ export class ProdsService implements OnInit {
             this._visitas.visita_activa_copvdet.resgrb_factu = data.men_error;      
             this._visitas.visita_activa_copvdet.menerrorgrb_factu = data.men_error;
             console.error(" genera_factura_netsolin ", data.men_error);
+            this.generando_factura = false;
             resolve(false);
           } else {
             if (data.isCallbackError || data.error) {
@@ -783,6 +800,7 @@ export class ProdsService implements OnInit {
               this._visitas.visita_activa_copvdet.resgrb_factu = data.messages;      
               this._visitas.visita_activa_copvdet.menerrorgrb_factu = data.messages[0].menerror;
               console.error(" Error genera_factura_netsolin ", data.messages[0].menerror);
+              this.generando_factura = false;
               resolve(false);
             } else {
             this._visitas.visita_activa_copvdet.errorgrb_factu = false;
@@ -803,10 +821,12 @@ export class ProdsService implements OnInit {
             };
               this.guardarfacturaFb(data.cod_tercer, data.cod_dfacturg.trim() + data.num_dfacturg.trim(), objfacturagfb).then(res => {
                 console.log('Factura guardada res: ', res);
+                this.generando_factura = false;
                 resolve(true);
               })
               .catch((err) => {
                   console.log('Error guardando factura en Fb', err);
+                  this.generando_factura = false;
                   resolve(false);
               });
               // resolve(true);

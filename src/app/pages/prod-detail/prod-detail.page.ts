@@ -13,7 +13,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class ProdDetailPage implements OnInit {
   prodshop: any;
-  prodID: any = this.route.snapshot.paramMap.get('id');
+  prodID: any = this.decodestring(this.route.snapshot.paramMap.get('id'));
   cantidad_sol = 0;
   total_t: number;
   prodenFact: any;
@@ -94,5 +94,8 @@ export class ProdDetailPage implements OnInit {
         toast.present();
       });
   }
-
+  public decodestring(pstring){
+    return decodeURIComponent(pstring);
+  }
+  
 }

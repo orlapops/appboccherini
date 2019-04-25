@@ -497,5 +497,7 @@ export class VisitaDetailPage implements OnInit {
     console.log('En eliminar foto ', ifoto);
 
   }
-
+public encodestring(pstring){
+  return encodeURIComponent(pstring);
+}
 }
