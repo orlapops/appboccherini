@@ -85,6 +85,11 @@
                     <ion-select-option *ngFor="let local of _cliente.direcciones" [value]="local.id_dir">{{local.direccion+' - '+local.ciudad}}</ion-select-option>
                 </ion-select>
             </ion-item>
+            <ion-item>
+                <ion-label color="dark" position="stacked">Nota:</ion-label>
+                <ion-textarea rows="3" cols="12" inputmode="text" placeholder="Registre la Nota" [(ngModel)]="notaPed" [value]="notaPed"></ion-textarea>
+            </ion-item>
+
             <ion-button *ngIf="!grabando_pedido && !mostrandoresulado" slot="end" shape="round" color="success" (click)="realizar_pedido()">
                 Realizar Pedido
             </ion-button>

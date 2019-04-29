@@ -22,6 +22,7 @@ export class PedidoPage implements OnInit {
   mostrandoresulado = false;
   itemprodaped: any;
   direcdespa:any;
+  notaPed = '';
   constructor(
     public navCtrl: NavController,
     public btCtrl: BluetoothSerial,
@@ -93,7 +94,7 @@ export class PedidoPage implements OnInit {
       console.log('Ya se esta generando un pedido. Espere');
     }
     this.grabando_pedido = true;
-    this._prods.genera_pedido_netsolin(this.direcdespa)
+    this._prods.genera_pedido_netsolin(this.direcdespa, this.notaPed)
     .then(res => {
       if (res){
         this.mostrandoresulado = true;

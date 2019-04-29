@@ -284,7 +284,7 @@ cargaPeriodoUsuar(pcod_usuar){
                 this.cargo_clienteact = true;
                 //Actualizar en fb
                 this._cliente.guardarClienteFb(cod_tercer).then(res => {
-                    console.log('Guardoclientefb res', res);
+                    // console.log('Guardoclientefb res', res, this._cliente.clienteActual.direcciones);
                     this._cliente.guardardireccionesClienteFb(cod_tercer, this._cliente.clienteActual.direcciones).then(() => {
                         resolve(true);
                     });

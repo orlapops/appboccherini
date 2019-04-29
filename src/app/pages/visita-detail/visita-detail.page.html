@@ -150,6 +150,24 @@
                             </h2>
                             <hr>
 
+                            <h3 *ngIf='cargo_ubicaact'>
+                                <div class="direcvisita">
+                                    <ion-icon name="pin" slot="start" class="direcvisita"></ion-icon>
+                                    <ion-text color="dark"> {{_visitas.direc_actual.ciudad}} </ion-text>
+                                </div>
+                            </h3>
+                            <h3 *ngIf='cargo_ubicaact'>
+                                <div class="direcvisita">
+                                    <ion-icon name="pin" slot="start" class="direcvisita"></ion-icon>
+                                    <ion-text color="dark"> {{_visitas.direc_actual.subzona+' - '+_visitas.direc_actual.nom_subzo}} </ion-text>
+                                </div>
+                            </h3>
+                            <h3 *ngIf='cargo_ubicaact'>
+                                <div class="direcvisita">
+                                    <ion-icon name="pin" slot="start" class="direcvisita"></ion-icon>
+                                    <ion-text color="dark"> {{_visitas.direc_actual.cod_barri+' - '+_visitas.direc_actual.nom_barri}} </ion-text>
+                                </div>
+                            </h3>
                             <h3>
                                 <div class="direcvisita">
                                     <ion-icon name="pin" slot="start" class="direcvisita"></ion-icon>

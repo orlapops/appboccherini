@@ -154,6 +154,7 @@ export class ClienteProvider {
                     direcciones : data.direcciones
                 };
                 this.direcciones = data.direcciones;
+                console.log('Direcciones traidas',this.direcciones);
                 // console.log('Datos traer cargaClienteNetsolin');
                 // console.log('clieAux: ', clieAux);
                 this.clienteActual = clieAux;
