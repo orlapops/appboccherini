@@ -80,6 +80,10 @@
         </ion-grid>
         <div *ngIf="!grabando_pedido && !mostrandoresulado">
             <ion-item class="bg-white">
+                <ion-label>Es Obsequio</ion-label>
+                <ion-checkbox [(ngModel)]="es_obsequio"></ion-checkbox>
+            </ion-item>
+            <ion-item class="bg-white">
                 <ion-label color="dark">Local:</ion-label>
                 <ion-select placeholder="Seleccione un local" [(ngModel)]="direcdespa" (ionChange)="changedirec($event)">
                     <ion-select-option *ngFor="let local of _cliente.direcciones" [value]="local.id_dir">{{local.direccion+' - '+local.ciudad}}</ion-select-option>

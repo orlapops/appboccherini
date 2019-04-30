@@ -661,7 +661,7 @@ export class ProdsService implements OnInit {
   }
 
   
-  genera_pedido_netsolin(pid_dir, pnota) {
+  genera_pedido_netsolin(pid_dir, pnota, pobsequio) {
     console.log('dataos para generar pedido this._visitas.visita_activa_copvdet:', this._visitas.visita_activa_copvdet);
     console.log('Pedido a genera this.pedido): ', this.pedido);
     // return new Promise((resolve, reject) => {
@@ -682,6 +682,7 @@ export class ProdsService implements OnInit {
         datos_gen: this._visitas.visita_activa_copvdet,
         id_dirdespa: pid_dir,
         nota: pnota,
+        es_obsequio: pobsequio,
         items_pedido: this.pedido,
         usuario: this._parempre.usuario
       };
