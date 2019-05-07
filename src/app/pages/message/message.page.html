@@ -11,7 +11,7 @@
 
     <ion-card *ngIf="cargado" class="bg-white" no-margin>
         <ion-card-header>
-            <ion-card-subtitle>{{message.fecha_enviado.toDate() | date: 'short'}} ∙ por <strong>{{message.enviadopor}}</strong></ion-card-subtitle>
+            <ion-card-subtitle>{{message.fecha_enviado.toDate() | date: 'shortDate'}} ∙ por <strong>{{message.enviadopor}}</strong></ion-card-subtitle>
             <ion-card-title>
                 <ion-text color="primary">
                     {{message.asunto}}

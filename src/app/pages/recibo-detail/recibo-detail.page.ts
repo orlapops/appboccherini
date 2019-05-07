@@ -68,19 +68,21 @@ export class ReciboDetailPage implements OnInit {
           if ( this.paga_efectivo) {
 // *            this.dcto_dchef = Math.round(this.oblshop.tot_duchas * this.oblshop.pord_duefec / 100)/100;
             this.dcto_dchef = this.oblshop.tot_duchas * this.oblshop.pord_duefec / 100;
-            this.dcto_dchef = Math.round(this.dcto_dchef * 100)/100;
+            // this.dcto_dchef = Math.round(this.dcto_dchef * 100)/100;
+// Redondeo sin decimales
+            this.dcto_dchef = Math.round(this.dcto_dchef);
             this.dcto_dchban = 0;
             this.dcto_otref = this.oblshop.tot_otros * this.oblshop.pord_otrefe / 100;
-            this.dcto_otref = Math.round(this.dcto_otref * 100)/100;
+            this.dcto_otref = Math.round(this.dcto_otref);
             this.dcto_otrban = 0;
           } else {
             // this.dcto_dchban = Math.round(this.oblshop.tot_duchas * this.oblshop.pord_duban / 100)/100;
             this.dcto_dchban = this.oblshop.tot_duchas * this.oblshop.pord_duban / 100;
-            this.dcto_dchban = Math.round(this.dcto_dchban * 100)/100;
+            this.dcto_dchban = Math.round(this.dcto_dchban);
             this.dcto_dchef = 0;
             // this.dcto_otrban = Math.round(this.oblshop.tot_otros * this.oblshop.pord_otrban / 100)/100;
             this.dcto_otrban = this.oblshop.tot_otros * this.oblshop.pord_otrban / 100;
-            this.dcto_otrban = Math.round(this.dcto_otrban * 100)/100;
+            this.dcto_otrban = Math.round(this.dcto_otrban);
             this.dcto_otref = 0;
           }
         }
@@ -102,17 +104,17 @@ export class ReciboDetailPage implements OnInit {
       if (this.apli_desc) {
         if ( this.paga_efectivo) {
           this.dcto_dchef = this.oblshop.tot_duchas * this.oblshop.pord_duefec / 100;
-          this.dcto_dchef = Math.round(this.dcto_dchef * 100)/100;
+          this.dcto_dchef = Math.round(this.dcto_dchef);
           this.dcto_dchban = 0;
           this.dcto_otref = this.oblshop.tot_otros * this.oblshop.pord_otrefe / 100;
-          this.dcto_otref = Math.round(this.dcto_otref * 100)/100;
+          this.dcto_otref = Math.round(this.dcto_otref);
           this.dcto_otrban = 0;
         } else {
           this.dcto_dchban = this.oblshop.tot_duchas * this.oblshop.pord_duban / 100;
-          this.dcto_dchban = Math.round(this.dcto_dchban * 100)/100;
+          this.dcto_dchban = Math.round(this.dcto_dchban);
           this.dcto_dchef = 0;
           this.dcto_otrban = this.oblshop.tot_otros * this.oblshop.pord_otrban / 100;
-          this.dcto_otrban = Math.round(this.dcto_otrban * 100)/100;
+          this.dcto_otrban = Math.round(this.dcto_otrban);
           this.dcto_otref = 0;
         }
       }
@@ -151,23 +153,23 @@ export class ReciboDetailPage implements OnInit {
       if (this.apli_desc) {
         if ( this.paga_efectivo) {
           this.dcto_dchef = this.oblshop.tot_duchas * this.oblshop.pord_duefec / 100;
-          this.dcto_dchef = Math.round(this.dcto_dchef * 100)/100;
+          this.dcto_dchef = Math.round(this.dcto_dchef);
           this.dcto_dchban = 0;
           this.dcto_otref = this.oblshop.tot_otros * this.oblshop.pord_otrefe / 100;
-          this.dcto_otref = Math.round(this.dcto_otref * 100)/100;
+          this.dcto_otref = Math.round(this.dcto_otref);
           this.dcto_otrban = 0;
         } else {
           this.dcto_dchef = 0;
           // this.dcto_dchban = Math.round(this.oblshop.tot_duchas * this.oblshop.pord_duban / 100)/100;
           this.dcto_dchban = this.oblshop.tot_duchas * this.oblshop.pord_duban / 100;
           console.log('this.dcto_dchban',this.dcto_dchban);
-          this.dcto_dchban = Math.round(this.dcto_dchban*100)/100;
+          this.dcto_dchban = Math.round(this.dcto_dchban);
           console.log('this.dcto_dchban',this.dcto_dchban);
           this.dcto_dchef = 0;
           // this.dcto_otrban = Math.round(this.oblshop.tot_otros * this.oblshop.pord_otrban / 100)/100;
           this.dcto_otrban = this.oblshop.tot_otros * this.oblshop.pord_otrban / 100;
           console.log('this.dcto_otrban',this.dcto_otrban);
-          this.dcto_otrban = Math.round(this.dcto_otrban * 100)/100;
+          this.dcto_otrban = Math.round(this.dcto_otrban);
           console.log('this.dcto_otrban',this.dcto_otrban);
           this.dcto_otref = 0;
         }

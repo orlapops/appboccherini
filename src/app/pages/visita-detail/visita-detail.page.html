@@ -135,17 +135,17 @@
                                     <!-- <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
         <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon> -->
                                     Ingreso:
-                                    <ion-text color="primary">{{ visitaAct.fechahora_ingreso | date: 'short'}}</ion-text>
+                                    <ion-text color="primary">{{ visitaAct.fechahora_ingreso | date: 'shortDate'}}</ion-text>
                                 </div>
                                 <div *ngIf="visitaAct.fechahora_reingreso && (visitaAct.estado == 'A' || visitaAct.estado == 'C')">
                                     <!-- <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
         <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon> -->
                                     Reingreso:
-                                    <ion-text color="primary">{{ visitaAct.fechahora_reingreso | date: 'short'}}</ion-text>
+                                    <ion-text color="primary">{{ visitaAct.fechahora_reingreso | date: 'shortDate'}}</ion-text>
                                 </div>
                                 <div *ngIf="visitaAct.estado == 'C'">
                                     Salio:
-                                    <ion-text color="primary">{{ visitaAct.fechahora_cierre | date: 'short'}}</ion-text>
+                                    <ion-text color="primary">{{ visitaAct.fechahora_cierre | date: 'shortDate'}}</ion-text>
                                 </div>
                             </h2>
                             <hr>
@@ -261,7 +261,7 @@
                                             <div class="fechavisita">
                                                 <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
                                                 <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon>
-                                                <ion-text color="primary">{{ item.registro | date: 'medium'}}</ion-text>
+                                                <ion-text color="primary">{{ item.registro | date: 'mediumDate'}}</ion-text>
                                             </div>
                                             <!-- <ion-text color="primary">Mensaje</ion-text> -->
                                         </h2>
