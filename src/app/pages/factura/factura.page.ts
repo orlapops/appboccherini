@@ -48,7 +48,7 @@ export class FacturaPage implements OnInit {
   getFactura() {
     this._prods.getFactura()
       .then(data => {
-        // console.log('getfavoritos data', data);
+        console.log('getfavoritos data', data);
          this.factura = data; 
          this.actualizar_totalfact();
         });

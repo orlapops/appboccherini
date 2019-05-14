@@ -95,9 +95,7 @@ export class ProdsService implements OnInit {
   cargaInventarioNetsolin() {
     return new Promise((resolve, reject) => {
       if (this.cargoInventarioNetsolin) {
-        console.log(
-          "resolve true cargo inventario netsolin por ya estar inciada"
-        );
+        console.log("resolve true cargo inventario netsolin por ya estar inciada");
         resolve(true);
       }
       const lparfiltro = {
@@ -108,16 +106,11 @@ export class ProdsService implements OnInit {
       NetsolinApp.objenvrest.filtro = this._parempre.usuario.bod_factura;
       NetsolinApp.objenvrest.parametros = lparfiltro;
       // console.log(" cargaInventarioNetsolin 1");
-      let url =
-        this._parempre.URL_SERVICIOS +
-        "netsolin_servirestgo.csvc?VRCod_obj=INVXBODUBIAPP";
+      let url =this._parempre.URL_SERVICIOS +"netsolin_servirestgo.csvc?VRCod_obj=INVXBODUBIAPP";
       console.log("cargaInventarioNetsolin url", url);
-      console.log(
-        "cargaInventarioNetsolin NetsolinApp.objenvrest",
-        NetsolinApp.objenvrest
-      );
+      console.log("cargaInventarioNetsolin NetsolinApp.objenvrest",NetsolinApp.objenvrest);
       this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
-        // console.log(" cargaInventarioNetsolin data:", data);
+        console.log(" cargaInventarioNetsolin data:", data);
         if (data){
         if (data.error) {
           console.error(" cargaInventarioNetsolin ", data.error);
@@ -125,7 +118,7 @@ export class ProdsService implements OnInit {
           this.inventario = null;
           resolve(false);
         } else {
-          // console.log("Datos traer cargaInventarioNetsolin ", data.inventario);
+          console.log("Datos traer cargaInventarioNetsolin ", data.inventario);
           this.cargoInventarioNetsolin = true;
           // this.menerror_usuar="";
           this.inventario = data.inventario;
@@ -449,7 +442,7 @@ export class ProdsService implements OnInit {
       // console.log("Item a adicionar:", itemAdi);
       this.factura.push({ id: this.facturaCounter, item: itemAdi });
     }
-    // console.log("Factura lista :", this.factura);
+    console.log("Factura lista :", this.factura);
     this.guardar_storage_factura();
     return Promise.resolve();
   }
@@ -584,7 +577,7 @@ export class ProdsService implements OnInit {
     // // let idvisiact = this._visitas.visita_activa_copvdet.datosgen.id_visita;
     // console.log("cargar_storage_factura 3", idvisiact);
     let idifact = idruta.toString() + idvisiact;
-    // console.log("cargar_storage_factura 4", idifact);
+    console.log("cargar_storage_factura 4", idifact);
     this.factura = [];
     let promesa = new Promise((resolve, reject) => {
       if (this.platform.is("cordova")) {
@@ -602,9 +595,9 @@ export class ProdsService implements OnInit {
         // console.log("carga del storage factura 0 ");
         if (localStorage.getItem("itemfac" + idifact)) {
           //Existe items en el localstorage
-          // console.log("carga del storage factura 1");
+          console.log("carga del storage factura 1");
           this.factura = JSON.parse(localStorage.getItem("itemfac" + idifact));
-          // console.log("carga del storage factura 2: ", this.factura);
+          console.log("carga del storage factura 2: ", this.factura);
         }
         resolve();
       }

@@ -18,7 +18,7 @@
         <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
         <br> No tiene items a Facturar
     </div>
-    <div *ngIf="!!_prods.generando_factura && !grabando_factura && !mostrandoresulado && factura.length != 0" class="bg-white">
+    <div *ngIf="!_prods.generando_factura && !grabando_factura && !mostrandoresulado && factura.length != 0" class="bg-white">
         <ion-grid class="btfactura-color">
             <ion-row *ngFor="let itemf of factura; let i = index;">
                 <ion-col size="4">

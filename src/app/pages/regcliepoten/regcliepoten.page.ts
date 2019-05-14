@@ -136,7 +136,7 @@ export class RegCliepotenPage implements OnInit {
   mostrar_camara(){
     console.log('en mostrar camara1');
     const optionscam: CameraOptions = {
-      quality: 60,
+      quality: 30,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.PNG,
       mediaType: this.camera.MediaType.PICTURE

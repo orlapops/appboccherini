@@ -196,10 +196,18 @@ export class VisitaDetailPage implements OnInit {
   ngOnInit() {
     // console.log('ngoniit visita detalle');
     // console.log(this.visita);
-    this._prods.cargar_storage_factura(this.visita.data.id_ruta, this.visita.id);
-    this._prods.cargar_storage_pedido(this.visita.data.id_ruta, this.visita.id);
-    this._recibos.cargar_storage_recibo(this.visita.data.id_ruta, this.visita.id);
-    this._recibos.cargar_storage_formpago(this.visita.data.id_ruta, this.visita.id);
+    this._prods.cargar_storage_factura(this.visita.data.id_ruta, this.visita.id)
+      .then( res =>{
+        this._prods.cargar_storage_pedido(this.visita.data.id_ruta, this.visita.id)
+          .then ( res1 =>{
+            this._recibos.cargar_storage_recibo(this.visita.data.id_ruta, this.visita.id)
+              .then( res2 =>{
+                this._recibos.cargar_storage_formpago(this.visita.data.id_ruta, this.visita.id)
+                  .then( res3 =>{
+                  })
+              })
+          })
+      })
   }
 
   // obtenerPosicion(): any {
@@ -423,9 +431,9 @@ export class VisitaDetailPage implements OnInit {
   }
 
   buscar_productos($event){
-
+    console.log('a buscar producto factura');
     this.q = $event.target.value;
-    console.log('a buscar producto ',this.q);
+    console.log('a buscar producto ',this.q, this._prods.inventario);
     if (this.q ==''){
       console.log('no buscar por vacio');
     } else {
@@ -444,7 +452,7 @@ export class VisitaDetailPage implements OnInit {
 }
     buscar_productosped($event){      
       this.qped = $event.target.value;
-      console.log('a buscar producto ',this.qped);
+      console.log('a buscar producto ',this.qped, this._prods.inventario);
       if (this.qped==''){
         console.log('no buscar por vacio');
       } else {
@@ -472,7 +480,7 @@ export class VisitaDetailPage implements OnInit {
   tomafoto(){
       console.log('en tomafoto camara1');
       const optionscam: CameraOptions = {
-        quality: 40,
+        quality: 30,
         destinationType: this.camera.DestinationType.DATA_URL,
         encodingType: this.camera.EncodingType.PNG,
         mediaType: this.camera.MediaType.PICTURE
