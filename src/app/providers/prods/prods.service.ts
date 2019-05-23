@@ -44,9 +44,11 @@ export class ProdsService implements OnInit {
     private afStorage: AngularFireStorage,
     private http: HttpClient,
     public _visitas: VisitasProvider
-  ) {}
+  ) {
+    console.log('constructor prod service',this.inventario);
+  }
   ngOnInit() {
-    console.log("ngoniit prod service visita");
+    console.log('ngoniit prod service visita',this.inventario);
     console.log(this._visitas);
   }
 
@@ -92,7 +94,8 @@ export class ProdsService implements OnInit {
 
 
   // Carga Inventario de la bodega para facturar en Netsolin
-  cargaInventarioNetsolin() {
+  cargaInventarioNetsolin(pcliente) {
+    console.log('cargaInventarioNetsolin pcliente',pcliente);
     return new Promise((resolve, reject) => {
       if (this.cargoInventarioNetsolin) {
         console.log("resolve true cargo inventario netsolin por ya estar inciada");
@@ -100,6 +103,7 @@ export class ProdsService implements OnInit {
       }
       const lparfiltro = {
         bodega: this._parempre.usuario.bod_factura,
+        cod_tercer: pcliente,
         ubicacion: this._parempre.usuario.placa_veh
       };
       //  NetsolinApp.objenvrest.filtro = this.bodega;
@@ -116,12 +120,14 @@ export class ProdsService implements OnInit {
           console.error(" cargaInventarioNetsolin ", data.error);
           this.cargoInventarioNetsolin = false;
           this.inventario = null;
+          console.log('inventario en prods a null: ',this.inventario);
           resolve(false);
         } else {
           console.log("Datos traer cargaInventarioNetsolin ", data.inventario);
           this.cargoInventarioNetsolin = true;
           // this.menerror_usuar="";
           this.inventario = data.inventario;
+          console.log('inventario en prods resolve true: ',this.inventario);
           resolve(true);
         }
       } 
@@ -136,7 +142,8 @@ export class ProdsService implements OnInit {
   }
 
   // Carga Inventario de la bodega para pedido en Netsolin
-  cargaInventarioNetsolinPedido() {
+  cargaInventarioNetsolinPedido(pcliente) {
+    console.log('car inv ped pcliente',pcliente);
     return new Promise((resolve, reject) => {
       if (this.cargoInventarioNetsolinPed) {
         // console.log(
@@ -144,7 +151,14 @@ export class ProdsService implements OnInit {
         // );
         resolve(true);
       }
+      const lparfiltro = {
+        bodega: this._parempre.usuario.bod_pedido,
+        cod_tercer: pcliente
+      };
+      //  NetsolinApp.objenvrest.filtro = this.bodega;
       NetsolinApp.objenvrest.filtro = this._parempre.usuario.bod_pedido;
+      NetsolinApp.objenvrest.parametros = lparfiltro;
+
       console.log('his._parempre.usuario.bod_pedido:', this._parempre.usuario.bod_pedido);
       console.log('NetsolinApp.objenvrest.filtro', NetsolinApp.objenvrest.filtro);
       console.log('NetsolinApp.objenvrest:', NetsolinApp.objenvrest);
@@ -228,6 +242,7 @@ export class ProdsService implements OnInit {
   //actualizar link imagen verifica si en firestorage imagenes producto existe y actualiza el lin
   actLinkimg(){
     return new Promise((resolve, reject) => {
+     console.log('inventario en prods act link img: ',this.inventario);
     for (let i = 0; i < this.inventario.length; i++) {  
       let lcodref = this.inventario[i].cod_refinv;
       let larchivo = '/imagenes/' + lcodref.trim() + '.png';
@@ -308,14 +323,15 @@ export class ProdsService implements OnInit {
   //cargar de firebase el inventario factura suscribirse para que quede actualizado
   cargaInventariodFB(bodega) {
     this.getInvdFB(bodega).subscribe((datos: any) => {
-      // console.log("En cargaInventariodFB 1 datos:", datos);
+      console.log("En cargaInventariodFB 1 datos:", datos);
       if (datos) {
         // console.log(
         //   "obtuvo inventario de firebase inventario antes:",
         //   this.inventario
         // );
-        // console.log("obtuvo inventario de firebase actual datos:", datos);
+        console.log("obtuvo inventario de firebase actual datos:", datos);
         this.inventario = datos.inventario;
+        console.log('inventario en prods getinvfb: ',this.inventario);
         // console.log(
         //   "obtuvo inventario de firebase inventario despues:",
         //   this.inventario

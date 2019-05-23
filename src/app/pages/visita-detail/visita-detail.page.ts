@@ -107,8 +107,64 @@ export class VisitaDetailPage implements OnInit {
       // this.obtenerPosicion();
           });
     // console.log('constructor detalle visita');
-    // console.log(this.visitaID);
+    console.log(this.visitaID);
     this.visita = this._visitas.getItem(this.visitaID);
+    console.log('visita antes inv luego de getitem',this.visita);
+
+    //se pasa del home a qui op mayo 23 19 cargar inventario
+    //carga inventario para factura
+    this._prods
+      .cargaInventarioNetsolin(this.visita.data.cod_tercer)
+      .then(cargo => {
+        //Si carga el inventario lo actualiza en firebase
+        if (cargo) {
+          // console.log("Cargo Inventario de Netsolin");
+          const reginv = {
+            // inventario : this._visitas.inventario
+            inventario: this._prods.inventario
+          };
+            console.log('inventario en prods: ',reginv,this._prods.inventario);
+          //  this._visitas.guardarInvdFB(bodega, reginv).then(res => {
+          //op mayo 23 19 no se guarda en firebase
+          // this._prods
+          //   .guardarInvdFB(this._parEmpre.usuario.bod_factura, reginv)
+          //   .then(res => {
+          //   });
+        } else {
+          console.log("No pudo cargar inventario de Netsolin");
+        }
+      })
+      .catch(() => {
+        console.log("error en homE ngoniti al cargaInventarioNetsolin");
+      });
+    //carga inventario para pedido
+    this._prods.cargaInventarioNetsolinPedido(this.visita.data.cod_tercer)
+      .then(cargo => {
+        //Si carga el inventario lo actualiza en firebase
+        if (cargo) {
+          // console.log("Cargo cargaInventarioNetsolinPedido de Netsolin");
+          const reginv = {
+            // inventario : this._visitas.inventario
+            inventario: this._prods.inventarioPed
+          };
+          //  this._visitas.guardarInvdFB(bodega, reginv).then(res => {
+            //op mayo 23 19 se quita no guardar en firebase 
+          // this._prods
+          //   .guardarInvdFBpedido(this._parEmpre.usuario.bod_pedido, reginv)
+          //   .then(res => {
+          //   });
+        } else {
+          console.log(
+            "No pudo cargar cargaInventarioNetsolinPedido de Netsolin"
+          );
+        }
+      })
+      .catch(() => {
+        console.log(
+          "error en home por catch al cargaInventarioNetsolinPedido"
+        );
+      });
+
     // console.log('constructor detalle visita 2 this.visita:', this.visita);    
     this.cargo_clienteact = false;
     this.cargo_clienteact = false;
@@ -354,6 +410,7 @@ export class VisitaDetailPage implements OnInit {
             console.log('Facturas visita act: ',datosvf);  
             this._visitas.getRecibosVisitaActual().subscribe((datosvr: any) => {
               console.log('Recibos visita act: ',datosvr);  
+              console.log('a cerrar visita this._visitas.visita_activa_copvdet',this._visitas.visita_activa_copvdet);
               const dvis_act = {
                 cod_tercer: this._visitas.visita_activa_copvdet.cod_tercer,                
                 nombre: this._visitas.visita_activa_copvdet.nombre,
@@ -361,6 +418,7 @@ export class VisitaDetailPage implements OnInit {
                 id_dir:  this._visitas.visita_activa_copvdet.id_dir,
                 id_visita:  this._visitas.visita_activa_copvdet.id_visita,
                 id_ruta:  this._visitas.visita_activa_copvdet.id_ruta,
+                id_reffecha : this._visitas.visita_activa_copvdet.id_reffecha,
                 fechaing: this._visitas.visita_activa_copvdet.fechahora_ingreso,
                 fechacierre: datactvisita.fechahora_cierre
               };
@@ -390,6 +448,7 @@ export class VisitaDetailPage implements OnInit {
                 id_dir:  this._visitas.visita_activa_copvdet.id_dir,
                 id_visita:  this._visitas.visita_activa_copvdet.id_visita,
                 id_ruta:  this._visitas.visita_activa_copvdet.id_ruta,
+                id_reffecha : this._visitas.visita_activa_copvdet.id_reffecha,
                 fechaing: this._visitas.visita_activa_copvdet.fechahora_ingreso,
                 fechacierre: datactvisita.fechahora_cierre
               };
@@ -452,7 +511,7 @@ export class VisitaDetailPage implements OnInit {
 }
     buscar_productosped($event){      
       this.qped = $event.target.value;
-      console.log('a buscar producto ',this.qped, this._prods.inventario);
+      console.log('a buscar producto ',this.qped, this._prods.inventarioPed);
       if (this.qped==''){
         console.log('no buscar por vacio');
       } else {

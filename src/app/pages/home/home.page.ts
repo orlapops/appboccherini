@@ -106,59 +106,6 @@ export class HomePage implements OnInit {
     // console.log(this._visitas.visitaTodas);
     //Actualizar Inventario para factura y pedido a Firebase
     // const bodega = 'VEH';
-    //carga inventario para factura
-    this._prods
-      .cargaInventarioNetsolin()
-      .then(cargo => {
-        //Si carga el inventario lo actualiza en firebase
-        if (cargo) {
-          // console.log("Cargo Inventario de Netsolin");
-          const reginv = {
-            // inventario : this._visitas.inventario
-            inventario: this._prods.inventario
-          };
-          //  this._visitas.guardarInvdFB(bodega, reginv).then(res => {
-          this._prods
-            .guardarInvdFB(this._parEmpre.usuario.bod_factura, reginv)
-            .then(res => {
-              // console.log("Se guardo el Inventario de Netsolin en firebase");
-            });
-        } else {
-          console.log("No pudo cargar inventario de Netsolin");
-        }
-      })
-      .catch(() => {
-        console.log("error en homE ngoniti al cargaInventarioNetsolin");
-      });
-    //carga inventario para pedido
-    this._prods.cargaInventarioNetsolinPedido()
-      .then(cargo => {
-        //Si carga el inventario lo actualiza en firebase
-        if (cargo) {
-          // console.log("Cargo cargaInventarioNetsolinPedido de Netsolin");
-          const reginv = {
-            // inventario : this._visitas.inventario
-            inventario: this._prods.inventarioPed
-          };
-          //  this._visitas.guardarInvdFB(bodega, reginv).then(res => {
-          this._prods
-            .guardarInvdFBpedido(this._parEmpre.usuario.bod_pedido, reginv)
-            .then(res => {
-              // console.log(
-              //   "Se guardo el cargaInventarioNetsolinPedido de Netsolin en firebase"
-              // );
-            });
-        } else {
-          console.log(
-            "No pudo cargar cargaInventarioNetsolinPedido de Netsolin"
-          );
-        }
-      })
-      .catch(() => {
-        console.log(
-          "error en home por catch al cargaInventarioNetsolinPedido"
-        );
-      });
       console.log('a cargaActividadesNetsolin');
       //Cargar tipos de actividades a Firebase
       this._actividades.cargaActividadesNetsolin()
@@ -209,12 +156,11 @@ export class HomePage implements OnInit {
             .catch(() => {
               console.log("error en homr ngoniti al cargar visitas");
             });
-          //Cargar el Inventario de Firebase suscribirse
+          //Cargar el Inventario de Firebase suscribirse no por que sobreescribe el de otro usuario
+          //se quita mayo 23 19 op
           // this._visitas.cargaInventariodFB(bodega);
-          this._prods.cargaInventariodFB(this._parEmpre.usuario.bod_factura);
-          this._prods.cargaInventariodFBpedido(
-            this._parEmpre.usuario.bod_pedido
-          );
+          // this._prods.cargaInventariodFB(this._parEmpre.usuario.bod_factura);
+          // this._prods.cargaInventariodFBpedido(this._parEmpre.usuario.bod_pedido);
         } else {
           console.log("ngOnInit home NO CARGO cargaPeriodoUsuar");
         }

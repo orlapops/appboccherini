@@ -223,6 +223,7 @@ cargaPeriodoUsuar(pcod_usuar){
 
   }
   genera_cierrevisita_netsolin(objdvisiact,objlistact,objpedidos,objfacturas,objrecibos) {
+    console.log(objdvisiact,objlistact,objpedidos,objfacturas,objrecibos);
     return new Promise((resolve, reject) => {
       let paramgrab = {
         // datos_gen: this._visitas.visita_activa_copvdet.datosgen,
@@ -612,7 +613,7 @@ cargaPeriodoUsuar(pcod_usuar){
         // console.log('buscarProducto searchKey:', searchKey);
         let key: string = searchKey.toUpperCase();
         // console.log('buscarProducto key:', key);
-        // console.log(this.inventario);
+        console.log(this.inventario);
          return Promise.resolve(this.inventario.filter((item: any) =>
             item.cod_refinv.toLowerCase().indexOf(searchKey.toLowerCase()) > -1 
             || item.nombre.toLowerCase().indexOf(searchKey.toLowerCase()) > -1 ));
