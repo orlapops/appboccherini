@@ -552,7 +552,7 @@ export class VisitaDetailPage implements OnInit {
         console.log('en mostrar camara2 optionscam:',optionscam);
         console.log('en mostrar camara2 imageData:',imageData);
         this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
-        this._parEmpre.reg_logappusuario('tomafoto','Tomo foto ',{imagenPreview: this.imagenPreview});
+        // this._parEmpre.reg_logappusuario('tomafoto','Tomo foto ',{imagenPreview: this.imagenPreview});
         console.log('this.imagenPreview:', this.imagenPreview);
         this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
           this.visitaID, imageData);

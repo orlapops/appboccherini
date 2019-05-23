@@ -172,20 +172,20 @@ actualizafotosVisitafirebase(idclie, idvisita, imageURL): Promise<any> {
   const idimg = ano.toString()+ mes.toString() + dia.toString() + hora.toString() + minutos.toString()+ segundos.toString();
 
   const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_visitas/${idclie}/visita/${idvisita}/${idimg}/`);
-  this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase ',{storageRef: storageRef});
-
+  // this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase ',{storageRef: storageRef});
+  console.log('tomafoto','actualizafotosVisitafirebase ',storageRef);
   console.log('en actualizafotosVisitafirebase idclie,iddirec: ', idclie, idvisita);
   return storageRef
     .putString(imageURL, 'base64', {
       contentType: 'image/png',
     })
     .then(() => {
-      this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase idclie',{idclie: idclie});
+      // this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase idclie',{idclie: idclie});
       console.log('a a ctualizar foto cliente visita ', idclie);          
       return storageRef.getDownloadURL().subscribe((linkref: any) => {
-        this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase linkref',{linkref: linkref});
+        // this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase linkref',{linkref: linkref});
         console.log(linkref);
-        this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase url guar',{urlfb: `/personal/${this._parempre.usuario.cod_usuar}/rutas/${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${idvisita}/fotos`});
+        // this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase url guar',{urlfb: `/personal/${this._parempre.usuario.cod_usuar}/rutas/${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${idvisita}/fotos`});
         console.log(`/personal/${this._parempre.usuario.cod_usuar}/rutas/
           ${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${idvisita}/fotos`);
           this.fbDb
