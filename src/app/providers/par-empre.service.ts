@@ -67,6 +67,30 @@ reg_log(titulo, mensaje){
   // .doc(id)
   // .set(inventario);
 }
+reg_logappusuario(titulo, mensaje, datoslog) {
+  console.log("reg_logappusuario datoslog:", datoslog);
+  //Actualizar
+  const now = new Date();
+  //extraemos el día mes y año
+  const dia = now.getDate();
+  const mes = now.getMonth() + 1;
+  const ano = now.getFullYear();
+  const hora = now.getHours();
+  const minutos = now.getMinutes();
+  const id = ano.toString()+mes.toString()+dia.toString();
+  const fd = new  Date();
+  const idpf = fd.toLocaleString().replace(/[/]/g, '-');
+  // console.log('reg_logappusuario',`/personal/${this.usuario.cod_usuar}/log`,idpf);
+  this.afDB
+  .collection(`/personal/${this.usuario.cod_usuar}/log`)
+  .doc(idpf)
+  .set({fecha: idpf, titulo: titulo, mensaje: mensaje, datoslog: datoslog});
+
+  // //asegurarse que este creado el año, mes y dia
+  // this.fbDb
+  //   .collection(`/personal/${this.usuario.cod_usuar}/log/${id}`)
+  //   .add({hora: hora, minutos: minutos, titulo: titulo, mensaje: mensaje, datoslog: datoslog});
+}
   // Carga bancos definidos en Netsolin
   cargaBancosNetsolin() {
     return new Promise((resolve, reject) => {

@@ -261,7 +261,7 @@
                                             <div class="fechavisita">
                                                 <ion-icon name="calendar" slot="start" color="secondary" *ngIf="true"></ion-icon>
                                                 <ion-icon name="mail-open" slot="start" color="primary" *ngIf="!true"></ion-icon>
-                                                <ion-text color="primary">{{ item.registro | date: 'mediumDate'}}</ion-text>
+                                                <ion-text color="primary">{{ item.registro.toDate() | date: 'mediumDate'}}</ion-text>
                                             </div>
                                             <!-- <ion-text color="primary">Mensaje</ion-text> -->
                                         </h2>

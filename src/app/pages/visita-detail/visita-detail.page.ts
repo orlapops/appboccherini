@@ -123,7 +123,8 @@ export class VisitaDetailPage implements OnInit {
             // inventario : this._visitas.inventario
             inventario: this._prods.inventario
           };
-            console.log('inventario en prods: ',reginv,this._prods.inventario);
+            // console.log('inventario en prods: ',reginv,this._prods.inventario);
+            this._parEmpre.reg_logappusuario('Carga inv factura','this._prods.inventario',this._prods.inventario);
           //  this._visitas.guardarInvdFB(bodega, reginv).then(res => {
           //op mayo 23 19 no se guarda en firebase
           // this._prods
@@ -214,7 +215,7 @@ export class VisitaDetailPage implements OnInit {
           this.cargoVisitaActual = true;
           // console.log('constructor detalle visita 4 this.visitaAct: ', this.visitaAct);
           this._actividad.getActividadesVisitaActual(this.visitaAct).subscribe((datosa: any) => {
-            // console.log('actividades de la visita: ', datosa);
+            console.log('actividades de la visita: ', datosa);
             this.listaactividades = datosa;
             // console.log(this.listaactividades.id);
             // console.log(this.listaactividades.payload.doc);
@@ -222,7 +223,7 @@ export class VisitaDetailPage implements OnInit {
             // console.log(this.listaactividades.payload.doc.id);
           });
           this._actividad.getFotosVisitaActual(this.visitaAct).subscribe((datosf: any) => {
-            // console.log('Fotos de la visita: ', datosf);
+            console.log('Fotos de la visita: ', datosf);
             this.listafotos = datosf;
             // console.log('Fotos de la visita listafotos: ', this.listafotos);
             // console.log(this.listaactividades.id);
@@ -544,16 +545,20 @@ export class VisitaDetailPage implements OnInit {
         encodingType: this.camera.EncodingType.PNG,
         mediaType: this.camera.MediaType.PICTURE
       };
+      this._parEmpre.reg_logappusuario('tomafoto','Ingreso',{});
+
       this.camera.getPicture(optionscam).then((imageData) => {
         this.presentLoading('Guardando Imagen');
         console.log('en mostrar camara2 optionscam:',optionscam);
         console.log('en mostrar camara2 imageData:',imageData);
         this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
+        this._parEmpre.reg_logappusuario('tomafoto','Tomo foto ',{imagenPreview: this.imagenPreview});
         console.log('this.imagenPreview:', this.imagenPreview);
         this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
           this.visitaID, imageData);
        }, (err) => {
         // Handle error
+        this._parEmpre.reg_logappusuario('tomafoto','Tomo foto Error ',{error: JSON.stringify(err)});
         console.log('Error en camara', JSON.stringify(err));
        });
        console.log('en mostrar camara4');
