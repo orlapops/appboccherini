@@ -36,6 +36,7 @@ export class VisitasProvider {
     public men_errorcargarruta = "";
     visitas_cumplidas: any[] = [];
     visitas_pendientes: any[] = [];
+    visitas_xllamada: any[] = [];
     visitas_incumplidas: any[] = [];
     visita_activa_copvdet: any;
     visita_activa: any;
@@ -150,7 +151,52 @@ cargaPeriodoUsuar(pcod_usuar){
          });
        });
   }
-
+  //Crea visita por llamada para tomar pedidos (no se encuentra en el sitio)
+  crearVisitaxllamada(pdcliente,pdvisita) {
+    console.log("crearVisitaxllamada pdcliente:", pdcliente,pdvisita);
+    const now = new Date();
+    const hora = now.getHours();
+    const minutos = now.getMinutes();
+    const horaing = hora.toString()+minutos.toString()
+    const idvisi = 9990000000000000+now.getTime();
+    const visicrear = {
+      cod_tercer: pdcliente.cod_tercer,
+      direccion: pdcliente.direccion,
+      envio_email: false,
+      error_envemail: '',
+      errorgrb_factu: false,
+      errorgrb_pedido:false,
+      errorgrb_recibo:false,
+      estado: 'L',
+      fecha_fin: pdvisita.fecha_fin,
+      fecha_in: pdvisita.fecha_in,
+      fechahora_cierre: '',
+      fechahora_ingreso: Date(),
+      hora_in : parseInt(horaing),
+      hora_sal : parseInt(horaing),
+      grb_pedido : false,
+      resgrb_pedido : '',
+      pedido_grabado : null,
+      grb_factu : false,
+      resgrb_factu : '',
+      pedido_factu : null,
+      grb_recibo : false,
+      resgrb_recibo : '',
+      pedido_recibo : null,
+      id_dir: pdcliente.id_dir, 
+      id_reffecha: pdvisita.id_reffecha,
+      id_ruta: pdvisita.id_ruta,
+      id_visita: idvisi,
+      nombre: pdcliente.nombre,
+      llamada: true,
+      notaing: '',
+      notas: 'Llamada Cliente'
+    };
+    return this.fbDb
+    .collection(`/personal/${this._parempre.usuario.cod_usuar}/rutas/${this.id_ruta}/periodos/${this.id_periodo}/visitas`)
+    .doc(idvisi.toString()).set(visicrear);
+  
+  }
   //Obtiene las visitas que corresponde a la fecha y ruta tomada de carga anterior en netsolin
   public getVisitasidrutper() {
       const lruta = `/personal/${this._parempre.usuario.cod_usuar}/rutas/${this.id_ruta}/periodos/${this.id_periodo}/visitas`;
@@ -546,7 +592,8 @@ cargaPeriodoUsuar(pcod_usuar){
       this.visitas_cumplidas = this.visitaTodas.filter(reg => reg.data.estado === 'C');
       this.visitas_pendientes = this.visitaTodas.filter(regP => regP.data.estado === 'P'
        || regP.data.estado === 'A' || regP.data.estado === '');
-      //  const visiabiertas = this.visitaTodas.filter(regP => regP.data.estado === 'A');
+       this.visitas_xllamada = this.visitaTodas.filter(reg => reg.data.estado === 'L');
+       //  const visiabiertas = this.visitaTodas.filter(regP => regP.data.estado === 'A');
       //  console.log('clasificando visitas 2',visiabiertas.data, visiabiertas.lenght);
       //  if (visiabiertas.lenght > 0){
       //    //asignar a abierta la primera que encuentre abierta
@@ -556,6 +603,7 @@ cargaPeriodoUsuar(pcod_usuar){
     // console.log('clasificando visitas 5');
     // console.log(this.visitas_pendientes);
     // console.log(this.visitas_cumplidas);
+    console.log(this.visitas_xllamada);
   }
 
 

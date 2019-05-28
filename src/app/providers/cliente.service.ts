@@ -33,6 +33,7 @@ export class ClienteProvider {
     public error_cargacliente = false;
     public men_errorcargacliente = "";
     direcciones: Array<any> = [];
+    clienbus: Array<any> = [];
     cargoclienteNetsolin = false;
     public dclienteFb: any;
     
@@ -45,6 +46,32 @@ export class ClienteProvider {
             console.log('en constructor cliente ', this.clienteActual);
     }
     
+  // Carga busqueda clientes netsolin codigo o nombre en pbuxar
+  cargaBusquedaClientesNetsolin(pbuscar) {
+    console.log('cargaBusquedaClientesNetsolin pcliente',pbuscar);
+    return new Promise((resolve, reject) => {
+      NetsolinApp.objenvrest.filtro = pbuscar;
+      let url =this._parempre.URL_SERVICIOS +"netsolin_servirestgo.csvc?VRCod_obj=BUSCLIENTESAPP";
+      console.log("cargaBusquedaClientesNetsolin url", url);
+      console.log("cargaBusquedaClientesNetsolin NetsolinApp.objenvrest",NetsolinApp.objenvrest);
+      this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
+        console.log(" cargaBusquedaClientesNetsolin data:", data);
+        if (data){
+        if (data.error) {
+          console.error(" cargaBusquedaClientesNetsolin ", data.error);
+          this.clienbus = null;
+          console.log('cargaBusquedaClientesNetsolin a null: ',this.clienbus);
+          resolve(false);
+        } else {
+          console.log("Datos traer cargaBusquedaClientesNetsolin ", data.clientes);
+          this.clienbus = data.clientes;
+          console.log('clientes busqueda resolve true: ',this.clienbus);
+          resolve(true);
+        }
+      } 
+      });
+    });
+  }
 
     //guarda o actualiza el cliente actual en coleccion clientes de firestore
     public guardarClienteFb(id){

@@ -47,6 +47,7 @@ export class HomePage implements OnInit {
   visitas: any;
   cargovisitas = false;
   visitalocation: string;
+  clientelocation: string;
   cargocoordenadas = false;
 
   agmStyles: any[] = environment.agmStyles;
@@ -144,6 +145,7 @@ export class HomePage implements OnInit {
             .then(cargo => {
               // console.log("ngOnInit home 2 luego de cargaVisitas");
               // console.log(this._visitas.visitaTodas);
+              console.log('Visitas x llamada ',this._visitas.visitas_xllamada);
               // console.log(cargo);
               if (cargo) {
                 // console.log("ngonit home cargo visitas verdadero");
@@ -176,7 +178,9 @@ export class HomePage implements OnInit {
 
 
   itemSelected(item: string) {
-    this.visitalocation = item;
+    // op mayo 27 19 cambio para reg llamada 
+    // this.visitalocation = item;
+    this.clientelocation = item;
     this.showItems = false;
   }
 
@@ -221,6 +225,24 @@ export class HomePage implements OnInit {
   //   return this.openMenu = !this.openMenu;
   // }
   // // //
+  async viewClientes() {
+    const loader = await this.loadingCtrl.create({
+      duration: 1000
+    });
+
+    loader.present();
+    loader.onWillDismiss().then(() => {
+      this.navCtrl.navigateForward(
+        `clientes-list/${this.clientelocation}/${this.checkin.date}/${
+          this.checkout.date
+        }`
+      );
+      // this.navCtrl.navigateForward(['visita-list', this.visitalocation,this.checkin.date, this.visitalocation, this.checkout.date]);
+      // this.router.navigate(['visita-list', 'text buscar']);
+      // this.router.navigate(['/bill-detail', billId]);
+    });
+  }
+
   async viewVisitas() {
     // console.log("homepage visita-list home checkin", this.checkin);
     // console.log("homepage visita-list home ", this.checkin);
@@ -324,9 +346,13 @@ export class HomePage implements OnInit {
         // console.log('retorna bg-verde');
         // return 'bg-verde';
       } else {
-        return 'colorvispend';
-        // return 'bg-white';
-    }
+        if (estado === 'L') {
+          return 'colorvisllamada';
+        } else {
+          return 'colorvispend';
+      }
+  
+      }
   }
   }
 }

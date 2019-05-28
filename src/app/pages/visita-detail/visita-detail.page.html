@@ -75,7 +75,8 @@
                                 <ion-col size="9" class="text-align">
                                     <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
                                     <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
-                                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
+                                    <hr *ngIf="visita.data.estado === 'L'" class="hrvisitallamada">
+                                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'  && visita.data.estado != 'L'" class="hrvisitanoabierta">
                                     <!-- <p class="clientevisita text"> -->
                                     <ion-text color="dark"> {{visitaAct.nombre}} </ion-text>
                                     <!-- </p> -->
@@ -119,7 +120,7 @@
                         </ion-fab-button>
                     </ion-fab>
 
-                    <ion-fab *ngIf="visitaAct.estado == 'A'" vertical="center" horizontal="end" slot="fixed">
+                    <ion-fab *ngIf="visitaAct.estado == 'A' || visitaAct.estado == 'L'" vertical="center" horizontal="end" slot="fixed">
                         <ion-fab-button color="danger" (click)="cerrarVisita()">
                             <ion-icon name="log-out"></ion-icon>
                         </ion-fab-button>
@@ -203,7 +204,8 @@
                                 <ion-icon size="medium" color="dark" name="contact"></ion-icon>{{ visitaAct.nombre }}</h6>
                             <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
                             <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
-                            <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
+                            <hr *ngIf="visita.data.estado === 'L'" class="hrvisitallamada">
+                            <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C' && visita.data.estado != 'L'" class="hrvisitanoabierta">
                             <h6 color="light" margin-bottom class="h6">
                                 <ion-icon size="medium" color="dark" name="locate"></ion-icon>{{visitaAct.direccion}}</h6>
                         </ion-text>
@@ -245,7 +247,7 @@
                                     </ion-text>
                                 </ion-col>
                                 <ion-col size="3">
-                                    <ion-button *ngIf="visitaAct.estado == 'A'" icon-left color="secondary" routerLink="/regactividades/0" shape="round" fill="solid">
+                                    <ion-button *ngIf="visitaAct.estado == 'A' || visitaAct.estado == 'L'" icon-left color="secondary" routerLink="/regactividades/0" shape="round" fill="solid">
                                         <ion-icon name="add"></ion-icon>
                                     </ion-button>
                                 </ion-col>
@@ -290,8 +292,9 @@
                     </ion-text>
                     <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
                     <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
-                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
-                    <ion-card *ngIf="_parEmpre.usuario.recauda && visitaAct.estado == 'A'" class="facturaCard">
+                    <hr *ngIf="visita.data.estado === 'L'" class="hrvisitallamada">
+                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C' && visita.data.estado != 'L'" class="hrvisitanoabierta">
+                    <ion-card *ngIf="_parEmpre.usuario.recauda && (visitaAct.estado == 'A' || visitaAct.estado == 'L')" class="facturaCard">
                         <!-- <ion-card-content>
         <ion-card no-margin margin-vertical class="bg-white" *ngFor="let item of clienteAct.cartera">
         <ion-item>
@@ -327,14 +330,21 @@
                                     </ion-col>
 
                                 </ion-row>
-                                <ion-row>
+                                <ion-row *ngIf="item.naturaleza == 'D'">
                                     <ion-col>
                                         <ion-button size="small" shape="round" expand="full" color="warning" routerLink="/recibo-detail/{{item.num_obliga}}">
                                             <ion-icon slot="start" name="book"></ion-icon>
                                             Detalle Obligación
                                         </ion-button>
                                     </ion-col>
-
+                                </ion-row>
+                                <ion-row *ngIf="item.naturaleza == 'C'">
+                                    <ion-col>
+                                        <ion-button size="small" shape="round" expand="full" color="danger">
+                                            <ion-icon slot="start" name="book"></ion-icon>
+                                            Anticipo
+                                        </ion-button>
+                                    </ion-col>
                                 </ion-row>
                             </ion-grid>
                         </ion-card-content>
@@ -351,7 +361,8 @@
                     </ion-text>
                     <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
                     <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
-                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
+                    <hr *ngIf="visita.data.estado === 'L'" class="hrvisitallamada">
+                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C' && visita.data.estado != 'L'" class="hrvisitanoabierta">
                     <ion-searchbar [(ngModel)]="buscar_item" debounce="4000" (ionChange)="buscar_productos($event)" placeholder="Buscar Producto"></ion-searchbar>
                     <div *ngIf="searching" class="spinner-container">
                         <ion-spinner></ion-spinner>
@@ -392,7 +403,7 @@
 
             </div>
             <div *ngSwitchCase="'pedido'">
-                <div *ngIf="_parEmpre.usuario.cap_pedido  && visitaAct.estado == 'A'" class="bg-white pedido-padding">
+                <div *ngIf="_parEmpre.usuario.cap_pedido  && (visitaAct.estado == 'A' || visitaAct.estado == 'L')" class="bg-white pedido-padding">
                     <ion-text color="primary">
                         <h6>
                             <ion-icon size="small" color="dark" name="cart"></ion-icon> {{clienteAct.cliente}}
@@ -401,7 +412,8 @@
                     </ion-text>
                     <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
                     <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
-                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
+                    <hr *ngIf="visita.data.estado === 'L'" class="hrvisitallamada">
+                    <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C' && visita.data.estado != 'L'" class="hrvisitanoabierta">
                     <!-- <hr class="bg-tertiary"> -->
                     <ion-searchbar class="margin-top" debounce="4000" [(ngModel)]="buscar_itemped" (ionChange)="buscar_productosped($event)" placeholder="Buscar producto"></ion-searchbar>
                     <div *ngIf="searchingped" class="spinner-container">
@@ -453,7 +465,7 @@
                 <ion-label>Pedidos</ion-label>
             </ion-segment-button>
             <!-- class="btfacturar-color text-color" -->
-            <ion-segment-button size="small" *ngIf="_parEmpre.usuario.cap_factura" class="buttonult" value="facturar">
+            <ion-segment-button size="small" *ngIf="_parEmpre.usuario.cap_factura && visita.data.estado != 'L'" class="buttonult" value="facturar">
                 <ion-icon slot="start" name="paper"></ion-icon>
                 <ion-label>Factura</ion-label>
             </ion-segment-button>

@@ -1,0 +1,59 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <!-- <ion-title>{{ 'app.pages.visitalist.title.header' | translate }}</ion-title> -->
+        <ion-title>Lista Clientes</ion-title>
+    </ion-toolbar>
+
+    <ion-toolbar color="dark">
+        <ion-title>
+            <h6 no-margin>({{ clientes?.length || '0' }}) {{ 'app.label.resultsf' | translate }}</h6>
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="animated fadeIn">
+
+    <div>
+        <!-- <ion-item tappable routerLink="/visita-detail/{{visita.id}}" *ngFor="let visita of visitas"> -->
+        <ion-list>
+            <ion-item-sliding *ngFor="let cliente of clientes">
+                <ion-item>
+                    <ion-label>
+                        <h2 [ngClass]="{'fw700 text-white': !true}">
+                            <div class="fechavisita">
+                                <ion-text color="primary">{{cliente.cod_tercer}}</ion-text>
+                            </div>
+                        </h2>
+                        <hr>
+                        <h2 class="clientevisita">
+                            <ion-text color="blue"> {{cliente.nombre}}</ion-text>
+                        </h2>
+                        <h3>
+                            <div class="direcvisita">
+                                <ion-icon name="pin" slot="start" class="direcvisita"></ion-icon>
+                                <ion-text color="dark"> {{cliente.direccion}} </ion-text>
+                            </div>
+                        </h3>
+                        <h4 class="notavisita">
+                            <p [ngClass]="{'text-light': !true}">
+                                <ion-text color="dark">{{ cliente.ciudad }}</ion-text>
+                            </p>
+                        </h4>
+                        <h4 class="notavisita">
+                            <p [ngClass]="{'text-light': !true}">
+                                <ion-text color="dark">{{ cliente.barrio }}</ion-text>
+                            </p>
+                        </h4>
+                    </ion-label>
+                </ion-item>
+                <ion-item-options side="end">
+                    <ion-item-option color="success" (click)="crearvisita(cliente)">Crear</ion-item-option>
+                </ion-item-options>
+            </ion-item-sliding>
+        </ion-list>
+
+    </div>
+</ion-content>

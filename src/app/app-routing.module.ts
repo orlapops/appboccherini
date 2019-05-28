@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: 'register', loadChildren: './pages/register/register.module#RegisterPageModule' },
   { path: 'edit-profile', loadChildren: './pages/edit-profile/edit-profile.module#EditProfilePageModule' },
   { path: 'settings', loadChildren: './pages/settings/settings.module#SettingsPageModule' },
+  { path: 'clientes-list/:textbus/:fini/:ffin', loadChildren: './pages/clientes-list/clientes-list.module#ClientesListPageModule' },
   { path: 'visita-list/:textbus/:fini/:ffin', loadChildren: './pages/visita-list/visita-list.module#VisitaListPageModule' },
   { path: 'visita-detail/:id', loadChildren: './pages/visita-detail/visita-detail.module#VisitaDetailPageModule' },
   { path: 'regactividades/:id', loadChildren: './pages/regactividades/regactividades.module#RegActividadesPageModule' },

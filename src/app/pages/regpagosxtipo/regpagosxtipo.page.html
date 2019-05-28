@@ -96,7 +96,7 @@
                         </ion-item>
                         <ion-item class="bg-white" *ngIf="regpago.tipopago==='CHD'">
                             <ion-label color="dark">Núm Cheque:</ion-label>
-                            <ion-input required autocapitalize="none" slot="end" class="chcuenpago" [(ngModel)]="regpago.referencia" type="text">
+                            <ion-input required slot="end" class="inputnumero" [(ngModel)]="regpago.referencia" type="number" min="1" max="9999999999">
                             </ion-input>
                         </ion-item>
                         <ion-item class="bg-white" *ngIf="regpago.tipopago==='CHD'">

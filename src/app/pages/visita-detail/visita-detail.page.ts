@@ -373,14 +373,25 @@ export class VisitaDetailPage implements OnInit {
   validaCierreVisita() {
     let retorna = false;
     //valida si puede cerrar visita
-    if (this.ubicaAct.email && this.ubicaAct.contacto && this.ubicaAct.longitud && this.ubicaAct.latitud) {
-      //valida si tiene items de pedido en proceso
-    if(this._prods.factura.length > 0 || this._prods.pedido.length > 0 || this._recibos.recibocaja.length > 0 ){
-      console.error('No puede tener items en proceso en pedidos, facturas o recibos. Elimine para cerrar o termine el proceso.',this._prods.factura , this._prods.pedido, this._recibos.recibocaja);
-      this.presentError('No puede tener items en proceso en pedidos, facturas o recibos. Elimine para cerrar o termine el proceso.');
+    let esllamada = false;
+    let continua = false;
+   if (this._visitas.visita_activa_copvdet.estado === 'L'){
+        console.log('3');
+        continua = true;
     } else {
-      retorna = true;
+        if (this.ubicaAct.email && this.ubicaAct.contacto && this.ubicaAct.longitud && this.ubicaAct.latitud) {  
+          continua = true;
+        }
     }
+          // if (this.ubicaAct.email && this.ubicaAct.contacto && this.ubicaAct.longitud && this.ubicaAct.latitud) {
+    if (continua) {
+      //valida si tiene items de pedido en proceso
+      if(this._prods.factura.length > 0 || this._prods.pedido.length > 0 || this._recibos.recibocaja.length > 0 ){
+        console.error('No puede tener items en proceso en pedidos, facturas o recibos. Elimine para cerrar o termine el proceso.',this._prods.factura , this._prods.pedido, this._recibos.recibocaja);
+        this.presentError('No puede tener items en proceso en pedidos, facturas o recibos. Elimine para cerrar o termine el proceso.');
+      } else {
+        retorna = true;
+      }
     } else {
       console.error('Debe ingresar a actualizar datos cliente. Email, contacto, Ubicación Gps', this.visitaAct, this.cargo_posicion, this.ubicaAct);
       this.presentError('Debe ingresar a actualizar datos cliente. Email, contacto, Ubicación Gps');
@@ -389,13 +400,17 @@ export class VisitaDetailPage implements OnInit {
   }
   cerrarVisita() {
     // validar si puede cerrar
-    
+    console.log('cerrarVisita visita activa:', this._visitas.visita_activa_copvdet);
+    // console.log('cerrarVisita visita',this.visitaAct, this._visitas.visita_activa);
+    const esllamada = this._visitas.visita_activa_copvdet.estado === 'L' ? true : false;
+    console.log('esllamada',esllamada);
     const datactvisita = {
       fechahora_cierre : Date(),
       lat_cierre: this.coords.lat,
       long_cierre: this.coords.lng,
       envio_email: false,
       error_envemail: '',
+      llamada: esllamada,
       estado : 'C'
     };
     if (this.validaCierreVisita()) {
@@ -460,6 +475,7 @@ export class VisitaDetailPage implements OnInit {
         });
     }
   }
+  
   actualizarGps(){
 
   }
@@ -471,8 +487,12 @@ export class VisitaDetailPage implements OnInit {
       if (estado === 'A') {
         return 'bg-verde';
       } else {
-        return 'bg-white';
-    }
+        if (estado === 'L') {
+          return 'bg-warning';
+        } else {
+          return 'bg-white';
+        }
+      }
   }
   }
 
