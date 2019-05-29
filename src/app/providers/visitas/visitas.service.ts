@@ -152,7 +152,7 @@ cargaPeriodoUsuar(pcod_usuar){
        });
   }
   //Crea visita por llamada para tomar pedidos (no se encuentra en el sitio)
-  crearVisitaxllamada(pdcliente,pdvisita) {
+  public  crearVisitaxllamada(pdcliente,pdvisita) {
     console.log("crearVisitaxllamada pdcliente:", pdcliente,pdvisita);
     const now = new Date();
     const hora = now.getHours();

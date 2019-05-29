@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
 import { environment } from '../../../environments/environment';
 import { VisitasProvider } from '../../providers/visitas/visitas.service';
@@ -43,6 +43,7 @@ export class ClientesListPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public navCtrl: NavController,
+    public alertCtrl: AlertController,
     private translate: TranslateProvider,
     public _parEmpre: ParEmpreService,
     public _visitas: VisitasProvider,
@@ -77,13 +78,23 @@ export class ClientesListPage implements OnInit {
     console.log('Segment changed', ev);
     
   }
-  crearvisita(dcliente) {
-    console.log('crearvisita');
+  async crearvisita(dcliente) {
+    // console.log('crearvisita');
     console.log('datos para crear visita del cliente:',dcliente,this._visitas.visitaTodas[0].data);
     const ldatvisi = this._visitas.visitaTodas[0].data;
 // tslint:disable-next-line: triple-equals
     if (typeof ldatvisi !== undefined){
-      this._visitas.crearVisitaxllamada(dcliente,ldatvisi);
+      const alert2 = await this.alertCtrl.create({
+        message: 'Creando Visita por llamada',
+        buttons: ['Enterado']
+      });
+       await alert2.present();
+      this._visitas.crearVisitaxllamada(dcliente,ldatvisi)
+      .then(async res => {        
+        this.navCtrl.navigateRoot('/home');
+        // console.log('retorna de crear visita llamada',res);
+      }
+      );      
     }
   }
 

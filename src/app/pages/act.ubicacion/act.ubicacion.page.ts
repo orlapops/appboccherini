@@ -99,7 +99,7 @@ export class ActUbicacionPage implements OnInit {
       const toast = await this.toastCtrl.create({
         showCloseButton: true,
         message: 'Se modifo la actividad.',
-        duration: 2000,
+        duration: 1000,
         position: 'bottom'
       });
       toast.present();

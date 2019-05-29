@@ -144,7 +144,7 @@ export class HomePage implements OnInit {
             .cargaVisitas()
             .then(cargo => {
               // console.log("ngOnInit home 2 luego de cargaVisitas");
-              // console.log(this._visitas.visitaTodas);
+              console.log('Todas las visitas',this._visitas.visitaTodas);
               console.log('Visitas x llamada ',this._visitas.visitas_xllamada);
               // console.log(cargo);
               if (cargo) {
