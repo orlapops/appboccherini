@@ -4,6 +4,7 @@ import {
   MenuController,
   LoadingController,
   Platform,
+  AlertController,
   ModalController,
   ActionSheetController
 } from '@ionic/angular';
@@ -72,6 +73,7 @@ export class HomePage implements OnInit {
     public modalCtrl: ModalController,
     public geolocation: Geolocation,
     public navCtrl: NavController,
+    public alertCtrl: AlertController,
     public menuCtrl: MenuController,
     public loadingCtrl: LoadingController,
     private translate: TranslateProvider,
@@ -226,6 +228,15 @@ export class HomePage implements OnInit {
   // }
   // // //
   async viewClientes() {
+    console.log('dato a buscar: ', this.clientelocation);
+    if (this.clientelocation === undefined  || this.clientelocation ==='' || this.clientelocation === '*') {
+      const alert2 = await this.alertCtrl.create({
+        message: 'Debe ingresar parte del código o nombre del cliente',
+        buttons: ['Enterado']
+      });
+       await alert2.present();
+      
+    } else {
     const loader = await this.loadingCtrl.create({
       duration: 1000
     });
@@ -241,6 +252,7 @@ export class HomePage implements OnInit {
       // this.router.navigate(['visita-list', 'text buscar']);
       // this.router.navigate(['/bill-detail', billId]);
     });
+  }
   }
 
   async viewVisitas() {

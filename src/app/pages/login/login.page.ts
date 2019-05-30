@@ -127,7 +127,12 @@ export class LoginPage implements OnInit {
         this._parEmpreProv.reg_log('Login 3 usuario valido:', 'this._parEmpreProv.usuario');
         console.log('Login 3 usuario valido:', this._parEmpreProv.usuario);
         this._parEmpreProv.guardarUsuarioStorage().then(()=>{
-        if (this._parEmpreProv.datoslicencia.logeo_firebase){
+          console.log('Login 4 GUARDO Y VA A TRAER CLIENTES usuario ', this._parEmpreProv);
+          this._parEmpreProv.cargaClientesxvendNetsolin().then(resultado => {
+            console.log('Login 5 CARGO CLIENTES usuario ', resultado);
+          });
+          console.log('Login 6 GUARDO Y VA A TRAER CLIENTES usuario ', this._parEmpreProv);
+          if (this._parEmpreProv.datoslicencia.logeo_firebase){
           this._parEmpreProv.reg_log('Login', 'login 4 legeo por firebase');
           this.auth.loginUser(this.onLoginForm.get('email').value, this.onLoginForm.get('password').value ).then((user) => {
             this._parEmpreProv.reg_log('Login', 'login 5');

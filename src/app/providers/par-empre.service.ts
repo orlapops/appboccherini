@@ -180,6 +180,46 @@ reg_logappusuario(titulo, mensaje, datoslog) {
 });
 }
 
+  // Carga clientes de un vendedor definidos en Netsolin
+  cargaClientesxvendNetsolin() {
+    return new Promise((resolve, reject) => {
+      console.log('ingreso a cargaClientesxvendNetsolin');
+      NetsolinApp.objenvrest.filtro = '';
+      //A cargar los clientes del vendedor (usuario actual) Filtro blanco
+      let url =this.URL_SERVICIOS +"netsolin_servirestgo.csvc?VRCod_obj=BUSCLIENTESAPP";
+      console.log('ingreso a cargaClientesxvendNetsolin url', url, NetsolinApp.objenvrest);
+      this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
+        console.log('ingreso a cargaClientesxvendNetsolin data', data);
+        if (data.error) {
+          console.error(" cargaClientesxvendNetsolin ", data.error);
+          resolve(false);
+        } else {
+          console.log('ingreso a cargaClientesxvendNetsolin cargo ciudades');
+          this.guardarClientexvendFB(data).then(resultado => {
+              if (resultado) {
+                resolve(true);
+              }
+          });
+        }
+      });
+    });
+  }
+ //guardar clientes vendedor en firebase
+ public guardarClientexvendFB(data) {
+  return new Promise((resolve, reject) => {
+  console.log('guardarClientexvendFB:');
+  console.log(data);
+  let clievendlist: AngularFirestoreCollection<any>;  
+  clievendlist = this.fbDb.collection(`/personal/${this.usuario.cod_usuar}/clientes`);
+  data.clientes.forEach((cliente: any) => {
+    console.log('recorriendo clientes :cliente ', cliente);
+    const idcliente   = cliente.cod_tercer + cliente.id_dir.toString();
+    console.log('recorriendo clientes :idcliente ', idcliente);
+    clievendlist.doc(idcliente).set(cliente);
+  });
+  resolve(true);
+});
+}
 
 
   //Obtiene tipos actividades de FB

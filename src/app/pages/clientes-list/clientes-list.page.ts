@@ -56,12 +56,25 @@ export class ClientesListPage implements OnInit {
     this.fechainibus = this.route.snapshot.paramMap.get('fini');
     this.fechafinbus = this.route.snapshot.paramMap.get('ffin');
     console.log('param leido llega ', this.textbus, this.fechainibus, this.fechafinbus);
-    this._clientes.cargaBusquedaClientesNetsolin(this.textbus)
-    .then(cargo =>{
-      if (cargo) {
-          this.clientes = this._clientes.clienbus;
-      };
-    })
+//op mayo 30 19 cambiado para cargar de fb se cargaron al logear los clientes del vendedor
+        // this._clientes.cargaBusquedaClientesNetsolin(this.textbus)
+        // .then(cargo =>{
+        //   if (cargo) {
+        //       this.clientes = this._clientes.clienbus;
+        //   };
+        // })
+      this._clientes.getClientesvendFb().subscribe((datos: any) => {
+        console.log("Cargo clientes  de firebase datos", datos);
+        if (this.textbus === undefined || this.textbus ==='' ){
+          this.clientes = datos;  
+        } else {
+          this.clientes = datos.filter(
+            (item: any) =>
+              item.cod_tercer.toLowerCase().indexOf(this.textbus.toLowerCase()) > -1 ||
+              item.nombre.toLowerCase().indexOf(this.textbus.toLowerCase()) > -1
+          )
+          }  
+      });
     // this.visitas = this._visitas.visitaTodas.filter((item: any) =>
     //         item.data.cod_tercer.toLowerCase().indexOf(this.textbus.toLowerCase()) > -1 
     //         || item.data.nombre.toLowerCase().indexOf(this.textbus.toLowerCase()) > -1 );  
