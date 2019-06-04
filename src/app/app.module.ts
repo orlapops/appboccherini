@@ -27,6 +27,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { ParEmpreService } from './providers/par-empre.service';
 import { AuthService } from './providers/auth.service';
 import { VisitasProvider } from './providers/visitas/visitas.service';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
 // import { VisitaitemComponent } from './netsolinlibrerias/visitaitem/visitaitem.component';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
@@ -98,6 +99,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     TranslateProvider,
     Geolocation,
     Camera,
+    ImagePicker,
     BluetoothSerial,
     VisitasProvider,
     UbicacionProvider,

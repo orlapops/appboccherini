@@ -26,6 +26,7 @@ import { ActividadesService } from '../../providers/actividades/actividades.serv
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 import { UbicacionProvider } from '../../providers/ubicacion/ubicacion.service';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
 
 
 @Component({
@@ -81,6 +82,7 @@ export class VisitaDetailPage implements OnInit {
     public geolocation: Geolocation,
     private translate: TranslateProvider,
     public _visitas: VisitasProvider,
+    private imagePicker: ImagePicker,
     public _prods: ProdsService,
     public _recibos: RecibosService,
     public _actividad: ActividadesService,
@@ -582,6 +584,23 @@ export class VisitaDetailPage implements OnInit {
         console.log('Error en camara', JSON.stringify(err));
        });
        console.log('en mostrar camara4');
+  }
+
+  seleccionarFoto(){
+    const options = {      
+      width: 200,
+      quality: 25,
+      outputType: 1
+    };
+    this.imagePicker.getPictures(options).then((image) => {
+      this.presentLoading('Guardando Imagen');
+      for (var i = 0; i < image.length; i++) {
+        var imageData = image[i];
+        this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
+        this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
+            this.visitaID, imageData);
+      }      
+    }, (err) => { });
   }
 
 
