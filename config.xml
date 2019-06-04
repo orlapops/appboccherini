@@ -108,4 +108,5 @@
         <string>Necesitamos la ubicación</string>
     </edit-config>
     <engine name="android" spec="7.1.4" />
+    <plugin name="cordova-plugin-telerik-imagepicker" spec="2.3.2" />
 </widget>
