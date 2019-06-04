@@ -196,7 +196,10 @@
 
                         <ion-fab *ngIf="visitaAct.estado == 'A'" vertical="bottom" horizontal="end" slot="fixed">
                             <ion-fab-button color="secondary" (click)="tomafoto()" class="fab-buttom" size="small">
-                                <ion-icon name="add"></ion-icon>
+                                <ion-icon name="camera"></ion-icon>
+                            </ion-fab-button>
+                            <ion-fab-button color="secondary" (click)="seleccionarFoto()" class="fab-buttom" size="small">
+                                <ion-icon name="folder"></ion-icon>
                             </ion-fab-button>
                         </ion-fab>
                         <ion-text color="primary text-align">

@@ -15,6 +15,7 @@ import { environment } from '../../../environments/environment';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UbicacionProvider } from '../../providers/ubicacion/ubicacion.service';
 import { ParEmpreService } from '../../providers/par-empre.service';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
 
 declare var google:any;
 
@@ -48,6 +49,7 @@ export class RegCliepotenPage implements OnInit {
     public loadingCtrl: LoadingController,
     public _DomSanitizer: DomSanitizer,
     public toastCtrl: ToastController,
+    private imagePicker: ImagePicker,
     public _regcliepot: RegClientespotenService,
     private formBuilder: FormBuilder,
     public route: ActivatedRoute,
@@ -159,6 +161,21 @@ export class RegCliepotenPage implements OnInit {
       console.log('Error en camara', JSON.stringify(err));
      });
      console.log('en mostrar camara4');
+  }
+  seleccionarFoto(){
+    const options = {  
+      maximumImagesCount: 1,    
+      width: 200,
+      quality: 25,
+      outputType: 1
+    };
+    this.imagePicker.getPictures(options).then((image) => {
+      this.presentLoading('Guardando Imagen');
+      var imageData = image[0];
+      this.imagenPreview = `data:image/jpeg;base64,${imageData}`;   
+      this.fototomada =   imageData;
+      this.tomofoto = true;
+    }, (err) => { });
   }
 
   grabarClienpoten(){

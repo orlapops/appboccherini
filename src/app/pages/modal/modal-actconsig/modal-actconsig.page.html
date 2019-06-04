@@ -30,8 +30,12 @@
             <img *ngIf="consignacion.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(consignacion.link_imgfb)" />
             <img *ngIf="!consignacion.link_imgfb" src="assets/img/imagennodisponible.jpg" />
             <ion-button icon-left size="small" shape="round" color="tertiary" (click)="mostrar_camara()">
-                Actualizar Foto
+                Actualizar con Foto
                 <ion-icon name="camera"></ion-icon>
+            </ion-button>
+            <ion-button icon-left size="small" shape="round" color="tertiary" (click)="seleccionarFoto()">
+                Actualizar con Archivo 
+                <ion-icon name="folder"></ion-icon>
             </ion-button>
         </ion-card-content>
     </ion-card>

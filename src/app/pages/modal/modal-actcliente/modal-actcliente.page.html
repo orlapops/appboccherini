@@ -31,8 +31,12 @@
             <img *ngIf="_visitas.direc_actual.link_foto" [src]="_DomSanitizer.bypassSecurityTrustUrl(_visitas.direc_actual.link_foto)" />
             <img *ngIf="!_visitas.direc_actual.link_foto" src="assets/img/imagennodisponible.jpg" />
             <ion-button icon-left size="small" shape="round" color="tertiary" (click)="mostrar_camara()">
-                Actualizar Foto
+                Actualizar con Foto
                 <ion-icon name="camera"></ion-icon>
+            </ion-button>
+            <ion-button icon-left size="small" shape="round" color="tertiary" (click)="seleccionarFoto()">
+                Actualizar con Archivo
+                <ion-icon name="folder"></ion-icon>
             </ion-button>
             <!-- </ion-item> -->
 

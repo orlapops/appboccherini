@@ -8,6 +8,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ConsignacionesService } from '../../../providers/consignaciones/consignaciones.service';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class ModalActConsigPage implements OnInit {
     public platform: Platform,
     private actionSheetCtrl: ActionSheetController,
     private storage: AngularFireStorage,
+    private imagePicker: ImagePicker,
     public loadingCtrl: LoadingController,
     public _DomSanitizer: DomSanitizer,
     private formBuilder: FormBuilder,
@@ -78,11 +80,25 @@ export class ModalActConsigPage implements OnInit {
       console.log('en mostrar camara2 imageData:',imageData);
       this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
       console.log('this.imagenPreview:', this.imagenPreview);
-      this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData)
+      this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData);
      }, (err) => {
       console.log('Error en camara', JSON.stringify(err));
      });
      console.log('en mostrar camara4');
+  }
+  seleccionarFoto(){
+    const options = {  
+      maximumImagesCount: 1,    
+      width: 200,
+      quality: 25,
+      outputType: 1
+    };
+    this.imagePicker.getPictures(options).then((image) => {
+      this.presentLoading('Guardando Imagen');
+      var imageData = image[0];
+      this.imagenPreview = `data:image/jpeg;base64,${imageData}`;   
+      this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData);
+    }, (err) => { });
   }
 
   

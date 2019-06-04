@@ -12,6 +12,7 @@ import { environment } from '../../../../environments/environment'
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UbicacionProvider } from '../../../providers/ubicacion/ubicacion.service';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
 
 declare var google:any;
 
@@ -44,6 +45,7 @@ export class ModalActClientePage implements OnInit {
     private actionSheetCtrl: ActionSheetController,
     private storage: AngularFireStorage,
     public loadingCtrl: LoadingController,
+    private imagePicker: ImagePicker,
     public _DomSanitizer: DomSanitizer,
     private formBuilder: FormBuilder,
     public _ubicacionService: UbicacionProvider,
@@ -185,7 +187,22 @@ export class ModalActClientePage implements OnInit {
      console.log('en mostrar camara4');
 
   }
-
+  seleccionarFoto(){
+    const options = {  
+      maximumImagesCount: 1,    
+      width: 200,
+      quality: 25,
+      outputType: 1
+    };
+    this.imagePicker.getPictures(options).then((image) => {
+      this.presentLoading('Guardando Imagen');
+      var imageData = image[0];
+      this.imagenPreview = `data:image/jpeg;base64,${imageData}`;   
+      this._clientes.actualizaimagenClientefirebase(this._visitas.visita_activa_copvdet.cod_tercer,
+        this._visitas.visita_activa_copvdet.id_dir,
+        imageData);
+    }, (err) => { });
+  }
   actualiza_ubicaciongps(){
     console.log('actualiza_ubicaciongps', this.coords);
     const adireccion = this.onActclieForm.controls['direccion'].value;
