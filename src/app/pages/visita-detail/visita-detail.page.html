@@ -194,14 +194,7 @@
                 <div no-margin *ngSwitchCase="'actividades'" class="bg-white actividades-padding">
                     <div class="booking-card">
 
-                        <ion-fab *ngIf="visitaAct.estado == 'A'" vertical="bottom" horizontal="end" slot="fixed">
-                            <ion-fab-button color="secondary" (click)="tomafoto()" class="fab-buttom" size="small">
-                                <ion-icon name="camera"></ion-icon>
-                            </ion-fab-button>
-                            <ion-fab-button color="secondary" (click)="seleccionarFoto()" class="fab-buttom" size="small">
-                                <ion-icon name="folder"></ion-icon>
-                            </ion-fab-button>
-                        </ion-fab>
+                        
                         <ion-text color="primary text-align">
                             <h6 class="fw500">
                                 <ion-icon size="medium" color="dark" name="contact"></ion-icon>{{ visitaAct.nombre }}</h6>
@@ -213,24 +206,40 @@
                                 <ion-icon size="medium" color="dark" name="locate"></ion-icon>{{visitaAct.direccion}}</h6>
                         </ion-text>
                         <hr class="bg-tertiary margin-special">
-                        <ion-text color="primary">
-                            <h3 class="h3">
-                                <ion-icon size="medium" color="dark" name="images"></ion-icon> Imagenes </h3>
-                        </ion-text>
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col size="6">
+                                    <ion-text color="primary">
+                                        <h3 class="h3">
+                                            <ion-icon size="medium" color="dark" name="images"></ion-icon> Imagenes </h3>
+                                    </ion-text>
+                                </ion-col>
+                                <ion-col size="3">
+                                    <ion-button color="secondary" (click)="tomafoto()" shape="round" fill="solid">
+                                        <ion-icon name="camera"></ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                                <ion-col size="3">
+                                    <ion-button color="secondary" (click)="seleccionarFoto()" shape="round" fill="solid">
+                                        <ion-icon name="folder"></ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
                         <hr class="bg-tertiary">
                         <ion-slides pager="true" margin-bottom class="slide">
-                            <ion-slide *ngFor="let foto of listafotos | slice:0:4; let i = index" (click)="presentImage(foto.link_foto)">
+                            <ion-slide *ngFor="let foto of listafotos" (click)="presentImage(foto.link_foto)">
                                 <ion-grid no-padding>
                                     <ion-row>
                                         <ion-col size="12">
                                             <ion-card class="actividadesCard">
                                                 <ion-img [src]="foto.link_foto"></ion-img>
                                                 <!--
-        <ion-card-subtitle>
-        <ion-badge color="danger" (click)="eliminarFoto(foto)">
-        <ion-icon size="small" name="trash" class="trash_icon"></ion-icon>
-        </ion-badge>
-        </ion-card-subtitle> -->
+                                                <ion-card-subtitle>
+                                                <ion-badge color="danger" (click)="eliminarFoto(foto)">
+                                                <ion-icon size="small" name="trash" class="trash_icon"></ion-icon>
+                                                </ion-badge>
+                                                </ion-card-subtitle> -->
                                             </ion-card>
                                         </ion-col>
                                     </ion-row>

@@ -595,10 +595,9 @@ export class VisitaDetailPage implements OnInit {
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
       for (var i = 0; i < image.length; i++) {
-        var imageData = image[i];
-        this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
+        this.imagenPreview = `data:image/jpeg;base64,${image[i]}`; 
         this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
-            this.visitaID, imageData);
+            this.visitaID, image[i]);
       }      
     }, (err) => { });
   }
