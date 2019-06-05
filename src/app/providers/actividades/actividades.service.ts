@@ -169,8 +169,10 @@ actualizafotosVisitafirebase(idclie, idvisita, imageURL): Promise<any> {
   const hora = now.getHours();
   const minutos = now.getMinutes();
   const segundos = now.getSeconds();
-  const idimg = ano.toString()+ mes.toString() + dia.toString() + hora.toString() + minutos.toString()+ segundos.toString();
-
+  const milisegundos = now.getMilliseconds();
+  console.log(milisegundos);
+  const idimg = ano.toString()+ mes.toString() + dia.toString() + hora.toString() + minutos.toString()+ segundos.toString()+milisegundos;
+  console.log(idimg);
   const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_visitas/${idclie}/visita/${idvisita}/${idimg}/`);
   // this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase ',{storageRef: storageRef});
   console.log('tomafoto','actualizafotosVisitafirebase ',storageRef);
