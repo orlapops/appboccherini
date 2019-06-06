@@ -30,6 +30,7 @@
         "@ionic-native/file": "^5.2.0",
         "@ionic-native/geolocation": "^5.2.0",
         "@ionic-native/image-picker": "^5.7.0",
+        "@ionic-native/ionic-webview": "^5.7.0",
         "@ionic-native/native-storage": "^5.2.0",
         "@ionic-native/network": "^5.2.0",
         "@ionic-native/splash-screen": "^5.2.0",
@@ -94,9 +95,7 @@
             "cordova-plugin-statusbar": {},
             "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
-            "cordova-plugin-ionic-webview": {
-                "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-            },
+            "cordova-plugin-ionic-webview": {},
             "cordova-plugin-ionic-keyboard": {},
             "cordova-plugin-camera": {},
             "cordova-plugin-geolocation": {},

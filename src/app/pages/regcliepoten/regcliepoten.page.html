@@ -14,7 +14,7 @@
             <h3 color="light" margin-bottom>{{_visitas.visita_activa_copvdet.direccion}}</h3>
         </ion-card-content> -->
         <ion-card-content>
-            <img *ngIf=" tomofoto && imagenPreview" [src]="_DomSanitizer.bypassSecurityTrustUrl(imagenPreview)" />
+            <img *ngIf=" tomofoto && imagenPreview" [src]="imagenPreview" />
             <img *ngIf="!tomofoto && link_foto" [src]="_DomSanitizer.bypassSecurityTrustUrl(link_foto)" />
             <img *ngIf="!link_foto && !imagenPreview" src="assets/img/imagennodisponible.jpg" />
             <ion-button icon-left size="small" shape="round" color="tertiary" (click)="mostrar_camara()">

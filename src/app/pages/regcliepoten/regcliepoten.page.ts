@@ -16,6 +16,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UbicacionProvider } from '../../providers/ubicacion/ubicacion.service';
 import { ParEmpreService } from '../../providers/par-empre.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import {WebView} from '@ionic-native/ionic-webview/ngx';
 
 declare var google:any;
 
@@ -58,7 +59,8 @@ export class RegCliepotenPage implements OnInit {
     public router: Router,
     public _ubicacionService: UbicacionProvider,
     public _parEmpre: ParEmpreService,    
-    private camera: Camera
+    private camera: Camera,
+    private webview: WebView
   ) {
     platform.ready().then(() => {
       // La plataforma esta lista y ya tenemos acceso a los plugins.
@@ -139,23 +141,17 @@ export class RegCliepotenPage implements OnInit {
     console.log('en mostrar camara1');
     const optionscam: CameraOptions = {
       quality: 30,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.PNG,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     };
     this.camera.getPicture(optionscam).then((imageData) => {
       this.presentLoading('Guardando Imagen');
-      console.log('en mostrar camara2');
       console.log('en mostrar camara2 imageData:',imageData);
-      this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
+      this.imagenPreview = this.webview.convertFileSrc(imageData); 
       this.fototomada = imageData;
       this.tomofoto = true;
-      console.log('this.imagenPreview:', this.imagenPreview);
-      // this._regcliepot.actualizaFotoClientepotenfirebase()
-      // this._clientes.actualizaimagenClientefirebase(this._visitas.visita_activa_copvdet.cod_tercer,
-      //   this._visitas.visita_activa_copvdet.id_dir,
-      //   imageData);
-
+      console.log('en mostrar camara2 preview:',this.imagenPreview);
      }, (err) => {
       // Handle error
       console.log('Error en camara', JSON.stringify(err));

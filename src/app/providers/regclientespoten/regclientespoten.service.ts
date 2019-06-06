@@ -87,13 +87,11 @@ public BorrarClienpoten(id){
 //   ) 
 // }    
 
-actualizaFotoClientepotenfirebase(idclie, imageData): Promise<any> {
+actualizaFotoClientepotenfirebase(idclie, imageUri): Promise<any> {
   const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_clienpoten/${idclie}`);
-  return storageRef
-    .putString(imageData, 'base64', {
-      contentType: 'image/png',
-    })
-    .then(() => {
+  return storageRef.put(imageUri, {
+      contentType: 'image/jpg',
+    }).then(() => {
       return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
         // this._parempre.reg_log('a actualizar img fb linkref: ' , linkref);
         // console.log(linkref);
