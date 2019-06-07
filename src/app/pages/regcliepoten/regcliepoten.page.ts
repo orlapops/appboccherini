@@ -168,10 +168,10 @@ export class RegCliepotenPage implements OnInit {
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
       var imageData = image[0];
-      this.imagenPreview = `data:image/jpeg;base64,${imageData}`;   
-      this.fototomada =   imageData;
+      this.imagenPreview =`data:image/jpeg;base64,${imageData}`;   
+      this.fototomada =imageData;
       this.tomofoto = true;
-    }, (err) => { });
+    }, (err) => { console.log("error cargando imagenes")});
   }
 
   grabarClienpoten(){
