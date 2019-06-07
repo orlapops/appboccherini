@@ -10,6 +10,7 @@ import { Storage } from "@ionic/storage";
 import { VisitasProvider } from "../visitas/visitas.service";
 import { AngularFireStorage,  AngularFireStorageReference } from '@angular/fire/storage';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { File } from "@ionic-native/file/ngx";
 // import { Observable } from 'rxjs';
 // import { map } from "rxjs/operators";
 
@@ -25,7 +26,8 @@ export class RegClientespotenService implements OnInit {
     private storage: Storage,
     private afStorage: AngularFireStorage,
     private http: HttpClient,
-    public _visitas: VisitasProvider
+    public _visitas: VisitasProvider,
+    private file : File
   ) {}
   ngOnInit() {
     console.log("ngoniit RegClientespotenService");
