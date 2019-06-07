@@ -149,16 +149,10 @@ export class RegCliepotenPage implements OnInit {
     };
     this.camera.getPicture(optionscam).then((imageData) => {
       this.presentLoading('Guardando Imagen');
-      console.log('en mostrar camara2 imageData:',imageData);
       this.imagenPreview = this.webview.convertFileSrc(imageData); 
       this.fototomada = imageData;
       this.tomofoto = true;
-      console.log('en mostrar camara2 preview:',this.imagenPreview);
-     }, (err) => {
-      // Handle error
-      console.log('Error en camara', JSON.stringify(err));
-     });
-     console.log('en mostrar camara4');
+     }, (err) => {console.log('Error en camara', JSON.stringify(err));});
   }
   seleccionarFoto(){
     const options = {  
@@ -173,7 +167,7 @@ export class RegCliepotenPage implements OnInit {
       this.imagenPreview =`data:image/jpeg;base64,${imageData}`;   
       this.fototomada =imageData;
       this.tomofoto = true;
-    }, (err) => { console.log("error cargando imagenes")});
+    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
 
   grabarClienpoten(){
