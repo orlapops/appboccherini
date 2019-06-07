@@ -106,11 +106,13 @@ public BorrarClienpoten(id){
         console.log("enter the put");
         return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
             this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/clientespoten`).doc(idclie).update({link_foto: linkref});
+            
         }); 
       }).catch((error) => {
         console.log('Error actualizaimagenClientefirebase putString img:', error);
       });    
     });
+    
   }
 
 }

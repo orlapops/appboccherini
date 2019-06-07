@@ -17,6 +17,7 @@ import { UbicacionProvider } from '../../providers/ubicacion/ubicacion.service';
 import { ParEmpreService } from '../../providers/par-empre.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
 
 declare var google:any;
 
@@ -60,6 +61,7 @@ export class RegCliepotenPage implements OnInit {
     public _ubicacionService: UbicacionProvider,
     public _parEmpre: ParEmpreService,    
     private camera: Camera,
+    private file: File,
     private webview: WebView
   ) {
     platform.ready().then(() => {
@@ -193,7 +195,12 @@ export class RegCliepotenPage implements OnInit {
     console.log('grabarActividad cliepotengrab:', cliepotengrab);
     this._regcliepot.grabarCliepoten(cliepotengrab).then(async res => {
       if (this.tomofoto){
-        this._regcliepot.actualizaFotoClientepotenfirebase(cliepotengrab.codigo, this.fototomada);
+        this._regcliepot.actualizaFotoClientepotenfirebase(cliepotengrab.codigo, this.fototomada).then(()=>{
+          this.tomofoto= false;
+          this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
+            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+          });
+        });
       }
       const toast = await this.toastCtrl.create({
         showCloseButton: true,
@@ -220,7 +227,12 @@ export class RegCliepotenPage implements OnInit {
     console.log('modificarActividad cliepotengrab:', cliepotengrab);
     this._regcliepot.modificarCliepoten(this.idcliepoten, cliepotengrab).then(async res => {
       if (this.tomofoto){
-        this._regcliepot.actualizaFotoClientepotenfirebase(this.idcliepoten, this.fototomada);
+        this._regcliepot.actualizaFotoClientepotenfirebase(this.idcliepoten, this.fototomada).then(()=>{
+          this.tomofoto= false;
+          this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
+            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+          });
+        });
       }
       console.log('cliepotengrab  modificada res: ', res);
       const toast = await this.toastCtrl.create({
