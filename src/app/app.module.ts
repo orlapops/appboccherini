@@ -41,6 +41,7 @@ import { ModalActConsigPageModule } from './pages/modal/modal-actconsig/modal-ac
 import { UbicacionProvider } from './providers/ubicacion/ubicacion.service';
 import { ActividadesService } from './providers/actividades/actividades.service';
 import { MessageService } from './providers/message/message.service';
+import {WebView} from '@ionic-native/ionic-webview/ngx';
 // import { ModalActClientePageModule } from './pages/modal/modal-actcliente/modal-actcliente';
 // import { VisitanService } from './providers/visitan.service';
 // import { Network } from '@ionic-native/network';
@@ -105,6 +106,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     UbicacionProvider,
     ActividadesService,
     MessageService,
+    WebView,
     // VisitanService,
     ClienteProvider,
     CarritoFacturaService,

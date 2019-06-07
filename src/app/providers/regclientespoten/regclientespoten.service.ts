@@ -10,6 +10,9 @@ import { Storage } from "@ionic/storage";
 import { VisitasProvider } from "../visitas/visitas.service";
 import { AngularFireStorage,  AngularFireStorageReference } from '@angular/fire/storage';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+
+import { File } from "@ionic-native/file/ngx";
+
 // import { Observable } from 'rxjs';
 // import { map } from "rxjs/operators";
 
@@ -25,6 +28,7 @@ export class RegClientespotenService implements OnInit {
     private storage: Storage,
     private afStorage: AngularFireStorage,
     private http: HttpClient,
+    private file: File,
     public _visitas: VisitasProvider
   ) {}
   ngOnInit() {
@@ -89,18 +93,34 @@ public BorrarClienpoten(id){
 
 actualizaFotoClientepotenfirebase(idclie, imageUri): Promise<any> {
   const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_clienpoten/${idclie}`);
-  return storageRef.put(imageUri, {
-      contentType: 'image/jpg',
-    }).then(() => {
-      return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
-        // this._parempre.reg_log('a actualizar img fb linkref: ' , linkref);
-        // console.log(linkref);
-          this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/clientespoten`).doc(idclie).update({link_foto: linkref});
-      }); 
-  })
-  .catch((error) => {
-    console.log('Error actualizaimagenClientefirebase putString img:', error);
-  });
+  let file = new File();
+  return file.resolveLocalFilesystemUrl(imageUri)
+    .then(fileEntry => {
+      let { name, nativeURL } = fileEntry;
+      let path = nativeURL.substring(0, nativeURL.lastIndexOf("/"));
+      return file.readAsArrayBuffer(path, name);
+    })
+    .then(buffer => {
+      let imgBlob = new Blob([buffer], {
+        type: "image/jpeg"
+      });
+      return storageRef.put(imgBlob, {
+        contentType: 'image/jpg',
+      }).then(() => {
+        return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
+            this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/clientespoten`).doc(idclie).update({link_foto: linkref});
+        }); 
+    })
+    .catch((error) => {
+      console.log('Error actualizaimagenClientefirebase putString img:', error);
+    });
+    })
+  
 }
 
+makeFileIntoBlob(_imagePath) {
+  // INSTALL PLUGIN - cordova plugin add cordova-plugin-file
+ 
+    
+}
 }
