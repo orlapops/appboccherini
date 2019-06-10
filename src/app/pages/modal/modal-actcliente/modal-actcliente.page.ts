@@ -14,6 +14,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UbicacionProvider } from '../../../providers/ubicacion/ubicacion.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
 
 declare var google:any;
 
@@ -51,6 +52,7 @@ export class ModalActClientePage implements OnInit {
     private formBuilder: FormBuilder,
     public _ubicacionService: UbicacionProvider,
     private camera: Camera,
+    private file: File,
     private webview: WebView) { 
       console.log('llega coords:',  this.coords);
       platform.ready().then(() => {
@@ -169,14 +171,17 @@ export class ModalActClientePage implements OnInit {
       this.imagenPreview = this.webview.convertFileSrc(imageData); 
       this._clientes.actualizaimagenClientefirebase(this._visitas.visita_activa_copvdet.cod_tercer,
         this._visitas.visita_activa_copvdet.id_dir,
-        imageData);
+        imageData).then(()=>{
+          this.file.resolveLocalFilesystemUrl(imageData).then((fe:FileEntry)=>{
+            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+          });
+      });
       }, (err) => {console.log('Error en camara', JSON.stringify(err));});
   }
   seleccionarFoto(){
     const options = {  
-      maximumImagesCount: 1,    
-      width: 200,
-      quality: 25,
+      maximumImagesCount: 1, 
+      quality: 75,
       outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
@@ -185,7 +190,11 @@ export class ModalActClientePage implements OnInit {
       this.imagenPreview =this.webview.convertFileSrc(imageData)  
       this._clientes.actualizaimagenClientefirebase(this._visitas.visita_activa_copvdet.cod_tercer,
         this._visitas.visita_activa_copvdet.id_dir,
-        imageData);
+        imageData).then(()=>{
+            this.file.resolveLocalFilesystemUrl(imageData).then((fe:FileEntry)=>{
+              fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+            });
+        });
     }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
   

@@ -155,8 +155,7 @@ export class RegCliepotenPage implements OnInit {
   }
   seleccionarFoto(){
     const options = {  
-      maximumImagesCount: 1,    
-      width: 200,
+      maximumImagesCount: 1,   
       quality: 25,
       outputType: 0
     };

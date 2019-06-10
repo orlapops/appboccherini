@@ -28,6 +28,7 @@ import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 import { UbicacionProvider } from '../../providers/ubicacion/ubicacion.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
 
 
 @Component({
@@ -95,6 +96,7 @@ export class VisitaDetailPage implements OnInit {
     public _ubicacionService: UbicacionProvider,
     public alertCtrl: AlertController,
     private impresora: BluetoothSerial,
+    private file: File,
     private webview: WebView
   ) {   
     platform.ready().then(() => {
@@ -573,16 +575,19 @@ export class VisitaDetailPage implements OnInit {
       this.presentLoading('Guardando Imagen');
       this.imagenPreview = this.webview.convertFileSrc(imageData); 
       this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
-        this.visitaID, imageData);
+        this.visitaID, imageData).then(()=>{
+          this.file.resolveLocalFilesystemUrl(imageData).then((fe:FileEntry)=>{
+            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+          });
+      });
      }, (err) => {
        console.log('Error en camara', JSON.stringify(err));
        this._parEmpre.reg_logappusuario('tomafoto','Tomo foto Error ',{error: JSON.stringify(err)});
       });
   }
   seleccionarFoto(){
-    const options = {  
-      width: 200,
-      quality: 25,
+    const options = { 
+      quality: 100,
       outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
@@ -590,7 +595,11 @@ export class VisitaDetailPage implements OnInit {
       for (var i = 0; i < image.length; i++) {
         this.imagenPreview = this.webview.convertFileSrc(image[i]); 
         this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
-            this.visitaID, image[i]);
+            this.visitaID, image[i]).then(()=>{
+              this.file.resolveLocalFilesystemUrl(image[i]).then((fe:FileEntry)=>{
+                fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+              });
+          });
       }      
     }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }

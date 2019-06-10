@@ -10,6 +10,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ConsignacionesService } from '../../../providers/consignaciones/consignaciones.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
 
 
 @Component({
@@ -40,6 +41,7 @@ export class ModalActConsigPage implements OnInit {
     private formBuilder: FormBuilder,
     public _consigna: ConsignacionesService,
     private camera: Camera,
+    private file: File,
     private webview: WebView
     ) { 
       platform.ready().then(() => {
@@ -77,21 +79,28 @@ export class ModalActConsigPage implements OnInit {
       this.presentLoading('Guardando Imagen');
       this.imagenPreview = this.webview.convertFileSrc(imageData); 
       console.log(this.consignacion.fecha);
-      this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData);
+      this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData).then(()=>{
+        this.file.resolveLocalFilesystemUrl(imageData).then((fe:FileEntry)=>{
+          fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+        });
+    });
      }, (err) => {console.log('Error en camara', JSON.stringify(err));});
   }
   seleccionarFoto(){
     const options = {  
-      maximumImagesCount: 1,    
-      width: 200,
-      quality: 25,
+      maximumImagesCount: 1,   
+      quality: 50,
       outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
       var imageData = image[0];
       this.imagenPreview =this.webview.convertFileSrc(imageData)  
-      this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData);
+      this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData).then(()=>{
+          this.file.resolveLocalFilesystemUrl(imageData).then((fe:FileEntry)=>{
+            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+          });
+      });
     }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
 
