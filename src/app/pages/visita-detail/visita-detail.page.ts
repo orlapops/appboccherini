@@ -27,6 +27,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 import { UbicacionProvider } from '../../providers/ubicacion/ubicacion.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 
 @Component({
@@ -93,7 +94,8 @@ export class VisitaDetailPage implements OnInit {
     public loadingCtrl: LoadingController,
     public _ubicacionService: UbicacionProvider,
     public alertCtrl: AlertController,
-    private impresora: BluetoothSerial
+    private impresora: BluetoothSerial,
+    private webview: WebView
   ) {   
     platform.ready().then(() => {
       // La plataforma esta lista y ya tenemos acceso a los plugins.
@@ -558,50 +560,40 @@ export class VisitaDetailPage implements OnInit {
   //       this.items = this.all_items;
   //     }
   }
-  
   tomafoto(){
-      console.log('en tomafoto camara1');
-      const optionscam: CameraOptions = {
-        quality: 30,
-        destinationType: this.camera.DestinationType.DATA_URL,
-        encodingType: this.camera.EncodingType.PNG,
-        mediaType: this.camera.MediaType.PICTURE
-      };
-      this._parEmpre.reg_logappusuario('tomafoto','Ingreso',{});
-
-      this.camera.getPicture(optionscam).then((imageData) => {
-        this.presentLoading('Guardando Imagen');
-        console.log('en mostrar camara2 optionscam:',optionscam);
-        console.log('en mostrar camara2 imageData:',imageData);
-        this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
-        // this._parEmpre.reg_logappusuario('tomafoto','Tomo foto ',{imagenPreview: this.imagenPreview});
-        console.log('this.imagenPreview:', this.imagenPreview);
-        this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
-          this.visitaID, imageData);
-       }, (err) => {
-        // Handle error
-        this._parEmpre.reg_logappusuario('tomafoto','Tomo foto Error ',{error: JSON.stringify(err)});
-        console.log('Error en camara', JSON.stringify(err));
-       });
-       console.log('en mostrar camara4');
+    console.log('en mostrar camara1');
+    const optionscam: CameraOptions = {
+      quality: 30,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    };    
+    this._parEmpre.reg_logappusuario('tomafoto','Ingreso',{});
+    this.camera.getPicture(optionscam).then((imageData) => {
+      this.presentLoading('Guardando Imagen');
+      this.imagenPreview = this.webview.convertFileSrc(imageData); 
+      this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
+        this.visitaID, imageData);
+     }, (err) => {
+       console.log('Error en camara', JSON.stringify(err));
+       this._parEmpre.reg_logappusuario('tomafoto','Tomo foto Error ',{error: JSON.stringify(err)});
+      });
   }
-
   seleccionarFoto(){
-    const options = {      
+    const options = {  
       width: 200,
       quality: 25,
-      outputType: 1
+      outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
       for (var i = 0; i < image.length; i++) {
-        this.imagenPreview = `data:image/jpeg;base64,${image[i]}`; 
+        this.imagenPreview = this.webview.convertFileSrc(image[i]); 
         this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
             this.visitaID, image[i]);
       }      
-    }, (err) => { });
+    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
-
 
   public eliminarFoto(ifoto){
     console.log('En eliminar foto ', ifoto);

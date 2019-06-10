@@ -9,6 +9,7 @@ import { environment } from '../../../../environments/environment'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ConsignacionesService } from '../../../providers/consignaciones/consignaciones.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 
 @Component({
@@ -38,7 +39,9 @@ export class ModalActConsigPage implements OnInit {
     public _DomSanitizer: DomSanitizer,
     private formBuilder: FormBuilder,
     public _consigna: ConsignacionesService,
-    private camera: Camera) { 
+    private camera: Camera,
+    private webview: WebView
+    ) { 
       platform.ready().then(() => {
         // La plataforma esta lista y ya tenemos acceso a los plugins.
         console.log('llega id:',  this.idcs);
@@ -63,42 +66,33 @@ export class ModalActConsigPage implements OnInit {
     return await loading.present();
   }
 
- 
   mostrar_camara(){
-    console.log('en mostrar camara1');
     const optionscam: CameraOptions = {
       quality: 30,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.PNG,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     };
     this.camera.getPicture(optionscam).then((imageData) => {
       this.presentLoading('Guardando Imagen');
-      console.log('en mostrar camara2');
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64 (DATA_URL):
-      console.log('en mostrar camara2 imageData:',imageData);
-      this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
-      console.log('this.imagenPreview:', this.imagenPreview);
+      this.imagenPreview = this.webview.convertFileSrc(imageData); 
+      console.log(this.consignacion.fecha);
       this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData);
-     }, (err) => {
-      console.log('Error en camara', JSON.stringify(err));
-     });
-     console.log('en mostrar camara4');
+     }, (err) => {console.log('Error en camara', JSON.stringify(err));});
   }
   seleccionarFoto(){
     const options = {  
       maximumImagesCount: 1,    
       width: 200,
       quality: 25,
-      outputType: 1
+      outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
       var imageData = image[0];
-      this.imagenPreview = `data:image/jpeg;base64,${imageData}`;   
+      this.imagenPreview =this.webview.convertFileSrc(imageData)  
       this._consigna.actualizaFotoConsignafirebase(this.idcs,this.consignacion.fecha, imageData);
-    }, (err) => { });
+    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
 
   

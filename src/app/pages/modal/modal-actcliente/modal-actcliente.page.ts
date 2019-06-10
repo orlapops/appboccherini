@@ -13,6 +13,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UbicacionProvider } from '../../../providers/ubicacion/ubicacion.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 declare var google:any;
 
@@ -49,7 +50,8 @@ export class ModalActClientePage implements OnInit {
     public _DomSanitizer: DomSanitizer,
     private formBuilder: FormBuilder,
     public _ubicacionService: UbicacionProvider,
-    private camera: Camera) { 
+    private camera: Camera,
+    private webview: WebView) { 
       console.log('llega coords:',  this.coords);
       platform.ready().then(() => {
         // La plataforma esta lista y ya tenemos acceso a los plugins.
@@ -154,55 +156,39 @@ export class ModalActClientePage implements OnInit {
   });
   }
  
+ 
   mostrar_camara(){
-    console.log('en mostrar camara1');
     const optionscam: CameraOptions = {
       quality: 30,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.PNG,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     };
     this.camera.getPicture(optionscam).then((imageData) => {
       this.presentLoading('Guardando Imagen');
-      console.log('en mostrar camara2');
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64 (DATA_URL):
-      console.log('en mostrar camara2 imageData:',imageData);
-      this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
-      console.log('this.imagenPreview:', this.imagenPreview);
+      this.imagenPreview = this.webview.convertFileSrc(imageData); 
       this._clientes.actualizaimagenClientefirebase(this._visitas.visita_activa_copvdet.cod_tercer,
         this._visitas.visita_activa_copvdet.id_dir,
         imageData);
-        // this.imagenPreview);
-     }, (err) => {
-      // Handle error
-      console.log('Error en camara', JSON.stringify(err));
-      // const nomarch='imagenp.jpg';
-      // const imgprueba = "Qk0qAQAAAAAAAHYAAAAoAAAAEQAAAA8AAAABAAQAAAAAALQAAAATCwAAEwsAAAAAAAAAAAAAAAAAAAAAgAAAgAAAAICAAIAAAACAAIAAgIAAAICAgADAwMAAAAD/AAD/AAAA//8A/wAAAP8A/wD//wAA////AP//////////8AkJCf+Hd3d3d3d38AkJCf8AAAAAAAAH8AkJCf8P7+/v7+8H8AkJCf8OAA4AAA4H8AkJCf8P7+8P/w8H8AkJCf8OAA4AAA4H8AkJCf8P7+/v7+8H8AkJCf8OAA4AAA4H8AkJCf8P7+8P/w8H8AkJCf8OAA4AAA4H8AkJCf8P7+/v7+8H8AkJCf8AAAAAAAAI8AkJCf//////////8AkJCf//////////8AkJCQ=="      
-      // console.log('Error en camara imgprueba:', imgprueba);
-      // this._clientes.actualizaimagenClientefirebase(this._visitas.visita_activa_copvdet.cod_tercer, 
-      //   this._visitas.visita_activa_copvdet.id_dir,
-      //   imgprueba);
-     });
-     console.log('en mostrar camara4');
-
+      }, (err) => {console.log('Error en camara', JSON.stringify(err));});
   }
   seleccionarFoto(){
     const options = {  
       maximumImagesCount: 1,    
       width: 200,
       quality: 25,
-      outputType: 1
+      outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
       var imageData = image[0];
-      this.imagenPreview = `data:image/jpeg;base64,${imageData}`;   
+      this.imagenPreview =this.webview.convertFileSrc(imageData)  
       this._clientes.actualizaimagenClientefirebase(this._visitas.visita_activa_copvdet.cod_tercer,
         this._visitas.visita_activa_copvdet.id_dir,
         imageData);
-    }, (err) => { });
+    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
+  
   actualiza_ubicaciongps(){
     console.log('actualiza_ubicaciongps', this.coords);
     const adireccion = this.onActclieForm.controls['direccion'].value;

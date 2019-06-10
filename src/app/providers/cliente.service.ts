@@ -6,6 +6,8 @@ import { NetsolinApp } from '../shared/global';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AngularFireStorageReference, AngularFireStorage } from '@angular/fire/storage';
 import { VisitasProvider } from './visitas/visitas.service';
+import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
+
 // tslint:disable-next-line:no-empty-interface
 export interface Icliente {
     cod_tercer: string;
@@ -43,7 +45,8 @@ export class ClienteProvider {
         public toastCtrl: ToastController,
         private http: HttpClient,
         private afStorage: AngularFireStorage,
-        public _parempre: ParEmpreService) {
+        public _parempre: ParEmpreService,
+        private file : File) {
             console.log('en constructor cliente ', this.clienteActual);
     }
     
@@ -211,24 +214,22 @@ export class ClienteProvider {
 
   actualizaimagenClientefirebase(idclie, iddirec, imageURL): Promise<any> {
     const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_clientes/${idclie}/direcciones/${iddirec}`);
-    // this._parempre.reg_log('a actualizar img fb clie: ' , idclie);
-    // this._parempre.reg_log('a actualizar img fb iddirec: ' , iddirec);
-    // this._parempre.reg_log('a actualizar img fb imageURL: ' , imageURL);
-    // console.log('en actualizaimagenClientefirebase idclie,iddirec: ', idclie, iddirec);
-    return storageRef
-      .putString(imageURL, 'base64', {
-        contentType: 'image/png',
-      })
-      .then(() => {
-        // this._parempre.reg_log('a actualizar img fb clie 2 then: ' , idclie);
-        // console.log('a a ctualizar foto cliente ', idclie);          
+    return this.file.resolveLocalFilesystemUrl(imageURL).then((fe:FileEntry)=>{
+      console.log(fe);
+      let { name, nativeURL } = fe;
+      let path = nativeURL.substring(0, nativeURL.lastIndexOf("/"));
+      console.log(path,"   ",name);
+      return this.file.readAsArrayBuffer(path, name);
+    }).then(buffer => {
+        let imgBlob = new Blob([buffer], {
+          type: "image/jpeg"
+        });
+      return storageRef.put(imgBlob, {
+          contentType: 'image/jpeg',
+      }).then(() => {         
         return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
-          // this._parempre.reg_log('a actualizar img fb linkref: ' , linkref);
-          // console.log(linkref);
-            let id_direc = iddirec.toString();
-            // console.log(id_direc);
-            // this._parempre.reg_log('a actualizar img fb id_direc: ' , id_direc);
-            this.actualizaimagenDirclienteNetsolin(idclie, iddirec, 0, 0, linkref,'','','','','');
+          let id_direc = iddirec.toString();
+          this.actualizaimagenDirclienteNetsolin(idclie, iddirec, 0, 0, linkref,'','','','','');
             this.fbDb.collection(`/clientes/${idclie}/direcciones/`).doc(id_direc).update({link_foto: linkref});
             const toast = await this.toastCtrl.create({
               showCloseButton: true,
@@ -237,11 +238,13 @@ export class ClienteProvider {
               position: 'bottom'
             });
             toast.present();
-        }); 
-    })
-    .catch((error) => {
-      console.log('Error actualizaimagenClientefirebase putString img:', error);
-    });
+          }); 
+        }).catch((error) => {
+          console.log('Error actualizaimagenClientefirebase putString img:', error);
+        });    
+      }).catch((error) => {
+        console.log('Error leyendo archivo:', error);
+      });
   }
 
   actualizaubicafirebase(idclie, iddirec, longitud, latitud, pdireccion, pemail, pcontacto,ptelefono,pcelular) {

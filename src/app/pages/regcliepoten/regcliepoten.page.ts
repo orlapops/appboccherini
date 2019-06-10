@@ -140,7 +140,6 @@ export class RegCliepotenPage implements OnInit {
       });
   }
   mostrar_camara(){
-    console.log('en mostrar camara1');
     const optionscam: CameraOptions = {
       quality: 30,
       destinationType: this.camera.DestinationType.FILE_URI,
@@ -163,13 +162,10 @@ export class RegCliepotenPage implements OnInit {
     };
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
-      console.log (image);
       var imageData = image[0];
       this.imagenPreview =this.webview.convertFileSrc(imageData)  
       this.fototomada =imageData;
       this.tomofoto = true;
-      console.log(this.imagenPreview);
-      console.log(this.fototomada);
     }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
 
