@@ -12,6 +12,7 @@ import { AngularFireStorage,  AngularFireStorageReference } from '@angular/fire/
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from "rxjs/operators";
+import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
 
 
 @Injectable({
@@ -28,7 +29,8 @@ export class ActividadesService implements OnInit {
     private storage: Storage,
     private afStorage: AngularFireStorage,
     private http: HttpClient,
-    public _visitas: VisitasProvider
+    public _visitas: VisitasProvider,
+    private file : File
   ) {}
   ngOnInit() {
     console.log("ngoniit ActividadesService");
@@ -170,32 +172,34 @@ actualizafotosVisitafirebase(idclie, idvisita, imageURL): Promise<any> {
   const minutos = now.getMinutes();
   const segundos = now.getSeconds();
   const milisegundos = now.getMilliseconds();
-  console.log(milisegundos);
   const idimg = ano.toString()+ mes.toString() + dia.toString() + hora.toString() + minutos.toString()+ segundos.toString()+milisegundos;
-  console.log(idimg);
   const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_visitas/${idclie}/visita/${idvisita}/${idimg}/`);
-  // this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase ',{storageRef: storageRef});
-  console.log('tomafoto','actualizafotosVisitafirebase ',storageRef);
-  console.log('en actualizafotosVisitafirebase idclie,iddirec: ', idclie, idvisita);
-  return storageRef
-    .putString(imageURL, 'base64', {
-      contentType: 'image/png',
-    })
-    .then(() => {
+  return this.file.resolveLocalFilesystemUrl(imageURL).then((fe:FileEntry)=>{
+    console.log(fe);
+    let { name, nativeURL } = fe;
+    let path = nativeURL.substring(0, nativeURL.lastIndexOf("/"));
+    console.log(path,"   ",name);
+    return this.file.readAsArrayBuffer(path, name);
+  }).then(buffer => {
+      let imgBlob = new Blob([buffer], {
+        type: "image/jpeg"
+      });
+    return storageRef.put(imgBlob, {
+        contentType: 'image/jpeg',
+    }).then(() => {
       // this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase idclie',{idclie: idclie});
       console.log('a a ctualizar foto cliente visita ', idclie);          
       return storageRef.getDownloadURL().subscribe((linkref: any) => {
-        // this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase linkref',{linkref: linkref});
-        console.log(linkref);
-        // this._parempre.reg_logappusuario('tomafoto','actualizafotosVisitafirebase url guar',{urlfb: `/personal/${this._parempre.usuario.cod_usuar}/rutas/${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${idvisita}/fotos`});
-        console.log(`/personal/${this._parempre.usuario.cod_usuar}/rutas/
-          ${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${idvisita}/fotos`);
           this.fbDb
-          // tslint:disable-next-line:max-line-length
           .collection(`/personal/${this._parempre.usuario.cod_usuar}/rutas/${this._visitas.visita_activa_copvdet.id_ruta}/periodos/${this._visitas.id_periodo}/visitas/${idvisita}/fotos`)
           .add({link_foto: linkref});
-      }); 
-  });
+        }); 
+      }).catch((error) => {
+        console.log('Error actualizaimagenVisitafirebase putString img:', error);
+      });    
+    }).catch((error) => {
+      console.log('Error leyendo archivo:', error);
+    });
 }      
 
 

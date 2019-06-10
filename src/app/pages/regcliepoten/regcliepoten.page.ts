@@ -16,6 +16,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UbicacionProvider } from '../../providers/ubicacion/ubicacion.service';
 import { ParEmpreService } from '../../providers/par-empre.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
 
 declare var google:any;
 
@@ -58,7 +60,9 @@ export class RegCliepotenPage implements OnInit {
     public router: Router,
     public _ubicacionService: UbicacionProvider,
     public _parEmpre: ParEmpreService,    
-    private camera: Camera
+    private camera: Camera,
+    private file: File,
+    private webview: WebView
   ) {
     platform.ready().then(() => {
       // La plataforma esta lista y ya tenemos acceso a los plugins.
@@ -136,46 +140,32 @@ export class RegCliepotenPage implements OnInit {
       });
   }
   mostrar_camara(){
-    console.log('en mostrar camara1');
     const optionscam: CameraOptions = {
       quality: 30,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.PNG,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     };
     this.camera.getPicture(optionscam).then((imageData) => {
       this.presentLoading('Guardando Imagen');
-      console.log('en mostrar camara2');
-      console.log('en mostrar camara2 imageData:',imageData);
-      this.imagenPreview = `data:image/jpeg;base64,${imageData}`; 
+      this.imagenPreview = this.webview.convertFileSrc(imageData); 
       this.fototomada = imageData;
       this.tomofoto = true;
-      console.log('this.imagenPreview:', this.imagenPreview);
-      // this._regcliepot.actualizaFotoClientepotenfirebase()
-      // this._clientes.actualizaimagenClientefirebase(this._visitas.visita_activa_copvdet.cod_tercer,
-      //   this._visitas.visita_activa_copvdet.id_dir,
-      //   imageData);
-
-     }, (err) => {
-      // Handle error
-      console.log('Error en camara', JSON.stringify(err));
-     });
-     console.log('en mostrar camara4');
+     }, (err) => {console.log('Error en camara', JSON.stringify(err));});
   }
   seleccionarFoto(){
     const options = {  
-      maximumImagesCount: 1,    
-      width: 200,
+      maximumImagesCount: 1,   
       quality: 25,
-      outputType: 1
+      outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
       var imageData = image[0];
-      this.imagenPreview = `data:image/jpeg;base64,${imageData}`;   
-      this.fototomada =   imageData;
+      this.imagenPreview =this.webview.convertFileSrc(imageData)  
+      this.fototomada =imageData;
       this.tomofoto = true;
-    }, (err) => { });
+    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
 
   grabarClienpoten(){
@@ -197,7 +187,12 @@ export class RegCliepotenPage implements OnInit {
     console.log('grabarActividad cliepotengrab:', cliepotengrab);
     this._regcliepot.grabarCliepoten(cliepotengrab).then(async res => {
       if (this.tomofoto){
-        this._regcliepot.actualizaFotoClientepotenfirebase(cliepotengrab.codigo, this.fototomada);
+        this._regcliepot.actualizaFotoClientepotenfirebase(cliepotengrab.codigo, this.fototomada).then(()=>{
+          this.tomofoto= false;
+            this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
+              fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+            });
+        });
       }
       const toast = await this.toastCtrl.create({
         showCloseButton: true,
@@ -224,7 +219,12 @@ export class RegCliepotenPage implements OnInit {
     console.log('modificarActividad cliepotengrab:', cliepotengrab);
     this._regcliepot.modificarCliepoten(this.idcliepoten, cliepotengrab).then(async res => {
       if (this.tomofoto){
-        this._regcliepot.actualizaFotoClientepotenfirebase(this.idcliepoten, this.fototomada);
+        this._regcliepot.actualizaFotoClientepotenfirebase(this.idcliepoten, this.fototomada).then(()=>{
+          this.tomofoto= false; 
+            this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
+              fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+            });
+        });
       }
       console.log('cliepotengrab  modificada res: ', res);
       const toast = await this.toastCtrl.create({

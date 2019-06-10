@@ -15,6 +15,7 @@ import { Platform } from "@ionic/angular";
 import { Storage } from "@ionic/storage";
 import { VisitasProvider } from "../visitas/visitas.service";
 import { ClienteProvider } from "../cliente.service";
+import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
 
 @Injectable({
   providedIn: "root"
@@ -41,7 +42,8 @@ export class ConsignacionesService implements OnInit {
     private storage: Storage,
     private http: HttpClient,
     public _visitas: VisitasProvider,
-    public _cliente: ClienteProvider
+    public _cliente: ClienteProvider,
+    private file : File
   ) {}
   ngOnInit() {}
   inicializaRecibos() {
@@ -249,17 +251,24 @@ export class ConsignacionesService implements OnInit {
 
   actualizaFotoConsignafirebase(idconsig,fecha, imageURL): Promise<any> {
     //extraemos el día mes y año
+    console.log(fecha);
     const dia = fecha.getDate();
     const mes = fecha.getMonth() + 1;
     const ano = fecha.getFullYear();
     const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_consigna/${this._parempre.usuario.cod_usuar}/consignacion/${idconsig}`);
-    return storageRef
-      .putString(imageURL, 'base64', {
-        contentType: 'image/png',
-      })
-      .then(() => {
-        // this._parempre.reg_log('a actualizar img fb clie 2 then: ' , idclie);
-        // console.log('a a ctualizar foto cliente ', idclie);          
+    return this.file.resolveLocalFilesystemUrl(imageURL).then((fe:FileEntry)=>{
+      console.log(fe);
+      let { name, nativeURL } = fe;
+      let path = nativeURL.substring(0, nativeURL.lastIndexOf("/"));
+      console.log(path,"   ",name);
+      return this.file.readAsArrayBuffer(path, name);
+    }).then(buffer => {
+        let imgBlob = new Blob([buffer], {
+          type: "image/jpeg"
+        });
+      return storageRef.put(imgBlob, {
+          contentType: 'image/jpeg',
+      }).then(() => {       
         return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
             this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/consignaciones/`)
               .doc(idconsig).update({link_imgfb: linkref});
@@ -272,11 +281,13 @@ export class ConsignacionesService implements OnInit {
               position: 'bottom'
             });
             toast.present();
-        }); 
-    })
-    .catch((error) => {
-      console.log('Error actualizaFotoConsignafirebase putString img:', error);
-    });
+          }); 
+        }).catch((error) => {
+          console.log('Error actualizaimagenConsignacionfirebase putString img:', error);
+        });    
+      }).catch((error) => {
+        console.log('Error leyendo archivo:', error);
+      });
   }
 
 }
