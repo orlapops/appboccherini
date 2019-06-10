@@ -95,6 +95,7 @@ public BorrarClienpoten(id){
       console.log(fe);
       let { name, nativeURL } = fe;
       let path = nativeURL.substring(0, nativeURL.lastIndexOf("/"));
+      console.log(path,"   ",name);
       return this.file.readAsArrayBuffer(path, name);
     }).then(buffer => {
         let imgBlob = new Blob([buffer], {
@@ -111,6 +112,8 @@ public BorrarClienpoten(id){
       }).catch((error) => {
         console.log('Error actualizaimagenClientefirebase putString img:', error);
       });    
+    }).catch((error) => {
+      console.log('Error leyendo archivo:', error);
     });
     
   }

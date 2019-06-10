@@ -159,14 +159,17 @@ export class RegCliepotenPage implements OnInit {
       maximumImagesCount: 1,    
       width: 200,
       quality: 25,
-      outputType: 1
+      outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
+      console.log (image);
       var imageData = image[0];
-      this.imagenPreview =`data:image/jpeg;base64,${imageData}`;   
+      this.imagenPreview =this.webview.convertFileSrc(imageData)  
       this.fototomada =imageData;
       this.tomofoto = true;
+      console.log(this.imagenPreview);
+      console.log(this.fototomada);
     }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
 
@@ -191,9 +194,9 @@ export class RegCliepotenPage implements OnInit {
       if (this.tomofoto){
         this._regcliepot.actualizaFotoClientepotenfirebase(cliepotengrab.codigo, this.fototomada).then(()=>{
           this.tomofoto= false;
-          this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
-            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
-          });
+            this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
+              fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+            });
         });
       }
       const toast = await this.toastCtrl.create({
@@ -222,10 +225,10 @@ export class RegCliepotenPage implements OnInit {
     this._regcliepot.modificarCliepoten(this.idcliepoten, cliepotengrab).then(async res => {
       if (this.tomofoto){
         this._regcliepot.actualizaFotoClientepotenfirebase(this.idcliepoten, this.fototomada).then(()=>{
-          this.tomofoto= false;
-          this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
-            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
-          });
+          this.tomofoto= false; 
+            this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
+              fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+            });
         });
       }
       console.log('cliepotengrab  modificada res: ', res);
