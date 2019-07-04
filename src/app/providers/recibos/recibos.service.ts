@@ -3,13 +3,8 @@ import { Injectable } from "@angular/core";
 import { NetsolinApp } from "../../shared/global";
 import { ParEmpreService } from "../par-empre.service";
 import { AngularFirestore } from "@angular/fire/firestore";
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpErrorResponse
-} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpErrorResponse} from "@angular/common/http";
 import { Platform } from "@ionic/angular";
-// Plugin storage
 import { Storage } from "@ionic/storage";
 import { VisitasProvider } from "../visitas/visitas.service";
 import { ClienteProvider } from "../cliente.service";
@@ -39,13 +34,12 @@ export class RecibosService implements OnInit {
     private http: HttpClient,
     public _visitas: VisitasProvider,
     public _cliente: ClienteProvider
-  ) {}
-  ngOnInit() {}
+  ) { }
+  ngOnInit() { }
   inicializaRecibos() {
-    // console.log("cosntructor prod service recibos");
     this.cartera = this._cliente.clienteActual.cartera;
-    // console.log('cartera:', this.cartera);
   }
+
   actualizar_totalformaspago() {
     return new Promise((resolve, reject) => {
       console.log("En promesa actualizar_totalformaspago");
@@ -523,8 +517,8 @@ export class RecibosService implements OnInit {
       "dataos para generar recibo this._visitas.visita_activa_copvdet:",
       this._visitas.visita_activa_copvdet
     );
-    console.log("Recibo a genera this.recibo): ", this.recibocaja);
-    if (this.generando_recibo){
+    console.log("Recibo a genera : ", this.recibocaja);
+    if (this.generando_recibo) {
       console.error('Ya se esta generando un recibo');
       return;
     }
@@ -698,64 +692,30 @@ export class RecibosService implements OnInit {
       )
       .doc(mes.toString())
       .set({ mes: mes.toString() });
-      console.log('2');
-      //asegurarse que este creado el año, mes y dia
+    console.log('2');
+    //asegurarse que este creado el año, mes y dia
     this.fbDb
       .collection(
         `/personal/${
-          this._parempre.usuario.cod_usuar
+        this._parempre.usuario.cod_usuar
         }/resumdiario/${ano}/meses/${mes}/dias`
       )
       .doc(dia.toString())
       .set({ dia: dia.toString() });
-      console.log('3');
+    console.log('3');
 
     //cierre de caja por cada forma de pago
     let lrutafp = `/personal/${
       this._parempre.usuario.cod_usuar
-    }/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`;
+      }/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`;
     console.log('3', lrutafp);
     objrecibo.objformpag.forEach(element => {
       console.log(element, element.item.tipopago);
-      // switch (element.item.tipopago) {
-      //   case "PBCS": {
-      //     //statements;
-      //     lrutafp = `/personal/${
-      //       this._parempre.usuario.cod_usuar
-      //     }/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja/pbcs`;
-      //     console.log('4', lrutafp);
-      //     break;
-      //   }
-      //   case "PBTR": {
-      //     //statements;
-      //     lrutafp = `/personal/${
-      //       this._parempre.usuario.cod_usuar
-      //     }/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja/pbtr`;
-      //     console.log('5', lrutafp);
-      //     break;
-      //   }
-      //   case "EFE": {
-      //     //statements;
-      //     lrutafp = `/personal/${
-      //       this._parempre.usuario.cod_usuar
-      //     }/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja/efe`;
-      //     console.log('6', lrutafp);
-      //     break;
-      //   }
-      //   case "CHD": {
-      //     //statements;
-      //     lrutafp = `/personal/${
-      //       this._parempre.usuario.cod_usuar
-      //     }/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja/chd`;
-      //     console.log('7', lrutafp);
-      //     break;
-      //   }
-      // }
-      const idfp =id.trim() + element.item.tipopago.trim();
+      const idfp = id.trim() + element.item.tipopago.trim();
       console.log('4', lrutafp, idfp);
       const regformapago = this.fbDb.collection(lrutafp).doc(idfp);
       console.log('5', lrutafp, idfp);
-      regformapago.set({
+      const obj : any = {
         formpago: element.item.tipopago,
         cod_docume: objrecibo.cod_docume,
         num_docume: objrecibo.num_docume,
@@ -765,13 +725,21 @@ export class RecibosService implements OnInit {
         banco: element.item.banco,
         cta_banco: element.item.cta_banco,
         valor: element.item.valor
-      });
+      };
+      if (element.item.tipopago == "EFE" || element.item.tipopago == "CHD") {
+        obj.pagos=[];
+        this.fbDb
+        .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`)
+        .doc(idfp)
+        .set(obj);
+      }
+      regformapago.set(obj);
     });
     console.log('8', lrutafp);
-    
+
     const lruta = `/personal/${
       this._parempre.usuario.cod_usuar
-    }/resumdiario/${ano}/meses/${mes}/dias/${dia}/recibos`;
+      }/resumdiario/${ano}/meses/${mes}/dias/${dia}/recibos`;
     console.log('9', lruta);
     return this.fbDb
       .collection(lruta)

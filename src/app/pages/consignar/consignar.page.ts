@@ -24,7 +24,6 @@ export class ConsignarPage implements OnInit {
   cargoformpago = false;
   totefectivo = 0;
   totalcheques = 0;
-  totalconsignadas = 0;
   bancos: any;
   cargobancos = false;
   cta_banco = '';
@@ -38,14 +37,14 @@ export class ConsignarPage implements OnInit {
     ajuste: 0
   };
 
-  pag_fechach1 =   new Date().toISOString();
-  pag_fechach2 =   new Date().toISOString();
+  pag_fechach1 = new Date().toISOString();
+  pag_fechach2 = new Date().toISOString();
 
   grabando_consigna = false;
   grabo_consigna = false;
   mostrandoresulado = false;
   vistapagos: String = 'verobls';
-  
+
   constructor(
     public _parEmpre: ParEmpreService,
     public navCtrl: NavController,
@@ -59,25 +58,20 @@ export class ConsignarPage implements OnInit {
     public modalCtrl: ModalController,
     public loadingCtrl: LoadingController,
     public _DomSanitizer: DomSanitizer,
-    ) {
-          //cargar bancos de firebase
+  ) {
+    //cargar bancos de firebase
     this._parEmpre.getbancosFB().subscribe((datos: any) => {
       console.log("Cargo en bancos  de firebase datos", datos);
       this.bancos = datos;
       this.cargobancos = true;
     });
-     }
+  }
 
   ngOnInit() {
-    this.getFormPagodia()
-      .then(res => {
-        this.getFormPagoantdia();
-      });
-
+    this.getFormPagodia().then(res => { });
     this.getUltConsignaPersona();
-    // this.totalpago();
-    console.log('for pagos: ');
   }
+
   async actualizarFotoconsigna(idconsig) {
     console.log('a actualizar actualizarFotoconsigna  modal idconsig:', idconsig);
     const modal = await this.modalCtrl.create({
@@ -120,165 +114,102 @@ export class ConsignarPage implements OnInit {
     this.ultconsigna = [];
     return new Promise((resolve, reject) => {
       this._consigna.getUltConsignaPersona()
-      .subscribe((datos: any) =>{
-        datos.forEach((itemcons: any) => {
-          this.ultconsigna.push({
-            id: itemcons.payload.doc.id,
-            data: itemcons.payload.doc.data()
+        .subscribe((datos: any) => {
+          datos.forEach((itemcons: any) => {
+            this.ultconsigna.push({
+              id: itemcons.payload.doc.id,
+              data: itemcons.payload.doc.data()
+            });
           });
+          return resolve(true);
         });
-        console.log('ultconsigna:',this.ultconsigna);
-        return resolve(true);
-      });
     });
   }
   getFormPagodia() {
     this.formaspago = [];
     return new Promise((resolve, reject) => {
       this._consigna.getFormPagodia()
-      .subscribe((datos: any) =>{
-        this.formaspago = datos;
-        this.cargoformpago = true;
-        for (let item of this.formaspago) {
-          if (item.formpago === "EFE" || item.formpago === "CHD") {
-            if (item.consignado){
-              this.totalconsignadas += item.valor;
-              this.consignadas.push(item);
-            } else {
-              if (item.formpago === 'EFE') {
-                this.totefectivo += item.valor;
-                this.formpagefec.push(item);
-              } else {
-                this.totalcheques += item.valor;
-                this.formpagcheq.push(item);
-              }
-            }            
-          } 
-        }
-        this.regconsig.valor = this.totefectivo + this.totalcheques;
-        console.log('Datos de formas de pago del dia leidas', datos);
-        console.log('Datos Efectivo',this.totefectivo, this.formpagefec);
-        console.log('Datos cheques',this.totalcheques, this.formpagcheq);
-        console.log('Datos Consignadas',this.totalconsignadas, this.consignadas);
-        return resolve(true);
-      });
+        .subscribe((datos: any) => {
+          this.formpagefec = []
+          this.formpagcheq = []
+          this.formaspago = datos;
+          this.cargoformpago = true;
+          for (let item of this.formaspago) {
+            if (item.formpago === 'EFE') {
+              this.totefectivo += item.valor;
+              this.formpagefec.push(item);
+            } else if (item.formpago === "CHD") {
+              this.totalcheques += item.valor;
+              this.formpagcheq.push(item);
+            }
+          }
+          this.regconsig.valor = this.totefectivo + this.totalcheques;
+          return resolve(true);
+        });
     });
   }
-//formas pago dia anterior para consignaciones
-  getFormPagoantdia() {
-    return new Promise((resolve, reject) => {
-      this._consigna.getFormPagoantdia()
-      .subscribe((datos: any) =>{
-        console.log('datos dia ant',datos);
-        for (let itemp of datos) {
-          this.formaspago.push(itemp);
-        }
-        console.log('this.formaspago',this.formaspago);
-        this.cargoformpago = true;
-        for (let item of datos) {
-          if (item.formpago === "EFE" || item.formpago === "CHD") {
-            if (item.consignado){
-              this.totalconsignadas += item.valor;
-              this.consignadas.push(item);
-            } else {
-              if (item.formpago === 'EFE') {
-                this.totefectivo += item.valor;
-                this.formpagefec.push(item);
-              } else {
-                this.totalcheques += item.valor;
-                this.formpagcheq.push(item);
-              }
-            }            
-          } 
-        }
-        this.regconsig.valor = this.totefectivo + this.totalcheques;
-        console.log('Datos de formas de pago del dia leidas', datos);
-        console.log('Datos Efectivo',this.totefectivo, this.formpagefec);
-        console.log('Datos cheques',this.totalcheques, this.formpagcheq);
-        console.log('Datos Consignadas',this.totalconsignadas, this.consignadas);
-        return resolve(true);
-      });
-    });
-  }
-
-
-  realizar_consigna(){
-    if (this._consigna.generando_consigna){
+  
+  realizar_consigna() {
+    if (this._consigna.generando_consigna) {
       console.log('Ya se esta generando un pedido. Espere');
     }
-
     this.grabando_consigna = true;
-    const obj_graba = {
-      cta_banco: this.regconsig.cta_banco,
-      fecha: this.regconsig.fecha,
-      referencia: this.regconsig.referencia,
-      nota: this.regconsig.nota,
-      valor: this.regconsig.valor,
-      ajuste: this.regconsig.ajuste,
-      efectivo: this.formpagefec,
-      cheques: this.formpagcheq
-    };
-  
-    this._consigna.genera_consigna_netsolin(obj_graba)
-    .then(res => {
-      if (res){
-        this.mostrandoresulado = true;
-        this.grabo_consigna = true;
-        console.log('retorna genera_consigna_netsolin res:', res);
-        console.log('Grabo consig netsolin de efectivo:',obj_graba.efectivo);
-        console.log('Grabo consig netsolin de cheques:',obj_graba.cheques);
-        console.log('Grabo consig netsolin de this.formaspago:',this.formaspago);        
-        obj_graba.efectivo.forEach(element => {
-          let idreg = element.cod_docume.trim()+element.num_docume.trim()+element.formpago.trim();
-          let objact = {
-            consignado: true,
-            cod_consig: this._consigna.consig_grabada.cod_docume,
-            num_dconsig: this._consigna.consig_grabada.num_docume,
-            link_imgfb: ''
-          };
-          this._consigna.actconsignacion(idreg,objact);
-        });
-        obj_graba.cheques.forEach(element => {
-          let idreg = element.cod_docume.trim()+element.num_docume.trim()+element.formpago.trim();
-          let objact = {
-            consignado: true,
-            cod_consig: this._consigna.consig_grabada.cod_docume,
-            num_dconsig: this._consigna.consig_grabada.num_docume,
-            link_imgfb: ''
-          };
-          this._consigna.actconsignacion(idreg,objact);
-        });
+    this.consignadas.forEach(consig =>{
+      const obj_graba = {
+        cta_banco: consig.cta_banco,
+        fecha: consig.fecha,
+        referencia: consig.referencia,
+        nota: consig.nota,
+        valor: consig.valor,
+        ajuste: consig.ajuste,
+        cuentas: consig.cuentas,
+        link_imgfb:consig.img
+      };
+    this._consigna.genera_consigna_netsolin(obj_graba).then(res => 
+      {
+        if (res) {
+          this.mostrandoresulado = true;
+          this.grabo_consigna = true;
+          console.log('retorna genera_consigna_netsolin res:', res);
+          obj_graba.cuentas.forEach(element => {
+            let idreg = element.cod_docume.trim() + element.num_docume.trim() + element.formpago.trim();
 
-      } else {
+            let objact = {
+              consignaciones: element.consignaciones
+            };
+            
+            this._consigna.actconsignacion(idreg, objact);
+          });
+        } else {
+          this.mostrandoresulado = true;
+          this.grabo_consigna = false;
+          this.grabando_consigna = true;
+          console.log('retorna genera_consigna_netsolin error.message: ');
+        }
+      })
+      .catch(error => {
         this.mostrandoresulado = true;
         this.grabo_consigna = false;
         this.grabando_consigna = true;
-        console.log('retorna genera_consigna_netsolin error.message: ');  
-      }
-    })
-    .catch(error => {
-      this.mostrandoresulado = true;
-      this.grabo_consigna = false;
-      this.grabando_consigna = true;
-      console.log('retorna genera_consigna_netsolin error.message: ', error.message);
+        console.log('retorna genera_consigna_netsolin error.message: ', error.message);
+      });
     });
-    
   }
-  quitar_resuladograboconsigna(){
-    if (this.grabo_consigna){
+  quitar_resuladograboconsigna() {
+    if (this.grabo_consigna) {
       this.grabo_consigna = false;
     }
     this.grabando_consigna = false;
-    this.mostrandoresulado = false;    
+    this.mostrandoresulado = false;
   }
 
   imprimir_consigna() {
     let printer;
     this.btCtrl.list().then(async datalist => {
       let sp = datalist;
-      let input =[];
+      let input = [];
       sp.forEach(element => {
-        let val = {name: element.id, type: 'radio', label: element.name, value: element};
+        let val = { name: element.id, type: 'radio', label: element.name, value: element };
         input.push(val);
       });
       const alert = await this.alertCtrl.create({
@@ -293,7 +224,7 @@ export class ConsignarPage implements OnInit {
               console.log('Confirm Cancel');
             }
           }, {
-            
+
             text: 'Ok',
             handler: (inpu) => {
               printer = inpu;
@@ -305,27 +236,27 @@ export class ConsignarPage implements OnInit {
                     message: 'Imprimiendo',
                     buttons: ['Cancel']
                   });
-                   await alert2.present();
+                  await alert2.present();
                 }, async err => {
-                   const alerter = await this.alertCtrl.create({
+                  const alerter = await this.alertCtrl.create({
                     message: 'ERROR' + err,
                     buttons: ['Cancelar']
                   });
-                   await alerter.present();
+                  await alerter.present();
                 });
-              });              
+              });
             }
           }
         ]
       });
-       await alert.present();
+      await alert.present();
     }, async err => {
       console.log('No se pudo conectar', err);
-       const alert = await this.alertCtrl.create({
+      const alert = await this.alertCtrl.create({
         message: 'ERROR' + err,
         buttons: ['Cancelar']
       });
-       await alert.present();
+      await alert.present();
     });
 
   }

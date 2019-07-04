@@ -58,7 +58,6 @@ export class ConsignacionesService implements OnInit {
 }
 
   genera_consigna_netsolin(obj_graba){
-    console.log("dataos para generar consigna:",obj_graba);
     if (this.generando_consigna){
       console.error('Ya se esta generando un recibo');
       return;
@@ -104,29 +103,21 @@ export class ConsignacionesService implements OnInit {
             const objconsigfb = {
               cod_docume: data.cod_docume,
               num_docume: data.num_docume,
-              fecha: data.fecha,
-              cod_usuar: this._parempre.usuario.cod_usuar,
+              fecha: obj_graba.fecha,
               cta_banco: obj_graba.cta_banco,
               referencia: obj_graba.referencia,
               valor: obj_graba.valor,
               ajuste: obj_graba.ajuste,
               nota: obj_graba.nota,
-              efectivo: obj_graba.efectivo,
-              cheques: obj_graba.cheques,
+              link_imgfb:obj_graba.img,
+              cuentas: obj_graba.cuentas,
               txt_imp: data.txt_imp,
               detalle: data.consigna_grabada
             };
-            this.guardarcierrecajaFb(
-              this._parempre.usuario.cod_usuar,
+            this.guardarFb(
               data.cod_docume.trim() + data.num_docume.trim(),
               objconsigfb
-            );
-            this.guardarconsigFb(
-              this._parempre.usuario.cod_usuar,
-              data.cod_docume.trim() + data.num_docume.trim(),
-              objconsigfb
-            )
-              .then(res => {
+            ).then(res => {
                 console.log("Recibo guardada res: ", res);
                 this.generando_consigna = false;
                 resolve(true);
@@ -143,30 +134,13 @@ export class ConsignacionesService implements OnInit {
       });
     });
   }
-  // Actualiza url firestorage en Netsolin, para cuando se traiga sea màs rapido
-  guardarconsigFb(person, id, objconsig) {
-    console.log("guardarconsigFb cod_tercer:", person);
-    console.log("guardarconsigFb id:", id);
-    console.log("guardarconsigFb objrecibo:", objconsig);
-    return this.fbDb
-      .collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones`)
-      .doc(id)
-      .set(objconsig);
-  }
+ 
   //Guardar para el vendedor o usuario datos para cierre, recibo y formas de pago
-  guardarcierrecajaFb(person, id, objconsig) {
-    console.log("guardarreciboFb cod_tercer:", person);
-    console.log("guardarreciboFb id:", id);
-    console.log("guardarreciboFb objrecibo:", objconsig);
-    //Actualizar
+  guardarFb( id, objconsig) {
     const now = new Date();
-    //extraemos el día mes y año
     const dia = now.getDate();
     const mes = now.getMonth() + 1;
     const ano = now.getFullYear();
-    const hora = now.getHours();
-    const minutos = now.getMinutes();
-    // console.log("Actualizar cierre", lruta);
     console.log('1');
     //asegurarse que este creado el año, mes y dia
     this.fbDb
@@ -190,11 +164,15 @@ export class ConsignacionesService implements OnInit {
 
     //cierre de caja por cada forma de pago
     let lrutafp = `/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/consignaciones`;
-    console.log('a grabar fb',lrutafp,id,objconsig);
     return this.fbDb
       .collection(lrutafp)
       .doc(id)
-      .set(objconsig);
+      .set(objconsig).then(res =>{
+          this.fbDb
+        .collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones`)
+        .doc(id)
+        .set(objconsig);
+      });
   }
   
   public getUltConsignaPersona() {
@@ -212,29 +190,11 @@ export class ConsignacionesService implements OnInit {
   }
   public getFormPagodia() {
     console.log("en getFormPagodia");
-    const now = new Date();
-    //extraemos el día mes y año
-    const dia = now.getDate();
-    const mes = now.getMonth() + 1;
-    const ano = now.getFullYear();
-    console.log(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`);
     return this.fbDb
-      .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`)
+      .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`,ref =>ref.orderBy("valor", "desc"))
       .valueChanges();
   }
-  public getFormPagoantdia() {
-    console.log("en getFormPagoantdia");
-    const now = new Date();
-    const ayer=new Date(now.getTime() - 24*60*60*1000);
-    //extraemos el día mes y año
-    const dia = ayer.getDate();
-    const mes = ayer.getMonth() + 1;
-    const ano = ayer.getFullYear();
-    console.log(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`);
-    return this.fbDb
-      .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`)
-      .valueChanges();
-  }
+
   public actconsignacion(id,objact) {
     console.log("en getFormPagodia");
     const now = new Date();
