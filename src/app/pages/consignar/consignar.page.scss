@@ -22,7 +22,6 @@
         text-transform: none;
     }
 }
-
 .fontrowcol {
     font-size: smaller;
     font-weight: bold;
@@ -79,9 +78,7 @@
     top: 1%;
 }
 
-.headercliente {
-    font-size: 12px;
-}
+
 
 .enviadomsg {
     position: absolute;
@@ -98,7 +95,10 @@
 }
 
 .cardtotales {
-    background-color: yellowgreen;
+    background: yellowgreen;
+    width: 100%;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 .rowtotales {
@@ -184,4 +184,17 @@
 .inputnumero {
     text-align: -webkit-right;
     background: whitesmoke;
+}
+
+.titulo{
+    top: -25px;
+    left: 5px;
+    color: var(--ion-color-tertiary);
+    font-size: 12px;
+    position: absolute;
+    padding: 10px 0;
+}
+
+.pagar ion-item{
+    border-width: 0;
 }

@@ -34,7 +34,9 @@ export class ConsignarPage implements OnInit {
     referencia: "",
     nota: "",
     valor: 0,
-    ajuste: 0
+    ajuste: 0,
+    cheques: [],
+    valcheques: 0
   };
 
   pag_fechach1 = new Date().toISOString();
@@ -43,7 +45,7 @@ export class ConsignarPage implements OnInit {
   grabando_consigna = false;
   grabo_consigna = false;
   mostrandoresulado = false;
-  vistapagos: String = 'verobls';
+  vistapagos: String = 'verefec';
 
   constructor(
     public _parEmpre: ParEmpreService,
@@ -130,11 +132,13 @@ export class ConsignarPage implements OnInit {
     return new Promise((resolve, reject) => {
       this._consigna.getFormPagodia()
         .subscribe((datos: any) => {
-          this.formpagefec = []
-          this.formpagcheq = []
+          console.log(datos);
+          this.formpagefec = [];
+          this.formpagcheq = [];
           this.formaspago = datos;
           this.cargoformpago = true;
           for (let item of this.formaspago) {
+            
             if (item.formpago === 'EFE') {
               this.totefectivo += item.valor;
               this.formpagefec.push(item);
@@ -143,7 +147,6 @@ export class ConsignarPage implements OnInit {
               this.formpagcheq.push(item);
             }
           }
-          this.regconsig.valor = this.totefectivo + this.totalcheques;
           return resolve(true);
         });
     });
@@ -172,13 +175,22 @@ export class ConsignarPage implements OnInit {
           this.grabo_consigna = true;
           console.log('retorna genera_consigna_netsolin res:', res);
           obj_graba.cuentas.forEach(element => {
-            let idreg = element.cod_docume.trim() + element.num_docume.trim() + element.formpago.trim();
-
+            let idcuen = element.cod_docume.trim() + element.num_docume.trim() + element.formpago.trim();
+            let idcons = this._consigna.consig_grabada.cod_docume.trim()+this._consigna.consig_grabada.num_docume.trim();
             let objact = {
-              consignaciones: element.consignaciones
+              porcentaje: element.porcentaje,              
+              cod_consig: this._consigna.consig_grabada.cod_docume,
+              num_dconsig: this._consigna.consig_grabada.num_docume,
+              nota: obj_graba.nota,
+              fecha: obj_graba.fecha,
+              cta_banco: obj_graba.cta_banco,
+              referencia: obj_graba.referencia
             };
-            
-            this._consigna.actconsignacion(idreg, objact);
+            let cuenta = element.valor*(100-(element.porcentaje))*0.01;
+            let valorRestante={
+              valor: cuenta
+            };
+            this._consigna.actcierre(idcuen,idcons, objact, valorRestante ,element.fecha);
           });
         } else {
           this.mostrandoresulado = true;
@@ -261,7 +273,7 @@ export class ConsignarPage implements OnInit {
 
   }
   changeBanco(e) {
-    console.log("changeBanco e: ", e);
+    console.log("changeBanco e: ", this.regconsig.cheques);
     console.log("e.detail.value", e.detail.value);
   }
 }

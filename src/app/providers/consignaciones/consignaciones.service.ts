@@ -43,22 +43,22 @@ export class ConsignacionesService implements OnInit {
     private http: HttpClient,
     public _visitas: VisitasProvider,
     public _cliente: ClienteProvider,
-    private file : File
-  ) {}
-  ngOnInit() {}
+    private file: File
+  ) { }
+  ngOnInit() { }
   inicializaRecibos() {
     // console.log("cosntructor prod service recibos");
     // this.cartera = this._cliente.clienteActual.cartera;
     // console.log('cartera:', this.cartera);
   }
-  public getconsigna(id){
+  public getconsigna(id) {
     return this.fbDb
-    .collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones`)
-    .doc(id).valueChanges();
-}
+      .collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones`)
+      .doc(id).valueChanges();
+  }
 
-  genera_consigna_netsolin(obj_graba){
-    if (this.generando_consigna){
+  genera_consigna_netsolin(obj_graba) {
+    if (this.generando_consigna) {
       console.error('Ya se esta generando un recibo');
       return;
     }
@@ -74,7 +74,7 @@ export class ConsignacionesService implements OnInit {
       this.grb_consig = false;
       this.menerrorgraba = "";
       this.errorgrb_consig = false;
-      let url =this._parempre.URL_SERVICIOS +"netsolin_servirestgo.csvc?VRCod_obj=APPGENCONSIGNA";
+      let url = this._parempre.URL_SERVICIOS + "netsolin_servirestgo.csvc?VRCod_obj=APPGENCONSIGNA";
       this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
         console.log(" genera_consigna_netsolin data:", data);
         if (data.error) {
@@ -89,11 +89,11 @@ export class ConsignacionesService implements OnInit {
             this.errorgrb_consig = true;
             this.resgrb_consig = "No se grabo por error";
             data.messages.forEach(element => {
-              this.menerrorgraba += element.menerror+' / ';  
-            });            
-              console.error(" Error genera_consigna_netsolin ", this.menerrorgraba);
-              this.generando_consigna = false;
-              resolve(false);
+              this.menerrorgraba += element.menerror + ' / ';
+            });
+            console.error(" Error genera_consigna_netsolin ", this.menerrorgraba);
+            this.generando_consigna = false;
+            resolve(false);
           } else {
             this.errorgrb_consig = false;
             this.grb_consig = true;
@@ -109,7 +109,7 @@ export class ConsignacionesService implements OnInit {
               valor: obj_graba.valor,
               ajuste: obj_graba.ajuste,
               nota: obj_graba.nota,
-              link_imgfb:obj_graba.img,
+              link_imgfb: obj_graba.img,
               cuentas: obj_graba.cuentas,
               txt_imp: data.txt_imp,
               detalle: data.consigna_grabada
@@ -118,10 +118,10 @@ export class ConsignacionesService implements OnInit {
               data.cod_docume.trim() + data.num_docume.trim(),
               objconsigfb
             ).then(res => {
-                console.log("Recibo guardada res: ", res);
-                this.generando_consigna = false;
-                resolve(true);
-              })
+              console.log("Recibo guardada res: ", res);
+              this.generando_consigna = false;
+              resolve(true);
+            })
               .catch(err => {
                 console.log("Error guardando consigna en Fb", err);
                 this.generando_consigna = false;
@@ -134,9 +134,9 @@ export class ConsignacionesService implements OnInit {
       });
     });
   }
- 
+
   //Guardar para el vendedor o usuario datos para cierre, recibo y formas de pago
-  guardarFb( id, objconsig) {
+  guardarFb(id, objconsig) {
     const now = new Date();
     const dia = now.getDate();
     const mes = now.getMonth() + 1;
@@ -154,27 +154,27 @@ export class ConsignacionesService implements OnInit {
       )
       .doc(mes.toString())
       .set({ mes: mes.toString() });
-      console.log('2');
-      //asegurarse que este creado el año, mes y dia
+    console.log('2');
+    //asegurarse que este creado el año, mes y dia
     this.fbDb
       .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias`)
       .doc(dia.toString())
       .set({ dia: dia.toString() });
-      console.log('3');
+    console.log('3');
 
     //cierre de caja por cada forma de pago
     let lrutafp = `/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/consignaciones`;
     return this.fbDb
       .collection(lrutafp)
       .doc(id)
-      .set(objconsig).then(res =>{
-          this.fbDb
-        .collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones`)
-        .doc(id)
-        .set(objconsig);
+      .set(objconsig).then(res => {
+        this.fbDb
+          .collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones`)
+          .doc(id)
+          .set(objconsig);
       });
   }
-  
+
   public getUltConsignaPersona() {
     // tslint:disable-next-line:max-line-length
     return this.fbDb
@@ -191,63 +191,72 @@ export class ConsignacionesService implements OnInit {
   public getFormPagodia() {
     console.log("en getFormPagodia");
     return this.fbDb
-      .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`,ref =>ref.orderBy("valor", "desc"))
+      .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`, ref => ref.orderBy("valor", "desc"))
       .valueChanges();
   }
 
-  public actconsignacion(id,objact) {
-    console.log("en getFormPagodia");
-    const now = new Date();
+  public actcierre(idcuen, idcons, valorRestante, objact, now) {
     //extraemos el día mes y año
     const dia = now.getDate();
     const mes = now.getMonth() + 1;
     const ano = now.getFullYear();
     console.log(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`);
     return this.fbDb
-      .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`)
-      .doc(id)
-      .update(objact);
+      .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja/${idcuen}/consignaciones`)
+      .doc(idcons)
+      .set(objact).then(mes => {
+        if (valorRestante.valor <= 0) {
+          this.fbDb
+            .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`)
+            .doc(idcons).delete();
+        }
+        else {
+          this.fbDb
+            .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`)
+            .doc(idcons).update(valorRestante);
+        }
+      });
   }
 
-  actualizaFotoConsignafirebase(idconsig,fecha, imageURL): Promise<any> {
+  actualizaFotoConsignafirebase(idconsig, fecha, imageURL): Promise<any> {
     //extraemos el día mes y año
     console.log(fecha);
     const dia = fecha.getDate();
     const mes = fecha.getMonth() + 1;
     const ano = fecha.getFullYear();
     const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_consigna/${this._parempre.usuario.cod_usuar}/consignacion/${idconsig}`);
-    return this.file.resolveLocalFilesystemUrl(imageURL).then((fe:FileEntry)=>{
+    return this.file.resolveLocalFilesystemUrl(imageURL).then((fe: FileEntry) => {
       console.log(fe);
       let { name, nativeURL } = fe;
       let path = nativeURL.substring(0, nativeURL.lastIndexOf("/"));
-      console.log(path,"   ",name);
+      console.log(path, "   ", name);
       return this.file.readAsArrayBuffer(path, name);
     }).then(buffer => {
-        let imgBlob = new Blob([buffer], {
-          type: "image/jpeg"
-        });
-      return storageRef.put(imgBlob, {
-          contentType: 'image/jpeg',
-      }).then(() => {       
-        return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
-            this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/consignaciones/`)
-              .doc(idconsig).update({link_imgfb: linkref});
-            this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones/`)
-              .doc(idconsig).update({link_imgfb: linkref});
-            const toast = await this.toastCtrl.create({
-              showCloseButton: true,
-              message: 'Se actualizo la foto consignación.',
-              duration: 2000,
-              position: 'bottom'
-            });
-            toast.present();
-          }); 
-        }).catch((error) => {
-          console.log('Error actualizaimagenConsignacionfirebase putString img:', error);
-        });    
-      }).catch((error) => {
-        console.log('Error leyendo archivo:', error);
+      let imgBlob = new Blob([buffer], {
+        type: "image/jpeg"
       });
+      return storageRef.put(imgBlob, {
+        contentType: 'image/jpeg',
+      }).then(() => {
+        return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
+          this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/consignaciones/`)
+            .doc(idconsig).update({ link_imgfb: linkref });
+          this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones/`)
+            .doc(idconsig).update({ link_imgfb: linkref });
+          const toast = await this.toastCtrl.create({
+            showCloseButton: true,
+            message: 'Se actualizo la foto consignación.',
+            duration: 2000,
+            position: 'bottom'
+          });
+          toast.present();
+        });
+      }).catch((error) => {
+        console.log('Error actualizaimagenConsignacionfirebase putString img:', error);
+      });
+    }).catch((error) => {
+      console.log('Error leyendo archivo:', error);
+    });
   }
 
 }

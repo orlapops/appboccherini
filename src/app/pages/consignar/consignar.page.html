@@ -4,8 +4,7 @@
             <ion-back-button defaultHref="home"></ion-back-button>
         </ion-buttons>
         <!-- <ion-title>Items Recibo de Caja</ion-title> -->
-        <ion-title *ngIf="!_consigna.generando_consigna" class="headercliente">Consignaciones</ion-title>
-        <ion-title *ngIf="!_consigna.generando_consigna" class="headercliente">Se esta generando consignación</ion-title>
+        <ion-title class="headercliente">Consignaciones</ion-title>
 
     </ion-toolbar>
 </ion-header>
@@ -13,220 +12,281 @@
 <ion-content class="animated fadeIn">
     <ion-text color="primary">
         <h6>
-            <ion-icon size="small" color="dark" name="cash"></ion-icon>Pendientes Consignar</h6>
+            <ion-icon size="small" color="dark" name="cash"></ion-icon>Pendientes Consignar
+        </h6>
     </ion-text>
     <hr class="bg-tertiary">
     <div text-center *ngIf="formpagefec.length === 0 && formpagcheq.length === 0" class="carrito_vacio">
         <ion-icon name="ios-cart-outline" class="icon-5x"></ion-icon>
         <br> No tiene items por consignar
     </div>
-    <div *ngIf="!_consigna.generando_consigna && !grabando_consigna && !mostrandoresulado && (formpagefec.length != 0 || formpagcheq.length != 0 || ultconsigna.length != 0)" class="bg-white">
+    <div *ngIf="!_consigna.generando_consigna && !grabando_consigna && !mostrandoresulado && (formpagefec.length != 0 || formpagcheq.length != 0 || ultconsigna.length != 0)"
+        class="bg-white">
         <!-- <ion-card class="bg-primary" no-margin> -->
         <ion-card no-margin>
-            <ion-card-content>
-                <!-- margin-top: -14px; -->
-                <ion-segment [(ngModel)]="vistapagos" color="light" margin-bottom>
-                    <!-- <ion-segment [(ngModel)]="vistapagos" color="light"> -->
-                    <ion-segment-button value="verefec">
-                        <ion-label color="tertiary">Efectivo</ion-label>
-                    </ion-segment-button>
-                    <ion-segment-button value="vercheques">
-                        <ion-label color="tertiary">Cheques</ion-label>
-                    </ion-segment-button>
-                    <ion-segment-button value="verpagar">
-                        <ion-label color="tertiary">Consignar</ion-label>
-                    </ion-segment-button>
-                    <ion-segment-button value="verconsignadas">
-                        <ion-label color="tertiary">Efectuadas</ion-label>
-                    </ion-segment-button>
-                </ion-segment>
-                <div class="ccFlags" [ngSwitch]="vistapagos">
-                    <ion-grid *ngSwitchCase="'verefec'" nopadding>
-                        <ion-row class="rowtotales">
-                            <ion-col size="12" margin-bottom>
-                                <ion-list>
-                                    <ion-item-sliding *ngFor="let iteme of formpagefec; let i = index;">
-                                        <ion-item>
-                                            <ion-label>
-                                                <h3>
-                                                    <div class="enviadomsg">
-                                                        <ion-icon name="document" slot="start" color="secondary"></ion-icon>
-                                                        <ion-text color="primary">{{iteme.cod_docume+'/'+iteme.num_docume +' ' }} {{ iteme.fecha | date: 'mediumDate'}} </ion-text>
-                                                    </div>
-                                                    <div class="fechamsg">
-                                                        <ion-text color="primary"> {{iteme.valor | currency}}</ion-text>
-                                                    </div>
-                                                </h3>
-                                            </ion-label>
-                                        </ion-item>
-                                    </ion-item-sliding>
-                                </ion-list>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                    <ion-grid *ngSwitchCase="'vercheques'" nopadding>
-                        <ion-row class="rowtotales">
-                            <ion-col size="12" margin-bottom>
-                                <ion-list>
-                                    <ion-item-sliding *ngFor="let itemc of formpagcheq; let i = index;">
-                                        <ion-item>
-                                            <ion-label>
-                                                <h3>
-                                                    <div class="enviadomsg">
-                                                        <ion-icon name="document" slot="start" color="secondary"></ion-icon>
-                                                        <ion-text color="primary">{{itemc.cod_docume+'/'+itemc.num_docume +' ' }} {{ itemc.fecha | date: 'mediumDate'}} </ion-text>
-                                                    </div>
-                                                    <div class="fechamsg">
-                                                        <!-- <ion-icon name="calendar" slot="end" color="tertiary" *ngIf="true"></ion-icon> -->
-                                                        <ion-text color="primary"> {{itemc.valor | currency}}</ion-text>
-                                                    </div>
-                                                </h3>
-                                            </ion-label>
-                                        </ion-item>
-                                    </ion-item-sliding>
-                                </ion-list>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                    <ion-grid *ngSwitchCase="'verpagar'" padding>
-                        <ion-row class="rowtotales">
-                            <ion-col size="12" margin-bottom>
-                                <ion-card no-margin class="animated fadeIn" margin-top>
-                                    <ion-card-content class="cardtotales">
-                                        <h2>
-                                            <ion-text>
-                                                Totales a Consignar
-                                            </ion-text>
-                                        </h2>
-                                    </ion-card-content>
-                                    <ion-item class="bg-white margentb">
-                                        <p>
-                                            Total Efectivo:
-                                        </p>
-                                        <ion-badge slot="end" color="warning">
-                                            {{totefectivo | currency }}
-                                        </ion-badge>
-                                    </ion-item>
-                                    <ion-item class="bg-white margentb">
-                                        <p>
-                                            Total Cheques:
-                                        </p>
-                                        <ion-badge slot="end" color="warning">
-                                            {{totalcheques | currency }}
-                                        </ion-badge>
-                                    </ion-item>
-                                    <ion-item class="bg-white margentb">
-                                        <ion-label>
-                                            Valor a Consignar:
-                                        </ion-label>
-                                        <ion-badge slot="end" color="success">
-                                            {{totefectivo + totalcheques | currency }}
-                                        </ion-badge>
-                                    </ion-item>
-                                    <ion-item class="bg-white margentb">
-                                        <ion-label>
-                                            Diferencia:
-                                        </ion-label>
-                                        <ion-badge slot="end" color="success">
-                                            {{((totefectivo + totalcheques) - (regconsig.valor+regconsig.ajuste)) | currency }}
-                                        </ion-badge>
-                                    </ion-item>
-
-                                    <ion-item class="bg-white">
-                                        <ion-label color="dark">Consignar en Banco:</ion-label>
-                                        <ion-select *ngIf="cargobancos" placeholder="Seleccione Uno" [(ngModel)]="regconsig.cta_banco" (ionChange)="changeBanco($event)">
-                                            <ion-select-option *ngFor="let banco of bancos" [value]="banco.cod_banco">{{banco.banco}}</ion-select-option>
-                                        </ion-select>
-                                    </ion-item>
-                                    <ion-item class="bg-white">
-                                        <ion-label color="dark">Ajuste:</ion-label>
-                                        <ion-input required slot="end" class="inputnumero" [(ngModel)]="regconsig.ajuste" type="number" min="0" max="1000">
-                                        </ion-input>
-                                    </ion-item>
-                                    <ion-item class="bg-white">
-                                        <ion-label color="dark">Valor:</ion-label>
-                                        <ion-input required slot="end" class="inputnumero" [(ngModel)]="regconsig.valor" type="number" min="0" max="9999999999">
-                                        </ion-input>
-                                    </ion-item>
-                                    <ion-item class="bg-white">
-                                        <ion-label color="dark">Referencia:</ion-label>
-                                        <ion-input required slot="end" class="chcuenpago" [(ngModel)]="regconsig.referencia" type="text">
-                                        </ion-input>
-                                    </ion-item>
+            <ion-segment [(ngModel)]="vistapagos" color="light">
+                <ion-segment-button value="verefec">
+                    <ion-label color="tertiary">Efectivo</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="vercheques">
+                    <ion-label color="tertiary">Cheques</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="verpagar">
+                    <ion-label color="tertiary">Consignar</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="verconsignadas">
+                    <ion-label color="tertiary">Efectuadas</ion-label>
+                </ion-segment-button>
+            </ion-segment>
+            <div class="ccFlags" [ngSwitch]="vistapagos">
+                <br>
+                <ion-grid *ngSwitchCase="'verefec'" nopadding>
+                    <ion-row>
+                        <ion-col size="12">
+                            <ion-list>
+                                <ion-item-sliding *ngFor="let iteme of formpagefec; let i = index;">
                                     <ion-item>
-                                        <ion-label color="dark" position="stacked">Notas:</ion-label>
-                                        <ion-textarea rows="3" cols="12" inputmode="text" placeholder="Registre las Notas" [(ngModel)]="regconsig.nota" [value]="regconsig.nota"></ion-textarea>
-                                    </ion-item>
-                                    <ion-item class="bg-white">
-                                        <ion-button *ngIf="(totefectivo + totalcheques) > 0 && regconsig.cta_banco  && regconsig.referencia  && ((totefectivo + totalcheques) - (regconsig.valor+regconsig.ajuste))===0 && (regconsig.ajuste <= 1000) " slot="start" shape="round" color="success"
-                                            (click)="realizar_consigna()">
-                                            Registrar Consignacón
-                                        </ion-button>
-                                    </ion-item>
-                                </ion-card>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                    <ion-grid *ngSwitchCase="'verconsignadas'">
-                        <ion-row>
-                            <ion-col size="12" no-margin>
-                                <ion-card no-margin class="bg-white margin-top margin-bottom" *ngFor="let item of ultconsigna">
-                                    <ion-grid>
-                                        <ion-row>
-                                            <ion-col size="5">
-                                                <div>
-                                                    <a (click)="presentImage(item.data.link_imgfb)">
-                                                        <img *ngIf="item.data.link_imgfb" [src]="_DomSanitizer.bypassSecurityTrustUrl(item.data.link_imgfb)" />
-                                                        <img *ngIf="!item.data.link_imgfb" src="assets/img/imagennodisponible.jpg" />
-                                                    </a>
+                                        <ion-label>
+                                            <h3>
+                                                <div class="enviadomsg">
+                                                    <ion-icon name="document" slot="start" color="secondary">
+                                                    </ion-icon>
+                                                    <ion-text color="primary">
+                                                        {{iteme.cod_docume+'/'+iteme.num_docume +' ' }}
+                                                        {{ iteme.fecha | date: 'mediumDate'}} </ion-text>
                                                 </div>
-                                            </ion-col>
-                                            <ion-col size="7">
-                                                <ion-row>
-                                                    <ion-col size="8">
-                                                        {{item.data.cod_docume+'/'+item.data.num_docume}}
-                                                    </ion-col>
-                                                    <ion-col size="4">
-                                                        {{item.data.fecha | date: 'shortDate'}}
-                                                    </ion-col>
-                                                </ion-row>
-                                                <ion-row>
-                                                    <ion-col size="12">
-                                                        Número: {{ item.data.referencia }}
-                                                    </ion-col>
-                                                </ion-row>
+                                                <div class="fechamsg">
+                                                    <ion-text color="primary"> {{iteme.valor | currency}}</ion-text>
+                                                </div>
+                                            </h3>
+                                        </ion-label>
+                                    </ion-item>
+                                </ion-item-sliding>
+                            </ion-list>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+                <ion-grid *ngSwitchCase="'vercheques'" nopadding>
+                    <ion-row>
+                        <ion-col size="12">
+                            <ion-list>
+                                <ion-item-sliding *ngFor="let itemc of formpagcheq; let i = index;">
+                                    <ion-item>
+                                        <ion-label>
+                                            <h3>
+                                                <div class="enviadomsg">
+                                                    <ion-icon name="document" slot="start" color="secondary">
+                                                    </ion-icon>
+                                                    <ion-text color="primary">
+                                                        {{itemc.cod_docume+'/'+itemc.num_docume +' ' }}
+                                                        {{ itemc.fecha | date: 'mediumDate'}} </ion-text>
+                                                </div>
+                                                <div class="fechamsg">
+                                                    <!-- <ion-icon name="calendar" slot="end" color="tertiary" *ngIf="true"></ion-icon> -->
+                                                    <ion-text color="primary"> {{itemc.valor | currency}}</ion-text>
+                                                </div>
+                                            </h3>
+                                        </ion-label>
+                                    </ion-item>
+                                </ion-item-sliding>
+                            </ion-list>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+                <ion-grid *ngSwitchCase="'verpagar'" nopadding>
+                    <ion-row>
+                        <!--class="rowtotales"> -->
+                        <ion-col>
+                            <ion-label class="titulo" style="font-size: 14">
+                                Total Efectivo:
+                            </ion-label>
+                            <ion-label>
+                                +{{totefectivo | currency }}
+                            </ion-label>
+                            <br>
+                            <ion-label color="danger">
+                                -{{regconsig.valor-regconsig.valcheques | currency }}
+                            </ion-label>
+                            <hr class="bg-primary">
+                            <ion-label>
+                                {{totefectivo -(regconsig.valor-regconsig.cheques) | currency }}
+                            </ion-label>
+                        </ion-col>
+                        <ion-col>
+                            <ion-label class="titulo" style="font-size: 14">
+                                Total Cheques:
+                            </ion-label>
+                            <ion-label>
+                                +{{totalcheques | currency }}
+                            </ion-label>
+                            <br>
+                            <ion-label color="danger">
+                                -{{regconsig.valcheques | currency }}
+                            </ion-label>
+                            <hr class="bg-primary">
+                            <ion-label>
+                                {{totalcheques-regconsig.cheques | currency }}
+                            </ion-label>
+                        </ion-col>
+                    </ion-row>
+                    <hr class="bg-tertiary">
+                    <br>
+                    <ion-row>
+                        <ion-col style="width: 50%">
+                            <ion-label class="titulo">Banco:</ion-label>
+                            <ion-select *ngIf="cargobancos" placeholder="Seleccione Uno"
+                                [(ngModel)]="regconsig.cta_banco" (ionChange)="changeBanco($event)"
+                                style="background: whitesmoke">
+                                <ion-select-option *ngFor="let banco of bancos" [value]="banco.cod_banco">
+                                    {{banco.banco}}
+                                </ion-select-option>
+                            </ion-select>
+                        </ion-col>
+                        <ion-col style="width: 50%">
+                                <ion-label class="titulo">Cheques:</ion-label>
+                                <ion-select  placeholder="Selecciona" multiple="true"
+                                    [(ngModel)]="regconsig.cheques"
+                                    style="background: whitesmoke">
+                                    <ion-select-option *ngFor="let cheque of formpagcheq" [value]="banco.cod_banco">
+                                        {{banco.banco}}
+                                    </ion-select-option>
+                                </ion-select>
+                        </ion-col>
+                    </ion-row>
+                    <br>
+                    <ion-row>
+                        <ion-col>
+                            <div>
+                                <ion-label class="titulo">Valor:</ion-label>
+                                <ion-input required slot="end" class="inputnumero" [(ngModel)]="regconsig.valor"
+                                    type="number" min="0" max="9999999999">
+                                </ion-input>
+                            </div>
+                        </ion-col>
+                        <ion-col>
+                            <div>
+                                <ion-label class="titulo">Ajuste:</ion-label>
+                                <ion-input required slot="end" class="inputnumero" [(ngModel)]="regconsig.ajuste"
+                                    type="number" min="0" max="1000">
+                                </ion-input>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                    <br>
+                    <ion-row>
+                        <ion-col>
+                            <div>
+                                <ion-label class="titulo" >Referencia:</ion-label>
+                                <ion-input required slot="end" class="inputnumero" placeholder="Ingresar ref." [(ngModel)]="regconsig.referencia"
+                                    type="text">
+                                </ion-input>
+                            </div>
+                        </ion-col>
+                        <ion-col>
+                            <div>
+                                <ion-button icon-left size="small" shape="round" color="tertiary"
+                                    (click)="seleccionarFoto()">
+                                    Archivo
+                                    <ion-icon name="folder"></ion-icon>
+                                </ion-button>
+                            </div>
+                        </ion-col>
+                        <ion-col>
+                            <div>
+                                <ion-button icon-left size="small" shape="round" color="tertiary"
+                                    (click)="mostrar_camara()">
+                                    Foto
+                                    <ion-icon name="camera"></ion-icon>
+                                </ion-button>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                    <br>
+                    <ion-row>
+                        <ion-col>
+                            <ion-label class="titulo">Notas:</ion-label>
+                            <ion-textarea style="background: whitesmoke" rows="2" cols="12" inputmode="text"
+                                placeholder="Registre las Notas" [(ngModel)]="regconsig.nota" [value]="regconsig.nota">
+                            </ion-textarea>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <!-- *ngIf="(totefectivo + totalcheques) > 0 && regconsig.cta_banco  && regconsig.referencia  && ((totefectivo + totalcheques) - (regconsig.valor+regconsig.ajuste))===0 && (regconsig.ajuste <= 1000) " -->
+                            <div>
+                                <ion-button [disabled]="consignadas.length==0"
+                                    style="position:relative; left: 50%; transform: translate(-50%,0);" slot="start"
+                                    shape="round" color="success" (click)="realizar_consigna()">
+                                    Registrar Consignacón
+                                </ion-button>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+                <ion-grid *ngSwitchCase="'verconsignadas'">
+                    <ion-row>
+                        <ion-col size="12" no-margin>
+                            <ion-card no-margin class="bg-white margin-top margin-bottom"
+                                *ngFor="let item of ultconsigna">
+                                <ion-grid>
+                                    <ion-row>
+                                        <ion-col size="5">
+                                            <div>
+                                                <a (click)="presentImage(item.data.link_imgfb)">
+                                                    <img *ngIf="item.data.link_imgfb"
+                                                        [src]="_DomSanitizer.bypassSecurityTrustUrl(item.data.link_imgfb)" />
+                                                    <img *ngIf="!item.data.link_imgfb"
+                                                        src="assets/img/imagennodisponible.jpg" />
+                                                </a>
+                                            </div>
+                                        </ion-col>
+                                        <ion-col size="7">
+                                            <ion-row>
+                                                <ion-col size="8">
+                                                    {{item.data.cod_docume+'/'+item.data.num_docume}}
+                                                </ion-col>
+                                                <ion-col size="4">
+                                                    {{item.data.fecha | date: 'shortDate'}}
+                                                </ion-col>
+                                            </ion-row>
+                                            <ion-row>
+                                                <ion-col size="12">
+                                                    Número: {{ item.data.referencia }}
+                                                </ion-col>
+                                            </ion-row>
 
-                                                <ion-row>
-                                                    <ion-col size="12">
-                                                        <p class="saldo-cartera">Valor:{{item.data.valor | currency }}</p>
-                                                    </ion-col>
+                                            <ion-row>
+                                                <ion-col size="12">
+                                                    <p class="saldo-cartera">Valor:{{item.data.valor | currency }}
+                                                    </p>
+                                                </ion-col>
 
-                                                </ion-row>
-                                                <ion-row>
-                                                    <ion-col>
-                                                        <ion-button size="small" shape="round" expand="full" color="warning" (click)="actualizarFotoconsigna(item.id)">
-                                                            <ion-icon slot="start" name="book"></ion-icon>
-                                                            Act. Foto
-                                                        </ion-button>
-                                                    </ion-col>
-                                                </ion-row>
-                                                <!-- <div>
+                                            </ion-row>
+                                            <ion-row>
+                                                <ion-col>
+                                                    <ion-button size="small" shape="round" expand="full" color="warning"
+                                                        (click)="actualizarFotoconsigna(item.id)">
+                                                        <ion-icon slot="start" name="book"></ion-icon>
+                                                        Act. Foto
+                                                    </ion-button>
+                                                </ion-col>
+                                            </ion-row>
+                                            <!-- <div>
                                                     <ion-item tappable (click)="actualizarFotoconsigna(item.id)">
                                                         <p text-capitalize>
                                                             {{item.data.cod_docume + ' - ' + item.data.num_docume}} {{item.data.fecha | date: 'short'}}
                                                         </p>
                                                     </ion-item>
                                                 </div> -->
-                                            </ion-col>
-                                        </ion-row>
-                                    </ion-grid>
-                                    <hr class="bg-tertiary">
-                                </ion-card>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </div>
-            </ion-card-content>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-grid>
+                                <hr class="bg-tertiary">
+                            </ion-card>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </div>
         </ion-card>
     </div>
     <ion-card *ngIf="grabando_consigna && !mostrandoresulado">
