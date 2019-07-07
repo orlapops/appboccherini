@@ -27,20 +27,16 @@ export class ConsignarPage implements OnInit {
   bancos: any;
   cargobancos = false;
   cta_banco = '';
-  lfecha = new Date().toISOString();
   regconsig = {
     cta_banco: "",
-    fecha: this.lfecha,
     referencia: "",
     nota: "",
     valor: 0,
     ajuste: 0,
     cheques: [],
-    valcheques: 0
+    valcheques: 0,
+    link_imgfb: ""
   };
-
-  pag_fechach1 = new Date().toISOString();
-  pag_fechach2 = new Date().toISOString();
 
   grabando_consigna = false;
   grabo_consigna = false;
@@ -75,15 +71,12 @@ export class ConsignarPage implements OnInit {
   }
 
   async actualizarFotoconsigna(idconsig) {
-    console.log('a actualizar actualizarFotoconsigna  modal idconsig:', idconsig);
     const modal = await this.modalCtrl.create({
       component: ModalActConsigPage,
-      // componentProps: { fromto: fromto, search: this.search }
       componentProps: { idcs: idconsig }
     });
     return await modal.present();
   }
-
 
   async presentImage(image: any) {
     const modal = await this.modalCtrl.create({
@@ -138,7 +131,7 @@ export class ConsignarPage implements OnInit {
           this.formaspago = datos;
           this.cargoformpago = true;
           for (let item of this.formaspago) {
-            
+
             if (item.formpago === 'EFE') {
               this.totefectivo += item.valor;
               this.formpagefec.push(item);
@@ -151,62 +144,60 @@ export class ConsignarPage implements OnInit {
         });
     });
   }
-  
+
   realizar_consigna() {
     if (this._consigna.generando_consigna) {
       console.log('Ya se esta generando un pedido. Espere');
     }
     this.grabando_consigna = true;
-    this.consignadas.forEach(consig =>{
-      const obj_graba = {
-        cta_banco: consig.cta_banco,
-        fecha: consig.fecha,
-        referencia: consig.referencia,
-        nota: consig.nota,
-        valor: consig.valor,
-        ajuste: consig.ajuste,
-        cuentas: consig.cuentas,
-        link_imgfb:consig.img
-      };
-    this._consigna.genera_consigna_netsolin(obj_graba).then(res => 
-      {
-        if (res) {
-          this.mostrandoresulado = true;
-          this.grabo_consigna = true;
-          console.log('retorna genera_consigna_netsolin res:', res);
-          obj_graba.cuentas.forEach(element => {
-            let idcuen = element.cod_docume.trim() + element.num_docume.trim() + element.formpago.trim();
-            let idcons = this._consigna.consig_grabada.cod_docume.trim()+this._consigna.consig_grabada.num_docume.trim();
-            let objact = {
-              porcentaje: element.porcentaje,              
-              cod_consig: this._consigna.consig_grabada.cod_docume,
-              num_dconsig: this._consigna.consig_grabada.num_docume,
-              nota: obj_graba.nota,
-              fecha: obj_graba.fecha,
-              cta_banco: obj_graba.cta_banco,
-              referencia: obj_graba.referencia
-            };
-            let cuenta = element.valor*(100-(element.porcentaje))*0.01;
-            let valorRestante={
-              valor: cuenta
-            };
-            this._consigna.actcierre(idcuen,idcons, objact, valorRestante ,element.fecha);
-          });
-        } else {
-          this.mostrandoresulado = true;
-          this.grabo_consigna = false;
-          this.grabando_consigna = true;
-          console.log('retorna genera_consigna_netsolin error.message: ');
-        }
-      })
+    const obj_graba = {
+      cta_banco: this.regconsig.cta_banco,
+      fecha: new Date().toISOString(),
+      referencia: this.regconsig.referencia,
+      nota: this.regconsig.nota,
+      valor: this.regconsig.valor,
+      ajuste: this.regconsig.ajuste,
+      cuentas: [],
+      link_imgfb: this.regconsig.link_imgfb
+    };
+    this._consigna.genera_consigna_netsolin(obj_graba).then(res => {
+      if (res) {
+        this.mostrandoresulado = true;
+        this.grabo_consigna = true;
+        console.log('retorna genera_consigna_netsolin res:', res);
+        obj_graba.cuentas.forEach(element => {
+          let idcuen = element.cod_docume.trim() + element.num_docume.trim() + element.formpago.trim();
+          let idcons = this._consigna.consig_grabada.cod_docume.trim() + this._consigna.consig_grabada.num_docume.trim();
+          let objact = {
+            porcentaje: element.porcentaje,
+            cod_consig: this._consigna.consig_grabada.cod_docume,
+            num_dconsig: this._consigna.consig_grabada.num_docume,
+            nota: obj_graba.nota,
+            fecha: obj_graba.fecha,
+            cta_banco: obj_graba.cta_banco,
+            referencia: obj_graba.referencia
+          };
+          let cuenta = element.valor * (100 - (element.porcentaje)) * 0.01;
+          let valorRestante = {
+            valor: cuenta
+          };
+          this._consigna.actcierre(idcuen, idcons, objact, valorRestante, element.fecha);
+        });
+      } else {
+        this.mostrandoresulado = true;
+        this.grabo_consigna = false;
+        this.grabando_consigna = true;
+        console.log('retorna genera_consigna_netsolin error.message: ');
+      }
+    })
       .catch(error => {
         this.mostrandoresulado = true;
         this.grabo_consigna = false;
         this.grabando_consigna = true;
         console.log('retorna genera_consigna_netsolin error.message: ', error.message);
       });
-    });
   }
+
   quitar_resuladograboconsigna() {
     if (this.grabo_consigna) {
       this.grabo_consigna = false;
@@ -271,10 +262,6 @@ export class ConsignarPage implements OnInit {
       await alert.present();
     });
 
-  }
-  changeBanco(e) {
-    console.log("changeBanco e: ", this.regconsig.cheques);
-    console.log("e.detail.value", e.detail.value);
   }
 }
 

@@ -3,8 +3,7 @@
         <ion-buttons *ngIf="!_consigna.generando_consigna" slot="start">
             <ion-back-button defaultHref="home"></ion-back-button>
         </ion-buttons>
-        <!-- <ion-title>Items Recibo de Caja</ion-title> -->
-        <ion-title class="headercliente">Consignaciones</ion-title>
+        <ion-title >Consignaciones</ion-title>
 
     </ion-toolbar>
 </ion-header>
@@ -97,7 +96,7 @@
                     <ion-row>
                         <!--class="rowtotales"> -->
                         <ion-col>
-                            <ion-label class="titulo" style="font-size: 14">
+                            <ion-label class="titulo1" >
                                 Total Efectivo:
                             </ion-label>
                             <ion-label>
@@ -109,11 +108,11 @@
                             </ion-label>
                             <hr class="bg-primary">
                             <ion-label>
-                                {{totefectivo -(regconsig.valor-regconsig.cheques) | currency }}
+                                {{totefectivo -(regconsig.valor-regconsig.valcheques) | currency }}
                             </ion-label>
                         </ion-col>
                         <ion-col>
-                            <ion-label class="titulo" style="font-size: 14">
+                            <ion-label class="titulo1" >
                                 Total Cheques:
                             </ion-label>
                             <ion-label>
@@ -125,7 +124,7 @@
                             </ion-label>
                             <hr class="bg-primary">
                             <ion-label>
-                                {{totalcheques-regconsig.cheques | currency }}
+                                {{totalcheques-regconsig.valcheques | currency }}
                             </ion-label>
                         </ion-col>
                     </ion-row>
@@ -147,8 +146,8 @@
                                 <ion-select  placeholder="Selecciona" multiple="true"
                                     [(ngModel)]="regconsig.cheques"
                                     style="background: whitesmoke">
-                                    <ion-select-option *ngFor="let cheque of formpagcheq" [value]="banco.cod_banco">
-                                        {{banco.banco}}
+                                    <ion-select-option *ngFor="let cheque of formpagcheq;let indice=index" [value]="indice">
+                                        {{cheque.cod_docume}}{{cheque.num_docume}}{{cheque.valor}}
                                     </ion-select-option>
                                 </ion-select>
                         </ion-col>

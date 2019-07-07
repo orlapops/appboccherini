@@ -510,9 +510,6 @@ export class RecibosService implements OnInit {
     tneto_recibir,
     objformpag
   ) {
-    //  pag_efectivo, pag_bancos,
-    // pag_cheq1, pag_ch1banco, pag_ch1cuenta, pag_numcheq1, pag_fechach1,
-    // pag_cheq2, pag_ch2banco, pag_ch2cuenta, pag_numcheq2, pag_fechach2) {
     console.log(
       "dataos para generar recibo this._visitas.visita_activa_copvdet:",
       this._visitas.visita_activa_copvdet
@@ -523,17 +520,12 @@ export class RecibosService implements OnInit {
       return;
     }
     this.generando_recibo = true;
-
-    // return new Promise((resolve, reject) => {
-    //   resolve(true);
-    // });
     this._visitas.visita_activa_copvdet.grb_recibo = false;
     this._visitas.visita_activa_copvdet.resgrb_recibo = "";
     this._visitas.visita_activa_copvdet.recibo_grabado = null;
     this._visitas.visita_activa_copvdet.errorgrb_recibo = false;
     return new Promise((resolve, reject) => {
       let paramgrab = {
-        // datos_gen: this._visitas.visita_activa_copvdet.datosgen,
         datos_gen: this._visitas.visita_activa_copvdet,
         items_recibo: this.recibocaja,
         total_recibo: total_recibo,
@@ -545,18 +537,6 @@ export class RecibosService implements OnInit {
         tretencion: tretencion,
         tneto_recibir: tneto_recibir,
         objformpag: objformpag,
-        // pag_efectivo: pag_efectivo,
-        // pag_bancos: pag_bancos,
-        // pag_cheq1: pag_cheq1,
-        // pag_ch1banco: pag_ch1banco,
-        // pag_ch1cuenta: pag_ch1cuenta,
-        // pag_cheq2: pag_cheq2,
-        // pag_ch2banco: pag_ch2banco,
-        // pag_ch2cuenta: pag_ch2cuenta,
-        // pag_numcheq1: pag_numcheq1,
-        // pag_fechach1: pag_fechach1,
-        // pag_numcheq2: pag_numcheq2,
-        // pag_fechach2: pag_fechach2,
         usuario: this._parempre.usuario
       };
       NetsolinApp.objenvrest.filtro = "";
@@ -573,8 +553,6 @@ export class RecibosService implements OnInit {
           this._visitas.visita_activa_copvdet.menerrorgrb_recibo =
             data.men_error;
           console.error(" genera_recibo_netsolin ", data.men_error);
-          // this.cargoInventarioNetsolinPed = false;
-          // this.inventarioPed = null;
           this.generando_recibo = false;
           resolve(false);
         } else {
@@ -676,11 +654,7 @@ export class RecibosService implements OnInit {
     const dia = now.getDate();
     const mes = now.getMonth() + 1;
     const ano = now.getFullYear();
-    const hora = now.getHours();
-    const minutos = now.getMinutes();
-    // console.log("Actualizar cierre", lruta);
     console.log('1');
-    //asegurarse que este creado el año, mes y dia
     this.fbDb
       .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario`)
       .doc(ano.toString())
