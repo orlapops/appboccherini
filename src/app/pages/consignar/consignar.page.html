@@ -134,7 +134,7 @@
                         <ion-col style="width: 50%">
                             <ion-label class="titulo">Banco:</ion-label>
                             <ion-select *ngIf="cargobancos" placeholder="Seleccione Uno"
-                                [(ngModel)]="regconsig.cta_banco" (ionChange)="changeBanco($event)"
+                                [(ngModel)]="regconsig.cta_banco" "
                                 style="background: whitesmoke">
                                 <ion-select-option *ngFor="let banco of bancos" [value]="banco.cod_banco">
                                     {{banco.banco}}
@@ -144,7 +144,7 @@
                         <ion-col style="width: 50%">
                                 <ion-label class="titulo">Cheques:</ion-label>
                                 <ion-select  placeholder="Selecciona" multiple="true"
-                                    [(ngModel)]="regconsig.cheques"
+                                    [(ngModel)]="regconsig.cheques" (ionChange)="actCheques($event)
                                     style="background: whitesmoke">
                                     <ion-select-option *ngFor="let cheque of formpagcheq;let indice=index" [value]="indice">
                                         {{cheque.cod_docume}}{{cheque.num_docume}}{{cheque.valor}}
