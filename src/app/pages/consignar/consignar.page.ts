@@ -199,10 +199,10 @@ export class ConsignarPage implements OnInit {
       else{
         let objet = this.formpagefec[cuenta];
         objet.porcentaje = (porasignar/this.formpagefec[cuenta].valor)*100;
-        porasignar = 0;
         obj_graba.cuentas.push(objet);
-        objet.valor=objet.valor*objet.porcentaje*0.01
+        objet.valor=porasignar
         obj_graba.efectivo.push(objet);
+        porasignar = 0;
       }
     }
     this.regconsig.cheques.forEach(cqe=>{
