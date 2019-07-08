@@ -38,7 +38,7 @@ export class ConsignarPage implements OnInit {
     valor: null,
     ajuste: null,
     cheques: [],
-    valcheques: null,
+    valcheques: 0,
     link_imgfb: ""
   };
 
@@ -170,6 +170,9 @@ export class ConsignarPage implements OnInit {
       });
     }
     console.log(this._consigna.linkimagen);
+    if(!this.regconsig.ajuste){
+      this.regconsig.ajuste=0;
+    }
     const obj_graba = {
       cta_banco: this.regconsig.cta_banco,
       fecha: new Date().toISOString(),
@@ -178,7 +181,9 @@ export class ConsignarPage implements OnInit {
       valor: this.regconsig.valor,
       ajuste: this.regconsig.ajuste,
       cuentas: [],
-      link_imgfb: this.regconsig.link_imgfb
+      link_imgfb: this.regconsig.link_imgfb,
+      efectivo: [],
+      cheques:[]
     };
     var porasignar = this.regconsig.valor-this.regconsig.valcheques;
     var cuenta = 0;
@@ -188,6 +193,7 @@ export class ConsignarPage implements OnInit {
         let objet = this.formpagefec[cuenta];
         objet.porcentaje = 100;
         obj_graba.cuentas.push(objet);
+        obj_graba.efectivo.push(objet);
         cuenta++;
       }
       else{
@@ -195,11 +201,15 @@ export class ConsignarPage implements OnInit {
         objet.porcentaje = (porasignar/this.formpagefec[cuenta].valor)*100;
         porasignar = 0;
         obj_graba.cuentas.push(objet);
+        objet.valor=objet.valor*objet.porcentaje*0.01
+        obj_graba.efectivo.push(objet);
       }
     }
     this.regconsig.cheques.forEach(cqe=>{
-      let ob =this.formpagcheq[cqe].porcentaje=100;
+      let ob =this.formpagcheq[cqe];
+      ob.porcentaje=100;
       obj_graba.cuentas.push(ob);
+      obj_graba.cheques.push(ob);
     })
     console.log(obj_graba);
     this._consigna.genera_consigna_netsolin(obj_graba).then(res => {
@@ -236,7 +246,7 @@ export class ConsignarPage implements OnInit {
         this.mostrandoresulado = true;
         this.grabo_consigna = false;
         this.grabando_consigna = true;
-        console.log('retorna genera_consigna_netsolin error.message: ', error.message);
+        console.log('retorna genera_consigna_netsolin error.message: ', error);
       });
   }
 

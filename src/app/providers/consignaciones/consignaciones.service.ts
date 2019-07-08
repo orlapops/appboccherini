@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ɵConsole } from "@angular/core";
 import { NavController, ToastController } from '@ionic/angular';
 import { Injectable } from "@angular/core";
 import { NetsolinApp } from "../../shared/global";
@@ -76,7 +76,7 @@ export class ConsignacionesService implements OnInit {
       this.menerrorgraba = "";
       this.errorgrb_consig = false;
       let url = this._parempre.URL_SERVICIOS + "netsolin_servirestgo.csvc?VRCod_obj=APPGENCONSIGNA";
-      console.log("porimprimir", NetsolinApp.objenvrest);
+      console.log("porimprimir", NetsolinApp.objenvrest, url);
       this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
         console.log(" genera_consigna_netsolin data:", data);
         if (data.error) {
@@ -101,7 +101,6 @@ export class ConsignacionesService implements OnInit {
             this.grb_consig = true;
             this.resgrb_consig = "Se grabo consignación";
             this.consig_grabada = data;
-            console.log("Datos traer genera_consigna_netsolin ", data);
             const objconsigfb = {
               cod_docume: data.cod_docume,
               num_docume: data.num_docume,
@@ -111,11 +110,12 @@ export class ConsignacionesService implements OnInit {
               valor: obj_graba.valor,
               ajuste: obj_graba.ajuste,
               nota: obj_graba.nota,
-              link_imgfb: obj_graba.img,
+              link_imgfb: obj_graba.link_imgfb,
               cuentas: obj_graba.cuentas,
               txt_imp: data.txt_imp,
               detalle: data.consigna_grabada
             };
+            console.log(objconsigfb)
             this.guardarFb(
               data.cod_docume.trim() + data.num_docume.trim(),
               objconsigfb
@@ -139,11 +139,11 @@ export class ConsignacionesService implements OnInit {
 
   //Guardar para el vendedor o usuario datos para cierre, recibo y formas de pago
   guardarFb(id, objconsig) {
-    const now = new Date();
+    const now = new Date(objconsig.fecha);
     const dia = now.getDate();
     const mes = now.getMonth() + 1;
     const ano = now.getFullYear();
-    console.log('1');
+    console.log('id');
     //asegurarse que este creado el año, mes y dia
     this.fbDb
       .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario`)
@@ -166,10 +166,13 @@ export class ConsignacionesService implements OnInit {
 
     //cierre de caja por cada forma de pago
     let lrutafp = `/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/consignaciones`;
+    console.log(objconsig);
+    console.log(id);
     return this.fbDb
       .collection(lrutafp)
       .doc(id)
       .set(objconsig).then(res => {
+        console.log("primero");
         this.fbDb
           .collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones`)
           .doc(id)
@@ -196,8 +199,9 @@ export class ConsignacionesService implements OnInit {
       .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`, ref => ref.orderBy("valor", "desc"))
       .valueChanges();
   }
-  public actcierre(idcuen, idcons, objact,valorRestante,  now) {
+  public actcierre(idcuen, idcons, objact,valorRestante,  f) {
     //extraemos el día mes y año
+    const now = new Date(f);
     const dia = now.getDate();
     const mes = now.getMonth() + 1;
     const ano = now.getFullYear();
@@ -209,12 +213,12 @@ export class ConsignacionesService implements OnInit {
         if (valorRestante.valor <= 0) {
           this.fbDb
             .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`)
-            .doc(idcons).delete();
+            .doc(idcuen).delete();
         }
         else {
           this.fbDb
             .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`)
-            .doc(idcons).update(valorRestante);
+            .doc(idcuen).update(valorRestante);
         }
       });
   }

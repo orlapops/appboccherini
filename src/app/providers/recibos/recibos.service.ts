@@ -647,9 +647,9 @@ export class RecibosService implements OnInit {
     console.log("guardarreciboFb cod_tercer:", cod_tercer);
     console.log("guardarreciboFb id:", id);
     console.log("guardarreciboFb objrecibo:", objrecibo);
-    console.log(`/clientes/${cod_tercer}/recibos/`);
     //Actualizar
-    const now = objrecibo.fecha;
+    const now= new Date(objrecibo.fecha);
+    console.log(now);
     //extraemos el día mes y año
     const dia = now.getDate();
     const mes = now.getMonth() + 1;
@@ -693,7 +693,7 @@ export class RecibosService implements OnInit {
         formpago: element.item.tipopago,
         cod_docume: objrecibo.cod_docume,
         num_docume: objrecibo.num_docume,
-        fecha: now,
+        fecha: objrecibo.fecha,
         referencia: element.item.referencia,
         banco: element.item.banco,
         cta_banco: element.item.cta_banco,
