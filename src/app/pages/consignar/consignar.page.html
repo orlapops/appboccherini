@@ -3,7 +3,7 @@
         <ion-buttons *ngIf="!_consigna.generando_consigna" slot="start">
             <ion-back-button defaultHref="home"></ion-back-button>
         </ion-buttons>
-        <ion-title >Consignaciones</ion-title>
+        <ion-title>Consignaciones</ion-title>
 
     </ion-toolbar>
 </ion-header>
@@ -96,7 +96,7 @@
                     <ion-row>
                         <!--class="rowtotales"> -->
                         <ion-col>
-                            <ion-label class="titulo1" >
+                            <ion-label class="titulo1">
                                 Total Efectivo:
                             </ion-label>
                             <ion-label>
@@ -104,15 +104,15 @@
                             </ion-label>
                             <br>
                             <ion-label color="danger">
-                                -{{regconsig.valor-regconsig.valcheques | currency }}
+                                -{{regconsig.ajuste+regconsig.valor-regconsig.valcheques | currency }}
                             </ion-label>
                             <hr class="bg-primary">
                             <ion-label>
-                                {{totefectivo -(regconsig.valor-regconsig.valcheques) | currency }}
+                                {{totefectivo -(regconsig.ajuste+regconsig.valor-regconsig.valcheques) | currency }}
                             </ion-label>
                         </ion-col>
                         <ion-col>
-                            <ion-label class="titulo1" >
+                            <ion-label class="titulo1">
                                 Total Cheques:
                             </ion-label>
                             <ion-label>
@@ -134,22 +134,22 @@
                         <ion-col style="width: 50%">
                             <ion-label class="titulo">Banco:</ion-label>
                             <ion-select *ngIf="cargobancos" placeholder="Seleccione Uno"
-                                [(ngModel)]="regconsig.cta_banco" "
-                                style="background: whitesmoke">
+                                [(ngModel)]="regconsig.cta_banco" 
+                                style=" background: whitesmoke">
                                 <ion-select-option *ngFor="let banco of bancos" [value]="banco.cod_banco">
-                                    {{banco.banco}}
+                                    {{banco.banco+"  hol    "}}
                                 </ion-select-option>
                             </ion-select>
                         </ion-col>
                         <ion-col style="width: 50%">
-                                <ion-label class="titulo">Cheques:</ion-label>
-                                <ion-select  placeholder="Selecciona" multiple="true"
-                                    [(ngModel)]="regconsig.cheques" (ionChange)="actCheques($event)
-                                    style="background: whitesmoke">
-                                    <ion-select-option *ngFor="let cheque of formpagcheq;let indice=index" [value]="indice">
-                                        {{cheque.cod_docume}}{{cheque.num_docume}}{{cheque.valor}}
-                                    </ion-select-option>
-                                </ion-select>
+                            <ion-label class="titulo">Cheques:</ion-label>
+                            <ion-select placeholder="Selecciona" multiple="true" [(ngModel)]="regconsig.cheques"
+                                (ionChange)="actCheques($event)"
+                                    style=" background: whitesmoke">
+                                <ion-select-option *ngFor="let cheque of formpagcheq;let indice=index" [value]="indice">
+                                    {{cheque.cod_docume}}{{cheque.num_docume+" "}}{{cheque.valor| currency}}
+                                </ion-select-option>
+                            </ion-select>
                         </ion-col>
                     </ion-row>
                     <br>
@@ -157,16 +157,16 @@
                         <ion-col>
                             <div>
                                 <ion-label class="titulo">Valor:</ion-label>
-                                <ion-input required slot="end" class="inputnumero" [(ngModel)]="regconsig.valor"
-                                    type="number" min="0" max="9999999999">
+                                <ion-input required slot="end" class="inputnumero" placeholder="0" [(ngModel)]="regconsig.valor"
+                                    type="number" [min]="0" [max]="9999999999">
                                 </ion-input>
                             </div>
                         </ion-col>
                         <ion-col>
                             <div>
                                 <ion-label class="titulo">Ajuste:</ion-label>
-                                <ion-input required slot="end" class="inputnumero" [(ngModel)]="regconsig.ajuste"
-                                    type="number" min="0" max="1000">
+                                <ion-input required slot="end" class="inputnumero" placeholder="0" [(ngModel)]="regconsig.ajuste"
+                                    type="number" [min]="0" [max]="1000">
                                 </ion-input>
                             </div>
                         </ion-col>
@@ -175,9 +175,9 @@
                     <ion-row>
                         <ion-col>
                             <div>
-                                <ion-label class="titulo" >Referencia:</ion-label>
-                                <ion-input required slot="end" class="inputnumero" placeholder="Ingresar ref." [(ngModel)]="regconsig.referencia"
-                                    type="text">
+                                <ion-label class="titulo">Referencia:</ion-label>
+                                <ion-input required slot="end" class="inputnumero" placeholder="Ingresar ref."
+                                    [(ngModel)]="regconsig.referencia" type="text">
                                 </ion-input>
                             </div>
                         </ion-col>
@@ -213,7 +213,7 @@
                         <ion-col>
                             <!-- *ngIf="(totefectivo + totalcheques) > 0 && regconsig.cta_banco  && regconsig.referencia  && ((totefectivo + totalcheques) - (regconsig.valor+regconsig.ajuste))===0 && (regconsig.ajuste <= 1000) " -->
                             <div>
-                                <ion-button [disabled]="consignadas.length==0"
+                                <ion-button [disabled]="regconsig.valor==0 || regconsig.valor<regconsig.valcheques|| ajuste >100 || regconsig.referencia ==''|| banco==[]"
                                     style="position:relative; left: 50%; transform: translate(-50%,0);" slot="start"
                                     shape="round" color="success" (click)="realizar_consigna()">
                                     Registrar Consignacón

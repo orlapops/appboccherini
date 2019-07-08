@@ -9,6 +9,10 @@ import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 import { ConsignacionesService } from '../../providers/consignaciones/consignaciones.service';
 import { ImagePage } from './../modal/image/image.page';
 import { ModalActConsigPage } from '../modal/modal-actconsig/modal-actconsig.page';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
 
 @Component({
   selector: 'app-consignacion',
@@ -31,10 +35,10 @@ export class ConsignarPage implements OnInit {
     cta_banco: "",
     referencia: "",
     nota: "",
-    valor: 0,
-    ajuste: 0,
+    valor: null,
+    ajuste: null,
     cheques: [],
-    valcheques: 0,
+    valcheques: null,
     link_imgfb: ""
   };
 
@@ -42,6 +46,8 @@ export class ConsignarPage implements OnInit {
   grabo_consigna = false;
   mostrandoresulado = false;
   vistapagos: String = 'verefec';
+  tomofoto: boolean = false;
+  fototomada: any;
 
   constructor(
     public _parEmpre: ParEmpreService,
@@ -56,6 +62,10 @@ export class ConsignarPage implements OnInit {
     public modalCtrl: ModalController,
     public loadingCtrl: LoadingController,
     public _DomSanitizer: DomSanitizer,
+    private imagePicker: ImagePicker,
+    private camera: Camera,
+    private file: File,
+    private webview: WebView
   ) {
     //cargar bancos de firebase
     this._parEmpre.getbancosFB().subscribe((datos: any) => {
@@ -150,6 +160,16 @@ export class ConsignarPage implements OnInit {
       console.log('Ya se esta generando un pedido. Espere');
     }
     this.grabando_consigna = true;
+    if (this.tomofoto){
+      this._consigna.actualizaFoto(this.regconsig.cta_banco+this.regconsig.referencia, this.fototomada).then(()=>{
+        this.tomofoto= false;
+          this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
+            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+          });
+          this.regconsig.link_imgfb=this._consigna.linkimagen;
+      });
+    }
+    console.log(this._consigna.linkimagen);
     const obj_graba = {
       cta_banco: this.regconsig.cta_banco,
       fecha: new Date().toISOString(),
@@ -160,6 +180,28 @@ export class ConsignarPage implements OnInit {
       cuentas: [],
       link_imgfb: this.regconsig.link_imgfb
     };
+    var porasignar = this.regconsig.valor-this.regconsig.valcheques;
+    var cuenta = 0;
+    while(porasignar>0){
+      if(this.formpagefec[cuenta].valor<=porasignar){
+        porasignar-=this.formpagefec[cuenta].valor;
+        let objet = this.formpagefec[cuenta];
+        objet.porcentaje = 100;
+        obj_graba.cuentas.push(objet);
+        cuenta++;
+      }
+      else{
+        let objet = this.formpagefec[cuenta];
+        objet.porcentaje = (porasignar/this.formpagefec[cuenta].valor)*100;
+        porasignar = 0;
+        obj_graba.cuentas.push(objet);
+      }
+    }
+    this.regconsig.cheques.forEach(cqe=>{
+      let ob =this.formpagcheq[cqe].porcentaje=100;
+      obj_graba.cuentas.push(ob);
+    })
+    console.log(obj_graba);
     this._consigna.genera_consigna_netsolin(obj_graba).then(res => {
       if (res) {
         this.mostrandoresulado = true;
@@ -173,7 +215,7 @@ export class ConsignarPage implements OnInit {
             cod_consig: this._consigna.consig_grabada.cod_docume,
             num_dconsig: this._consigna.consig_grabada.num_docume,
             nota: obj_graba.nota,
-            fecha: obj_graba.fecha,
+            fecha: element.fecha,
             cta_banco: obj_graba.cta_banco,
             referencia: obj_graba.referencia
           };
@@ -262,6 +304,40 @@ export class ConsignarPage implements OnInit {
       await alert.present();
     });
 
+  }
+  actCheques(e) {
+    this.regconsig.valcheques=0;
+    e.detail.value.forEach(element => {
+      this.regconsig.valcheques+=this.formpagcheq[element].valor;
+    });
+  }
+  mostrar_camara(){
+    const optionscam: CameraOptions = {
+      quality: 30,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    };
+    this.camera.getPicture(optionscam).then((imageData) => {
+      this.presentLoading('Guardando Imagen');
+      //this.imagenPreview = this.webview.convertFileSrc(imageData); 
+      this.fototomada= imageData;
+      this.tomofoto = true;
+     }, (err) => {console.log('Error en camara', JSON.stringify(err));});
+  }
+  seleccionarFoto(){
+    const options = {  
+      maximumImagesCount: 1,   
+      quality: 25,
+      outputType: 0
+    };
+    this.imagePicker.getPictures(options).then((image) => {
+      this.presentLoading('Guardando Imagen');
+      var imageData = image[0];
+      //this.imagenPreview =this.webview.convertFileSrc(imageData)  
+      this.fototomada =imageData;
+      this.tomofoto = true;
+    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
   }
 }
 

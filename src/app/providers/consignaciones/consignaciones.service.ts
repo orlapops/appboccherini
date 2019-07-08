@@ -32,6 +32,7 @@ export class ConsignacionesService implements OnInit {
   resgrb_consig = "";
   consig_grabada: any;
   generando_consigna = false;
+  linkimagen: any;
 
   constructor(
     public _parempre: ParEmpreService,
@@ -75,6 +76,7 @@ export class ConsignacionesService implements OnInit {
       this.menerrorgraba = "";
       this.errorgrb_consig = false;
       let url = this._parempre.URL_SERVICIOS + "netsolin_servirestgo.csvc?VRCod_obj=APPGENCONSIGNA";
+      console.log("porimprimir", NetsolinApp.objenvrest);
       this.http.post(url, NetsolinApp.objenvrest).subscribe((data: any) => {
         console.log(" genera_consigna_netsolin data:", data);
         if (data.error) {
@@ -194,8 +196,7 @@ export class ConsignacionesService implements OnInit {
       .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`, ref => ref.orderBy("valor", "desc"))
       .valueChanges();
   }
-
-  public actcierre(idcuen, idcons, valorRestante, objact, now) {
+  public actcierre(idcuen, idcons, objact,valorRestante,  now) {
     //extraemos el día mes y año
     const dia = now.getDate();
     const mes = now.getMonth() + 1;
@@ -218,6 +219,33 @@ export class ConsignacionesService implements OnInit {
       });
   }
 
+  actualizaFoto(id, imageData): Promise<any> {
+    const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_consignacion/${id}`);
+    return this.file.resolveLocalFilesystemUrl(imageData).then((fe:FileEntry)=>{
+      console.log(fe);
+      let { name, nativeURL } = fe;
+      let path = nativeURL.substring(0, nativeURL.lastIndexOf("/"));
+      console.log(path,"   ",name);
+      return this.file.readAsArrayBuffer(path, name);
+    }).then(buffer => {
+        let imgBlob = new Blob([buffer], {
+          type: "image/jpeg"
+        });
+      return storageRef.put(imgBlob, {
+          contentType: 'image/jpeg',
+      }).then(() => {
+        console.log("enter the put");
+        return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
+          this.linkimagen = linkref;
+        }); 
+      }).catch((error) => {
+        console.log('Error actualizaimagenClientefirebase putString img:', error);
+      });    
+    }).catch((error) => {
+      console.log('Error leyendo archivo:', error);
+    });
+    
+  }
   actualizaFotoConsignafirebase(idconsig, fecha, imageURL): Promise<any> {
     //extraemos el día mes y año
     console.log(fecha);
