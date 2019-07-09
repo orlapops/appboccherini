@@ -205,12 +205,12 @@ export class ConsignacionesService implements OnInit {
     const dia = now.getDate();
     const mes = now.getMonth() + 1;
     const ano = now.getFullYear();
-    console.log(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja`);
     return this.fbDb
       .collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/cierrecaja/${idcuen}/consignaciones`)
       .doc(idcons)
       .set(objact).then(mes => {
         if (valorRestante.valor <= 0) {
+          console.log(valorRestante.valor);
           this.fbDb
             .collection(`/personal/${this._parempre.usuario.cod_usuar}/ConsignacionesPendientes`)
             .doc(idcuen).delete();
@@ -250,9 +250,10 @@ export class ConsignacionesService implements OnInit {
     });
     
   }
-  actualizaFotoConsignafirebase(idconsig, fecha, imageURL): Promise<any> {
+  actualizaFotoConsignafirebase(idconsig, fec, imageURL): Promise<any> {
     //extraemos el día mes y año
-    console.log(fecha);
+    console.log(fec);
+    const fecha = new Date(fec);
     const dia = fecha.getDate();
     const mes = fecha.getMonth() + 1;
     const ano = fecha.getFullYear();

@@ -138,6 +138,8 @@ export class ConsignarPage implements OnInit {
           console.log(datos);
           this.formpagefec = [];
           this.formpagcheq = [];
+          this.totefectivo = 0;
+          this.totalcheques = 0;
           this.formaspago = datos;
           this.cargoformpago = true;
           for (let item of this.formaspago) {
@@ -165,11 +167,11 @@ export class ConsignarPage implements OnInit {
         this.tomofoto= false;
           this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
             fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+            this.regconsig.link_imgfb=this._consigna.linkimagen;
+            console.log(this._consigna.linkimagen);
           });
-          this.regconsig.link_imgfb=this._consigna.linkimagen;
       });
     }
-    console.log(this._consigna.linkimagen);
     if(!this.regconsig.ajuste){
       this.regconsig.ajuste=0;
     }
@@ -183,7 +185,7 @@ export class ConsignarPage implements OnInit {
       cuentas: [],
       link_imgfb: this.regconsig.link_imgfb,
       efectivo: [],
-      cheques:[]
+      cheques:[],
     };
     var porasignar = this.regconsig.valor-this.regconsig.valcheques;
     var cuenta = 0;
@@ -192,13 +194,18 @@ export class ConsignarPage implements OnInit {
         porasignar-=this.formpagefec[cuenta].valor;
         let objet = this.formpagefec[cuenta];
         objet.porcentaje = 100;
+        objet.valorRestante = 0;
         obj_graba.cuentas.push(objet);
         obj_graba.efectivo.push(objet);
         cuenta++;
       }
       else{
         let objet = this.formpagefec[cuenta];
-        objet.porcentaje = (porasignar/this.formpagefec[cuenta].valor)*100;
+        console.log(objet);
+        objet.porcentaje = (porasignar/objet.valor)*100;
+        console.log(objet);
+        objet.valorRestante = objet.valor-porasignar;
+        console.log(objet);
         obj_graba.cuentas.push(objet);
         objet.valor=porasignar
         obj_graba.efectivo.push(objet);
@@ -208,6 +215,7 @@ export class ConsignarPage implements OnInit {
     this.regconsig.cheques.forEach(cqe=>{
       let ob =this.formpagcheq[cqe];
       ob.porcentaje=100;
+      ob.valorRestante=0;
       obj_graba.cuentas.push(ob);
       obj_graba.cheques.push(ob);
     })
@@ -229,10 +237,10 @@ export class ConsignarPage implements OnInit {
             cta_banco: obj_graba.cta_banco,
             referencia: obj_graba.referencia
           };
-          let cuenta = element.valor * (100 - (element.porcentaje)) * 0.01;
           let valorRestante = {
-            valor: cuenta
+            valor: element.valorRestante
           };
+          console.log(valorRestante);
           this._consigna.actcierre(idcuen, idcons, objact, valorRestante, element.fecha);
         });
       } else {
@@ -248,6 +256,16 @@ export class ConsignarPage implements OnInit {
         this.grabando_consigna = true;
         console.log('retorna genera_consigna_netsolin error.message: ', error);
       });
+      this.regconsig = {
+        cta_banco: "",
+        referencia: "",
+        nota: "",
+        valor: null,
+        ajuste: null,
+        cheques: [],
+        valcheques: 0,
+        link_imgfb: ""
+      };
   }
 
   quitar_resuladograboconsigna() {
@@ -342,7 +360,7 @@ export class ConsignarPage implements OnInit {
       outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
-      this.presentLoading('Guardando Imagen');
+      this.presentLoading('Guardando Imagen seleccionar');
       var imageData = image[0];
       //this.imagenPreview =this.webview.convertFileSrc(imageData)  
       this.fototomada =imageData;
