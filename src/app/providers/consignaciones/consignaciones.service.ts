@@ -58,7 +58,7 @@ export class ConsignacionesService implements OnInit {
       .doc(id).valueChanges();
   }
 
-  genera_consigna_netsolin(obj_graba) {
+  genera_consigna_netsolin(obj_graba, fototomada) {
     if (this.generando_consigna) {
       console.error('Ya se esta generando un recibo');
       return;
@@ -120,6 +120,12 @@ export class ConsignacionesService implements OnInit {
               data.cod_docume.trim() + data.num_docume.trim(),
               objconsigfb
             ).then(res => {
+              if (fototomada) {
+                console.log("grabando foto");
+                this.actualizaFotoConsignafirebase(data.cod_docume.trim() + data.num_docume.trim(), obj_graba.fecha, fototomada).then(() => {
+                  console.log("guardo foto");
+                });
+              }
               console.log("Recibo guardada res: ", res);
               this.generando_consigna = false;
               resolve(true);
@@ -223,33 +229,7 @@ export class ConsignacionesService implements OnInit {
       });
   }
 
-  actualizaFoto(id, imageData): Promise<any> {
-    const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_consignacion/${id}`);
-    return this.file.resolveLocalFilesystemUrl(imageData).then((fe:FileEntry)=>{
-      console.log(fe);
-      let { name, nativeURL } = fe;
-      let path = nativeURL.substring(0, nativeURL.lastIndexOf("/"));
-      console.log(path,"   ",name);
-      return this.file.readAsArrayBuffer(path, name);
-    }).then(buffer => {
-        let imgBlob = new Blob([buffer], {
-          type: "image/jpeg"
-        });
-      return storageRef.put(imgBlob, {
-          contentType: 'image/jpeg',
-      }).then(() => {
-        console.log("enter the put");
-        return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
-          this.linkimagen = linkref;
-        }); 
-      }).catch((error) => {
-        console.log('Error actualizaimagenClientefirebase putString img:', error);
-      });    
-    }).catch((error) => {
-      console.log('Error leyendo archivo:', error);
-    });
-    
-  }
+
   actualizaFotoConsignafirebase(idconsig, fec, imageURL): Promise<any> {
     //extraemos el día mes y año
     console.log(fec);
@@ -257,7 +237,7 @@ export class ConsignacionesService implements OnInit {
     const dia = fecha.getDate();
     const mes = fecha.getMonth() + 1;
     const ano = fecha.getFullYear();
-    const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_consigna/${this._parempre.usuario.cod_usuar}/consignacion/${idconsig}`);
+    const storageRef: AngularFireStorageReference = this.afStorage.ref(`/img_consigna/${this._parempre.usuario.cod_usuar}/${idconsig}`);
     return this.file.resolveLocalFilesystemUrl(imageURL).then((fe: FileEntry) => {
       console.log(fe);
       let { name, nativeURL } = fe;
@@ -272,6 +252,7 @@ export class ConsignacionesService implements OnInit {
         contentType: 'image/jpeg',
       }).then(() => {
         return storageRef.getDownloadURL().subscribe(async (linkref: any) => {
+          console.log(linkref);
           this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/resumdiario/${ano}/meses/${mes}/dias/${dia}/consignaciones/`)
             .doc(idconsig).update({ link_imgfb: linkref });
           this.fbDb.collection(`/personal/${this._parempre.usuario.cod_usuar}/consignaciones/`)

@@ -48,6 +48,7 @@ export class ConsignarPage implements OnInit {
   vistapagos: String = 'verefec';
   tomofoto: boolean = false;
   fototomada: any;
+  imagenPreview: string = "";
 
   constructor(
     public _parEmpre: ParEmpreService,
@@ -116,16 +117,17 @@ export class ConsignarPage implements OnInit {
   }
 
   getUltConsignaPersona() {
-    this.ultconsigna = [];
     return new Promise((resolve, reject) => {
       this._consigna.getUltConsignaPersona()
         .subscribe((datos: any) => {
+          this.ultconsigna = [];
           datos.forEach((itemcons: any) => {
             this.ultconsigna.push({
               id: itemcons.payload.doc.id,
               data: itemcons.payload.doc.data()
             });
           });
+          console.log("ultimas ", this.ultconsigna);
           return resolve(true);
         });
     });
@@ -162,18 +164,9 @@ export class ConsignarPage implements OnInit {
       console.log('Ya se esta generando un pedido. Espere');
     }
     this.grabando_consigna = true;
-    if (this.tomofoto){
-      this._consigna.actualizaFoto(this.regconsig.cta_banco+this.regconsig.referencia, this.fototomada).then(()=>{
-        this.tomofoto= false;
-          this.file.resolveLocalFilesystemUrl(this.fototomada).then((fe:FileEntry)=>{
-            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
-            this.regconsig.link_imgfb=this._consigna.linkimagen;
-            console.log(this._consigna.linkimagen);
-          });
-      });
-    }
-    if(!this.regconsig.ajuste){
-      this.regconsig.ajuste=0;
+
+    if (!this.regconsig.ajuste) {
+      this.regconsig.ajuste = 0;
     }
     const obj_graba = {
       cta_banco: this.regconsig.cta_banco,
@@ -185,13 +178,13 @@ export class ConsignarPage implements OnInit {
       cuentas: [],
       link_imgfb: this.regconsig.link_imgfb,
       efectivo: [],
-      cheques:[],
+      cheques: [],
     };
-    var porasignar = this.regconsig.valor-this.regconsig.valcheques;
+    var porasignar = this.regconsig.valor - this.regconsig.valcheques;
     var cuenta = 0;
-    while(porasignar>0){
-      if(this.formpagefec[cuenta].valor<=porasignar){
-        porasignar-=this.formpagefec[cuenta].valor;
+    while (porasignar > 0) {
+      if (this.formpagefec[cuenta].valor <= porasignar) {
+        porasignar -= this.formpagefec[cuenta].valor;
         let objet = this.formpagefec[cuenta];
         objet.porcentaje = 100;
         objet.valorRestante = 0;
@@ -199,32 +192,33 @@ export class ConsignarPage implements OnInit {
         obj_graba.efectivo.push(objet);
         cuenta++;
       }
-      else{
+      else {
         let objet = this.formpagefec[cuenta];
         console.log(objet);
-        objet.porcentaje = (porasignar/objet.valor)*100;
+        objet.porcentaje = (porasignar / objet.valor) * 100;
         console.log(objet);
-        objet.valorRestante = objet.valor-porasignar;
+        objet.valorRestante = objet.valor - porasignar;
         console.log(objet);
         obj_graba.cuentas.push(objet);
-        objet.valor=porasignar
+        objet.valor = porasignar
         obj_graba.efectivo.push(objet);
         porasignar = 0;
       }
     }
-    this.regconsig.cheques.forEach(cqe=>{
-      let ob =this.formpagcheq[cqe];
-      ob.porcentaje=100;
-      ob.valorRestante=0;
+    this.regconsig.cheques.forEach(cqe => {
+      let ob = this.formpagcheq[cqe];
+      ob.porcentaje = 100;
+      ob.valorRestante = 0;
       obj_graba.cuentas.push(ob);
       obj_graba.cheques.push(ob);
     })
     console.log(obj_graba);
-    this._consigna.genera_consigna_netsolin(obj_graba).then(res => {
+    this._consigna.genera_consigna_netsolin(obj_graba, this.fototomada).then(res => {
       if (res) {
         this.mostrandoresulado = true;
         this.grabo_consigna = true;
         console.log('retorna genera_consigna_netsolin res:', res);
+
         obj_graba.cuentas.forEach(element => {
           let idcuen = element.cod_docume.trim() + element.num_docume.trim() + element.formpago.trim();
           let idcons = this._consigna.consig_grabada.cod_docume.trim() + this._consigna.consig_grabada.num_docume.trim();
@@ -241,7 +235,21 @@ export class ConsignarPage implements OnInit {
             valor: element.valorRestante
           };
           console.log(valorRestante);
-          this._consigna.actcierre(idcuen, idcons, objact, valorRestante, element.fecha);
+          this._consigna.actcierre(idcuen, idcons, objact, valorRestante, element.fecha).then(res => {
+            this.regconsig = {
+              cta_banco: "",
+              referencia: "",
+              nota: "",
+              valor: null,
+              ajuste: null,
+              cheques: [],
+              valcheques: 0,
+              link_imgfb: ""
+            };
+            this.tomofoto = false;
+            this.fototomada = "";
+            this.imagenPreview = "";
+          });
         });
       } else {
         this.mostrandoresulado = true;
@@ -256,16 +264,6 @@ export class ConsignarPage implements OnInit {
         this.grabando_consigna = true;
         console.log('retorna genera_consigna_netsolin error.message: ', error);
       });
-      this.regconsig = {
-        cta_banco: "",
-        referencia: "",
-        nota: "",
-        valor: null,
-        ajuste: null,
-        cheques: [],
-        valcheques: 0,
-        link_imgfb: ""
-      };
   }
 
   quitar_resuladograboconsigna() {
@@ -334,12 +332,12 @@ export class ConsignarPage implements OnInit {
 
   }
   actCheques(e) {
-    this.regconsig.valcheques=0;
+    this.regconsig.valcheques = 0;
     e.detail.value.forEach(element => {
-      this.regconsig.valcheques+=this.formpagcheq[element].valor;
+      this.regconsig.valcheques += this.formpagcheq[element].valor;
     });
   }
-  mostrar_camara(){
+  mostrar_camara() {
     const optionscam: CameraOptions = {
       quality: 30,
       destinationType: this.camera.DestinationType.FILE_URI,
@@ -348,24 +346,24 @@ export class ConsignarPage implements OnInit {
     };
     this.camera.getPicture(optionscam).then((imageData) => {
       this.presentLoading('Guardando Imagen');
-      //this.imagenPreview = this.webview.convertFileSrc(imageData); 
-      this.fototomada= imageData;
+      this.imagenPreview = this.webview.convertFileSrc(imageData);
+      this.fototomada = imageData;
       this.tomofoto = true;
-     }, (err) => {console.log('Error en camara', JSON.stringify(err));});
+    }, (err) => { console.log('Error en camara', JSON.stringify(err)); });
   }
-  seleccionarFoto(){
-    const options = {  
-      maximumImagesCount: 1,   
+  seleccionarFoto() {
+    const options = {
+      maximumImagesCount: 1,
       quality: 25,
       outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen seleccionar');
       var imageData = image[0];
-      //this.imagenPreview =this.webview.convertFileSrc(imageData)  
-      this.fototomada =imageData;
+      this.imagenPreview = this.webview.convertFileSrc(imageData)
+      this.fototomada = imageData;
       this.tomofoto = true;
-    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
+    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err)); });
   }
 }
 

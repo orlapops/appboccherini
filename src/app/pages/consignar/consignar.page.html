@@ -201,6 +201,11 @@
                         </ion-col>
                     </ion-row>
                     <br>
+                    <ion-row *ngIf=" tomofoto && imagenPreview">
+                        <ion-col>
+                            <img  [src]="_DomSanitizer.bypassSecurityTrustUrl(imagenPreview)" />
+                        </ion-col>
+                    </ion-row>
                     <ion-row>
                         <ion-col>
                             <ion-label class="titulo">Notas:</ion-label>

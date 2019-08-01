@@ -46,7 +46,7 @@ import { File, DirectoryEntry, FileEntry } from "@ionic-native/file/ngx";
 })
 export class VisitaDetailPage implements OnInit {
   visita: any;
-  visitaID: any = this.route.snapshot.paramMap.get('id'); 
+  visitaID: any = this.route.snapshot.paramMap.get('id');
   visitaAct: any;
   clienteAct: any;
   ubicaAct: any;
@@ -98,7 +98,7 @@ export class VisitaDetailPage implements OnInit {
     private impresora: BluetoothSerial,
     private file: File,
     private webview: WebView
-  ) {   
+  ) {
     platform.ready().then(() => {
       // La plataforma esta lista y ya tenemos acceso a los plugins.
       this.cargo_posicion = false;
@@ -106,16 +106,16 @@ export class VisitaDetailPage implements OnInit {
       this._ubicacionService.getUbicaUsuarFb().subscribe((datosc: any) => {
         console.log('susc usuar para localiza fb ', datosc);
         this.coords.lat = datosc.latitud;
-        this.coords.lng = datosc.longitud;  
+        this.coords.lng = datosc.longitud;
         this.cargo_posicion = true;
       });
 
       // this.obtenerPosicion();
-          });
+    });
     // console.log('constructor detalle visita');
     console.log(this.visitaID);
     this.visita = this._visitas.getItem(this.visitaID);
-    console.log('visita antes inv luego de getitem',this.visita);
+    console.log('visita antes inv luego de getitem', this.visita);
 
     //se pasa del home a qui op mayo 23 19 cargar inventario
     //carga inventario para factura
@@ -129,8 +129,8 @@ export class VisitaDetailPage implements OnInit {
             // inventario : this._visitas.inventario
             inventario: this._prods.inventario
           };
-            // console.log('inventario en prods: ',reginv,this._prods.inventario);
-            this._parEmpre.reg_logappusuario('Carga inv factura','this._prods.inventario',this._prods.inventario);
+          // console.log('inventario en prods: ',reginv,this._prods.inventario);
+          this._parEmpre.reg_logappusuario('Carga inv factura', 'this._prods.inventario', this._prods.inventario);
           //  this._visitas.guardarInvdFB(bodega, reginv).then(res => {
           //op mayo 23 19 no se guarda en firebase
           // this._prods
@@ -155,7 +155,7 @@ export class VisitaDetailPage implements OnInit {
             inventario: this._prods.inventarioPed
           };
           //  this._visitas.guardarInvdFB(bodega, reginv).then(res => {
-            //op mayo 23 19 se quita no guardar en firebase 
+          //op mayo 23 19 se quita no guardar en firebase 
           // this._prods
           //   .guardarInvdFBpedido(this._parEmpre.usuario.bod_pedido, reginv)
           //   .then(res => {
@@ -176,31 +176,31 @@ export class VisitaDetailPage implements OnInit {
     this.cargo_clienteact = false;
     this.cargo_clienteact = false;
     this.cargo_ubicaact = false;
-    this._visitas.actualizarclientenetsolinFb(this.visita.data.cod_tercer).then(result =>{
+    this._visitas.actualizarclientenetsolinFb(this.visita.data.cod_tercer).then(result => {
       // console.log('Actualizar cliente netsolin result:', result);
-      if (result){
+      if (result) {
         //Suscribirse a cliente actual fb
         this._cliente.getClienteFb(this.visita.data.cod_tercer).subscribe((datos: any) => {
-            console.log('Suscribe a clientes fb ', datos);
-            this.clienteAct = datos;
-            this.cargo_clienteact = true;
-            //encontrar ubicacion actual en arreglo
-            this.ubicaAct = null;
-            this.cargo_ubicaact = false;
-            // console.log('a buscar ubica act ',this.visita.data.cod_tercer, this.visita.data.id_dir);
-            for (var i = 0; i < this.clienteAct.direcciones.length; i++) {
-              if (this.clienteAct.direcciones[i].id_dir === this.visita.data.id_dir) {
-                // this.ubicaAct = this.clienteAct.direcciones[i];
-                this._cliente.getUbicaActFb(this.visita.data.cod_tercer, this.visita.data.id_dir).subscribe((datosc: any) => {
-                  console.log('susc datos cliente fb ', datosc);
-                  this.ubicaAct = datosc;
-                  this._visitas.direc_actual = this.ubicaAct;
-                  console.log('encontro ubica act; ', this.ubicaAct);
-                  this.cargo_ubicaact = true;
-                  });
-              }
+          console.log('Suscribe a clientes fb ', datos);
+          this.clienteAct = datos;
+          this.cargo_clienteact = true;
+          //encontrar ubicacion actual en arreglo
+          this.ubicaAct = null;
+          this.cargo_ubicaact = false;
+          // console.log('a buscar ubica act ',this.visita.data.cod_tercer, this.visita.data.id_dir);
+          for (var i = 0; i < this.clienteAct.direcciones.length; i++) {
+            if (this.clienteAct.direcciones[i].id_dir === this.visita.data.id_dir) {
+              // this.ubicaAct = this.clienteAct.direcciones[i];
+              this._cliente.getUbicaActFb(this.visita.data.cod_tercer, this.visita.data.id_dir).subscribe((datosc: any) => {
+                console.log('susc datos cliente fb ', datosc);
+                this.ubicaAct = datosc;
+                this._visitas.direc_actual = this.ubicaAct;
+                console.log('encontro ubica act; ', this.ubicaAct);
+                this.cargo_ubicaact = true;
+              });
             }
-          });
+          }
+        });
         // //Suscribirse a direccion actual fb
         // this._cliente.getUbicaActFb(this.visita.data.cod_tercer, this.visita.data.id_dir).subscribe((datos: any) => {
         //   console.log('Suscribe a ubicacion actual fb ', datos);
@@ -209,10 +209,10 @@ export class VisitaDetailPage implements OnInit {
         //     this.cargo_ubicaact = true;
         //   }
         // });
-      this._visitas.getVisitaActual(this.visitaID).subscribe((datos: any) => {
-          console.log('constructor detalle visita getVisitaActual datos:', datos, this._visitas.visitaabierta);                
+        this._visitas.getVisitaActual(this.visitaID).subscribe((datos: any) => {
+          console.log('constructor detalle visita getVisitaActual datos:', datos, this._visitas.visitaabierta);
           //si latitud esta en cero dejar la de boccherini para el mapa
-          if (datos.latitud==0){
+          if (datos.latitud == 0) {
             datos.latitud = 4.6529392;
             datos.longitud = -74.1230245;
           }
@@ -240,33 +240,33 @@ export class VisitaDetailPage implements OnInit {
         });
       }
     })
-    .catch(error => {
-      console.log('Error al actualizarclientenetsolinFb error.message:', error);
-    });
+      .catch(error => {
+        console.log('Error al actualizarclientenetsolinFb error.message:', error);
+      });
     // console.log('constructor detalle visita 3');
 
 
-  //     // if (datos) {
-  //     //   console.log('constructor detalle visita getVisitaActual datos true:', datos);                
-  //     //     this.visitaAct = datos;
-  //     // } else {
-  //     //   console.log('constructor detalle visita getVisitaActual datos false:', datos);                
-  //     //   this.visitaAct = null;
-  //     // }
-  //   });
+    //     // if (datos) {
+    //     //   console.log('constructor detalle visita getVisitaActual datos true:', datos);                
+    //     //     this.visitaAct = datos;
+    //     // } else {
+    //     //   console.log('constructor detalle visita getVisitaActual datos false:', datos);                
+    //     //   this.visitaAct = null;
+    //     // }
+    //   });
   }
 
   ngOnInit() {
     // console.log('ngoniit visita detalle');
     // console.log(this.visita);
     this._prods.cargar_storage_factura(this.visita.data.id_ruta, this.visita.id)
-      .then( res =>{
+      .then(res => {
         this._prods.cargar_storage_pedido(this.visita.data.id_ruta, this.visita.id)
-          .then ( res1 =>{
+          .then(res1 => {
             this._recibos.cargar_storage_recibo(this.visita.data.id_ruta, this.visita.id)
-              .then( res2 =>{
+              .then(res2 => {
                 this._recibos.cargar_storage_formpago(this.visita.data.id_ruta, this.visita.id)
-                  .then( res3 =>{
+                  .then(res3 => {
                   })
               })
           })
@@ -334,46 +334,46 @@ export class VisitaDetailPage implements OnInit {
 
   registrarIngresoVisita() {
     const datactvisita = {
-      fechahora_ingreso : Date(),
-      estado : 'A',
-      grb_pedido : false,
-      resgrb_pedido : '',
-      pedido_grabado : null,
-      errorgrb_pedido : false,
-      grb_factu : false,
-      resgrb_factu : '',
-      pedido_factu : null,
-      errorgrb_factu : false,
-      grb_recibo : false,
-      resgrb_recibo : '',
-      pedido_recibo : null,
-      errorgrb_recibo : false
+      fechahora_ingreso: Date(),
+      estado: 'A',
+      grb_pedido: false,
+      resgrb_pedido: '',
+      pedido_grabado: null,
+      errorgrb_pedido: false,
+      grb_factu: false,
+      resgrb_factu: '',
+      pedido_factu: null,
+      errorgrb_factu: false,
+      grb_recibo: false,
+      resgrb_recibo: '',
+      pedido_recibo: null,
+      errorgrb_recibo: false
     };
     console.log('registrarIngresoVisita ', this._visitas.visitaabierta);
-    if (this._visitas.visitaabierta){
+    if (this._visitas.visitaabierta) {
       console.error('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre, this._visitas.visitaabierta);
       this.presentError('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre);
     } else {
       console.log('No Hay visitas abiertas establece esta como abierta');
       //dejar como visita abierta esta
       this._visitas.visitaabierta = this.visita;
-      this._visitas.actualizarVisita(this.visitaID, datactvisita);      
+      this._visitas.actualizarVisita(this.visitaID, datactvisita);
     }
   }
   registrarReingresoVisita() {
     const datactvisita = {
-      fechahora_reingreso : Date(),
-      estado : 'A'
+      fechahora_reingreso: Date(),
+      estado: 'A'
     };
     console.log('registrarIngresoVisita ', this._visitas.visitaabierta);
-    if (this._visitas.visitaabierta){
+    if (this._visitas.visitaabierta) {
       console.error('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre, this._visitas.visitaabierta);
       this.presentError('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre);
     } else {
       console.log('No Hay visitas abiertas establece esta como abierta');
       //dejar como visita abierta esta
       this._visitas.visitaabierta = this.visita;
-      this._visitas.actualizarVisita(this.visitaID, datactvisita);      
+      this._visitas.actualizarVisita(this.visitaID, datactvisita);
     }
   }
   validaCierreVisita() {
@@ -381,19 +381,19 @@ export class VisitaDetailPage implements OnInit {
     //valida si puede cerrar visita
     let esllamada = false;
     let continua = false;
-   if (this._visitas.visita_activa_copvdet.estado === 'L'){
-        console.log('3');
-        continua = true;
+    if (this._visitas.visita_activa_copvdet.estado === 'L') {
+      console.log('3');
+      continua = true;
     } else {
-        if (this.ubicaAct.email && this.ubicaAct.contacto && this.ubicaAct.longitud && this.ubicaAct.latitud) {  
-          continua = true;
-        }
+      if (this.ubicaAct.email && this.ubicaAct.contacto && this.ubicaAct.longitud && this.ubicaAct.latitud) {
+        continua = true;
+      }
     }
-          // if (this.ubicaAct.email && this.ubicaAct.contacto && this.ubicaAct.longitud && this.ubicaAct.latitud) {
+    // if (this.ubicaAct.email && this.ubicaAct.contacto && this.ubicaAct.longitud && this.ubicaAct.latitud) {
     if (continua) {
       //valida si tiene items de pedido en proceso
-      if(this._prods.factura.length > 0 || this._prods.pedido.length > 0 || this._recibos.recibocaja.length > 0 ){
-        console.error('No puede tener items en proceso en pedidos, facturas o recibos. Elimine para cerrar o termine el proceso.',this._prods.factura , this._prods.pedido, this._recibos.recibocaja);
+      if (this._prods.factura.length > 0 || this._prods.pedido.length > 0 || this._recibos.recibocaja.length > 0) {
+        console.error('No puede tener items en proceso en pedidos, facturas o recibos. Elimine para cerrar o termine el proceso.', this._prods.factura, this._prods.pedido, this._recibos.recibocaja);
         this.presentError('No puede tener items en proceso en pedidos, facturas o recibos. Elimine para cerrar o termine el proceso.');
       } else {
         retorna = true;
@@ -401,7 +401,7 @@ export class VisitaDetailPage implements OnInit {
     } else {
       console.error('Debe ingresar a actualizar datos cliente. Email, contacto, Ubicación Gps', this.visitaAct, this.cargo_posicion, this.ubicaAct);
       this.presentError('Debe ingresar a actualizar datos cliente. Email, contacto, Ubicación Gps');
-    }    
+    }
     return retorna;
   }
   cerrarVisita() {
@@ -409,15 +409,16 @@ export class VisitaDetailPage implements OnInit {
     console.log('cerrarVisita visita activa:', this._visitas.visita_activa_copvdet);
     // console.log('cerrarVisita visita',this.visitaAct, this._visitas.visita_activa);
     const esllamada = this._visitas.visita_activa_copvdet.estado === 'L' ? true : false;
-    console.log('esllamada',esllamada);
+    console.log('esllamada', esllamada);
+    const fechCierre= new Date();
     const datactvisita = {
-      fechahora_cierre : Date(),
+      fechahora_cierre: fechCierre.toString(),
       lat_cierre: this.coords.lat,
       long_cierre: this.coords.lng,
       envio_email: false,
       error_envemail: '',
       llamada: esllamada,
-      estado : 'C'
+      estado: 'C'
     };
     if (this.validaCierreVisita()) {
       this.presentLoading('Cerrando visita y enviando Email');
@@ -427,27 +428,56 @@ export class VisitaDetailPage implements OnInit {
       console.log('visita activa:', this._visitas.visita_activa_copvdet);
       console.log('Actividades visita:', this.listaactividades);
       this._visitas.getPedidosVisitaActual().subscribe((datosvp: any) => {
-          console.log('Pedidos visita act: ',datosvp);  
-          this._visitas.getFacturasVisitaActual().subscribe((datosvf: any) => {
-            console.log('Facturas visita act: ',datosvf);  
-            this._visitas.getRecibosVisitaActual().subscribe((datosvr: any) => {
-              console.log('Recibos visita act: ',datosvr);  
-              console.log('a cerrar visita this._visitas.visita_activa_copvdet',this._visitas.visita_activa_copvdet);
-              const dvis_act = {
-                cod_tercer: this._visitas.visita_activa_copvdet.cod_tercer,                
-                nombre: this._visitas.visita_activa_copvdet.nombre,
-                direccion: this._visitas.visita_activa_copvdet.direccion,
-                id_dir:  this._visitas.visita_activa_copvdet.id_dir,
-                id_visita:  this._visitas.visita_activa_copvdet.id_visita,
-                id_ruta:  this._visitas.visita_activa_copvdet.id_ruta,
-                id_reffecha : this._visitas.visita_activa_copvdet.id_reffecha,
-                fechaing: this._visitas.visita_activa_copvdet.fechahora_ingreso,
-                fechacierre: datactvisita.fechahora_cierre
-              };
-             this._visitas.genera_cierrevisita_netsolin(dvis_act,this.listaactividades,datosvp,datosvf,datosvr)
-              .then(result =>{
-                if (result){
+        console.log('Pedidos visita act: ', datosvp);
+        this._visitas.getFacturasVisitaActual().subscribe((datosvf: any) => {
+          console.log('Facturas visita act: ', datosvf);
+          this._visitas.getRecibosVisitaActual().subscribe((datosvr: any) => {
+            console.log('Recibos visita act: ', datosvr);
+            console.log('a cerrar visita this._visitas.visita_activa_copvdet', this._visitas.visita_activa_copvdet);
+            const act = new Date(this._visitas.visita_activa_copvdet.fechahora_ingreso);
+            console.log(act);
+            const dvis_act = {
+              cod_tercer: this._visitas.visita_activa_copvdet.cod_tercer,
+              nombre: this._visitas.visita_activa_copvdet.nombre,
+              direccion: this._visitas.visita_activa_copvdet.direccion,
+              id_dir: this._visitas.visita_activa_copvdet.id_dir,
+              id_visita: this._visitas.visita_activa_copvdet.id_visita,
+              id_ruta: this._visitas.visita_activa_copvdet.id_ruta,
+              id_reffecha: this._visitas.visita_activa_copvdet.id_reffecha,
+              llamada: esllamada,
+              fechaingreso:act,
+              fechaingY: act.getFullYear(),
+              fechaingM: act.getMonth() + 1,
+              fechaingD: act.getDate(),
+              fechaingH: act.getHours(),
+              fechaingMin: act.getMinutes(),
+              fechacierreY: fechCierre.getFullYear(),
+              fechacierreM: fechCierre.getMonth() + 1,
+              fechacierreD: fechCierre.getDate(),
+              fechacierreH: fechCierre.getHours(),
+              fechacierreMin: fechCierre.getMinutes(),
+              fechacierre: fechCierre
+            };
+            this._visitas.genera_cierrevisita_netsolin(dvis_act, this.listaactividades, datosvp, datosvf, datosvr)
+              .then(result => {
+                if (result) {
+                  console.log("sirvio envio");
                   datactvisita.envio_email = true;
+                  this._visitas.actualizarVisita(this.visitaID, datactvisita);
+                  const dvis_cierre = {
+                    cod_tercer: this._visitas.visita_activa_copvdet.cod_tercer,
+                    nombre: this._visitas.visita_activa_copvdet.nombre,
+                    direccion: this._visitas.visita_activa_copvdet.direccion,
+                    id_dir: this._visitas.visita_activa_copvdet.id_dir,
+                    id_visita: this._visitas.visita_activa_copvdet.id_visita,
+                    id_ruta: this._visitas.visita_activa_copvdet.id_ruta,
+                    id_reffecha: this._visitas.visita_activa_copvdet.id_reffecha,
+                    llamada: esllamada,
+                    fechaing: this._visitas.visita_activa_copvdet.fechahora_ingreso,
+                    fechacierre: fechCierre.toString()
+                  };
+                  this._visitas.guardarcierrevisitaFb(this.visitaID, dvis_cierre);
+                  this._visitas.visitaabierta = null;
                 } else {
                   datactvisita.envio_email = false;
                   datactvisita.error_envemail = this._visitas.men_errocierrevisnetsolin;
@@ -458,34 +488,21 @@ export class VisitaDetailPage implements OnInit {
               .catch(error => {
                 datactvisita.envio_email = false;
                 datactvisita.error_envemail = error;
-              console.log('Error al genera_cierrevisita_netsolin error.message:', error);
-              this.presentError('Error enviando email visita. Se cierra pero no se envia email. ' + datactvisita.error_envemail);
-            });
-            });
-              this._visitas.actualizarVisita(this.visitaID, datactvisita);
-              const dvis_cierre = {
-                cod_tercer: this._visitas.visita_activa_copvdet.cod_tercer,                
-                nombre: this._visitas.visita_activa_copvdet.nombre,
-                direccion: this._visitas.visita_activa_copvdet.direccion,
-                id_dir:  this._visitas.visita_activa_copvdet.id_dir,
-                id_visita:  this._visitas.visita_activa_copvdet.id_visita,
-                id_ruta:  this._visitas.visita_activa_copvdet.id_ruta,
-                id_reffecha : this._visitas.visita_activa_copvdet.id_reffecha,
-                fechaing: this._visitas.visita_activa_copvdet.fechahora_ingreso,
-                fechacierre: datactvisita.fechahora_cierre
-              };
-              this._visitas.guardarcierrevisitaFb(this.visitaID, dvis_cierre);
-              this._visitas.visitaabierta = null;
+                console.log('Error al genera_cierrevisita_netsolin error.message:', error);
+                this.presentError('Error enviando email visita. Se cierra pero no se envia email. ' + datactvisita.error_envemail);
+              });
+          });
 
-            });
+
         });
+      });
     }
   }
-  
-  actualizarGps(){
+
+  actualizarGps() {
 
   }
-  
+
   colorxEstado(estado) {
     if (estado === 'C') {
       return 'bg-red';
@@ -499,7 +516,7 @@ export class VisitaDetailPage implements OnInit {
           return 'bg-white';
         }
       }
-  }
+    }
   }
 
   range(n) {
@@ -516,99 +533,99 @@ export class VisitaDetailPage implements OnInit {
     return average / this.visita.reviews.length;
   }
 
-  buscar_productos($event){
+  buscar_productos($event) {
     console.log('a buscar producto factura');
     this.q = $event.target.value;
-    console.log('a buscar producto ',this.q, this._prods.inventario);
-    if (this.q ==''){
+    console.log('a buscar producto ', this.q, this._prods.inventario);
+    if (this.q == '') {
       console.log('no buscar por vacio');
     } else {
-  // console.log('buscar_productos: ', this.q );
-    this.searching = true;
-    // this._visitas.buscarProducto(this.q).then(lbusq => {
-    this._prods.buscarProducto(this.q).then(lbusq => {
-      // console.log('lo buscado por producto: ' , lbusq);
-      this.productos_bus = lbusq;
-      console.log('resultado busqueda ',this.productos_bus);
-      this.searching = false;
-      // console.log('lo buscado por producto  this.productos_bus: ' ,  this.productos_bus);
+      // console.log('buscar_productos: ', this.q );
+      this.searching = true;
+      // this._visitas.buscarProducto(this.q).then(lbusq => {
+      this._prods.buscarProducto(this.q).then(lbusq => {
+        // console.log('lo buscado por producto: ' , lbusq);
+        this.productos_bus = lbusq;
+        console.log('resultado busqueda ', this.productos_bus);
+        this.searching = false;
+        // console.log('lo buscado por producto  this.productos_bus: ' ,  this.productos_bus);
 
-    });    
+      });
+    }
   }
-}
-    buscar_productosped($event){      
-      this.qped = $event.target.value;
-      console.log('a buscar producto ',this.qped, this._prods.inventarioPed);
-      if (this.qped==''){
-        console.log('no buscar por vacio');
-      } else {
-      console.log('buscar_productos ped: ', this.qped );
+  buscar_productosped($event) {
+    this.qped = $event.target.value;
+    console.log('a buscar producto ', this.qped, this._prods.inventarioPed);
+    if (this.qped == '') {
+      console.log('no buscar por vacio');
+    } else {
+      console.log('buscar_productos ped: ', this.qped);
       this.searchingped = true;
       // this._visitas.buscarProducto(this.q).then(lbusq => {
       this._prods.buscarProductoPed(this.qped).then(lbusq => {
         // console.log('lo buscado por producto: ' , lbusq);
         this.productos_busped = lbusq;
-        console.log('resultado busqueda ',this.productos_busped);
+        console.log('resultado busqueda ', this.productos_busped);
         this.searchingped = false;
         // console.log('lo buscado por producto  this.productos_bus: ' ,  this.productos_busped);
-  
-      });    
+
+      });
     }
     //     if (this.q != '') {
-  //       this.startAt.next(this.q);
-  //       this.endAt.next(this.q + "\uf8ff");
-  //     }
-  //     else {
-  //       this.items = this.all_items;
-  //     }
+    //       this.startAt.next(this.q);
+    //       this.endAt.next(this.q + "\uf8ff");
+    //     }
+    //     else {
+    //       this.items = this.all_items;
+    //     }
   }
-  tomafoto(){
+  tomafoto() {
     console.log('en mostrar camara1');
     const optionscam: CameraOptions = {
       quality: 30,
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
-    };    
-    this._parEmpre.reg_logappusuario('tomafoto','Ingreso',{});
+    };
+    this._parEmpre.reg_logappusuario('tomafoto', 'Ingreso', {});
     this.camera.getPicture(optionscam).then((imageData) => {
       this.presentLoading('Guardando Imagen');
-      this.imagenPreview = this.webview.convertFileSrc(imageData); 
+      this.imagenPreview = this.webview.convertFileSrc(imageData);
       this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
-        this.visitaID, imageData).then(()=>{
-          this.file.resolveLocalFilesystemUrl(imageData).then((fe:FileEntry)=>{
-            fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
+        this.visitaID, imageData).then(() => {
+          this.file.resolveLocalFilesystemUrl(imageData).then((fe: FileEntry) => {
+            fe.remove(function () { console.log("se elimino la foto") }, function () { console.log("error al eliminar") });
           });
-      });
-     }, (err) => {
-       console.log('Error en camara', JSON.stringify(err));
-       this._parEmpre.reg_logappusuario('tomafoto','Tomo foto Error ',{error: JSON.stringify(err)});
-      });
+        });
+    }, (err) => {
+      console.log('Error en camara', JSON.stringify(err));
+      this._parEmpre.reg_logappusuario('tomafoto', 'Tomo foto Error ', { error: JSON.stringify(err) });
+    });
   }
-  seleccionarFoto(){
-    const options = { 
+  seleccionarFoto() {
+    const options = {
       quality: 100,
       outputType: 0
     };
     this.imagePicker.getPictures(options).then((image) => {
       this.presentLoading('Guardando Imagen');
       for (var i = 0; i < image.length; i++) {
-        this.imagenPreview = this.webview.convertFileSrc(image[i]); 
+        this.imagenPreview = this.webview.convertFileSrc(image[i]);
         this._actividad.actualizafotosVisitafirebase(this._visitas.visita_activa_copvdet.cod_tercer,
-            this.visitaID, image[i]).then(()=>{
-              this.file.resolveLocalFilesystemUrl(image[i]).then((fe:FileEntry)=>{
-                fe.remove(function(){console.log("se elimino la foto")},function(){console.log("error al eliminar")});
-              });
+          this.visitaID, image[i]).then(() => {
+            this.file.resolveLocalFilesystemUrl(image[i]).then((fe: FileEntry) => {
+              fe.remove(function () { console.log("se elimino la foto") }, function () { console.log("error al eliminar") });
+            });
           });
-      }      
-    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err));});
+      }
+    }, (err) => { console.log("error cargando imagenes", JSON.stringify(err)); });
   }
 
-  public eliminarFoto(ifoto){
+  public eliminarFoto(ifoto) {
     console.log('En eliminar foto ', ifoto);
 
   }
-public encodestring(pstring){
-  return encodeURIComponent(pstring);
-}
+  public encodestring(pstring) {
+    return encodeURIComponent(pstring);
+  }
 }

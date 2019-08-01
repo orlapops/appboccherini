@@ -24,7 +24,6 @@ export class ModalActConsigPage implements OnInit {
   imagenPreview: string;
   cargo_posicion = false;
   consignacion: any;
-  private photo: string = 'assets/img/logo.png';
   
   uploadPercent: Observable<number>;
   downloadURL: Observable<string>;

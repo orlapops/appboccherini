@@ -199,7 +199,9 @@ cargaPeriodoUsuar(pcod_usuar){
   }
   //Obtiene las visitas que corresponde a la fecha y ruta tomada de carga anterior en netsolin
   public getVisitasidrutper() {
+
       const lruta = `/personal/${this._parempre.usuario.cod_usuar}/rutas/${this.id_ruta}/periodos/${this.id_periodo}/visitas`;
+      console.log(lruta);
     //   this._parempre.reg_log('getVisitasidrutper lruta ', lruta);
     return this.fbDb
     .collection(`/personal/${this._parempre.usuario.cod_usuar}/rutas/${this.id_ruta}/periodos/${this.id_periodo}/visitas`)
@@ -299,6 +301,7 @@ cargaPeriodoUsuar(pcod_usuar){
           } else {
             this.error_cierrevisnetsolin = false;
             this.men_errocierrevisnetsolin ='';
+            resolve(true);
           }
         }
         console.log(" genera_cierrevisita_netsolin 4");
@@ -569,8 +572,8 @@ cargaPeriodoUsuar(pcod_usuar){
                                   dato.longitud = -74.1230245;
                               }  
                           });
-                        //   console.log('Todas las visitas con id');
-                        //   console.log(this.visitaTodas);                     
+                        console.log('Todas las visitas con id');
+                          console.log(this.visitaTodas);                     
                           this.clasificaVisitas();
                           resolve(true);
                       } else {
