@@ -361,11 +361,16 @@ export class VisitaDetailPage implements OnInit {
     }
   }
   registrarReingresoVisita() {
+    let esllamada = false;
+    console.log('this._visitas.visita_activa_copvdet.llamada',this._visitas.visita_activa_copvdet.llamada);
+    if (typeof this._visitas.visita_activa_copvdet.llamada !== undefined){
+      esllamada =  this._visitas.visita_activa_copvdet.llamada;
+    }
     const datactvisita = {
       fechahora_reingreso: Date(),
-      estado: 'A'
+      estado: esllamada ? 'L' : 'A'
     };
-    console.log('registrarIngresoVisita ', this._visitas.visitaabierta);
+    console.log('registrarIngresoVisita ', this._visitas.visitaabierta,datactvisita);
     if (this._visitas.visitaabierta) {
       console.error('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre, this._visitas.visitaabierta);
       this.presentError('No puede abrir otra visita si ya hay una abierta. Cierrela primero. Visita:' + this._visitas.visitaabierta.nombre);

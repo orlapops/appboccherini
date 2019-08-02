@@ -158,7 +158,7 @@ cargaPeriodoUsuar(pcod_usuar){
     const hora = now.getHours();
     const minutos = now.getMinutes();
     const horaing = hora.toString()+minutos.toString()
-    const idvisi = 9990000000000000+now.getTime();
+    const idvisi = 90000000000000+now.getTime();
     const visicrear = {
       cod_tercer: pdcliente.cod_tercer,
       direccion: pdcliente.direccion,
