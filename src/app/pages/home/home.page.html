@@ -13,8 +13,11 @@
         </ion-title>
         <ion-buttons slot="end">
             <ion-button icon-left size="small" shape="round" color="tertiary" (click)="messages()">
+                <ion-badge *ngIf="messagesrec.length" color="success">{{ messagesrec.length }}</ion-badge>
                 <ion-icon name="mail"></ion-icon>
             </ion-button>
+
+
             <!-- <ion-button icon-left size="small" shape="round" color="tertiary" (click)="editprofile()">
             <ion-icon name="contact"></ion-icon>
             </ion-button> -->

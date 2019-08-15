@@ -22,6 +22,7 @@ import { ProdsService } from '../../providers/prods/prods.service';
 import { UbicacionProvider } from '../../providers/ubicacion/ubicacion.service';
 import { ActividadesService } from '../../providers/actividades/actividades.service';
 import { VisitasProvider } from '../../providers/visitas/visitas.service';
+import { MessageService } from '../../providers/message/message.service';
 
 @Injectable({
   providedIn: "root"
@@ -50,6 +51,8 @@ export class HomePage implements OnInit {
   visitalocation: string;
   clientelocation: string;
   cargocoordenadas = false;
+  messagesrec: Array<any> = [];
+
 
   agmStyles: any[] = environment.agmStyles;
   user: any = {};
@@ -67,6 +70,7 @@ export class HomePage implements OnInit {
 
   constructor(
     private actionSheetCtrl: ActionSheetController,
+    public messageService: MessageService,
     private router: Router,
     public _parEmpre: ParEmpreService,
     public platform: Platform,
@@ -109,7 +113,23 @@ export class HomePage implements OnInit {
     // console.log(this._visitas.visitaTodas);
     //Actualizar Inventario para factura y pedido a Firebase
     // const bodega = 'VEH';
-      console.log('a cargaActividadesNetsolin');
+    this.messageService.getdbDbmensajes()
+      .subscribe((datosm: any)  => {
+        console.log('ngOnInit cargar mensajes datosm:', datosm);
+        if ( datosm.length > 0) {
+              let itemdato = datosm[0];
+              this.messagesrec = [];
+              datosm.forEach((Mensaje: any) => {
+                this.messagesrec.push({
+                  id: Mensaje.payload.doc.id,
+                  data: Mensaje.payload.doc.data()
+                });
+              });
+          } else {
+            this.messagesrec = [];
+          }
+      });
+    console.log('a cargaActividadesNetsolin');
       //Cargar tipos de actividades a Firebase
       this._actividades.cargaActividadesNetsolin()
       .then(cargo => {

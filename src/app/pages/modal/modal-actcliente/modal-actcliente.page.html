@@ -113,7 +113,7 @@
             </p>
 
         </form>
-        <ion-button *ngIf="cargo_posicion" icon-left size="small" shape="round" [disabled]="!onActclieForm.valid" color="tertiary" (click)="actualiza_ubicaciongps()">
+        <ion-button *ngIf="cargo_posicion && activaract_direccion" icon-left size="small" shape="round" [disabled]="!onActclieForm.valid" color="tertiary" (click)="actualiza_ubicaciongps()">
             Actualizar
             <ion-icon name="pin"></ion-icon>
         </ion-button>

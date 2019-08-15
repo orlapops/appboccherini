@@ -31,6 +31,8 @@ export class ModalActClientePage implements OnInit {
   imagenPreview: string;
   agmStyles: any[] = environment.agmStyles;
   cargo_posicion = false;
+  // Op Agosto 15 19 se deshabilita actualización dirección
+  activaract_direccion = false;
   private photo: string = 'assets/img/logo.png';
   private userId: string;
 
@@ -110,7 +112,8 @@ export class ModalActClientePage implements OnInit {
         console.log(ldiract);
         if (ldiract==undefined || ldiract==''){
           console.log('a act direccion');
-          this.onActclieForm.controls['direccion'].setValue(this.address);
+          //op agosto 16 19 se desahactiva act dirección
+          // this.onActclieForm.controls['direccion'].setValue(this.address);
         }
       },errStatus=>{
         //Aqui codigo manejo error
