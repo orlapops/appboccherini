@@ -209,8 +209,9 @@
                             </div>
                             <!-- <ion-text color="primary">Mensaje</ion-text> -->
                         </h2>
-                        <hr *ngIf="visita.data.estado === 'A'" class="hrvisitaabierta">
-                        <hr *ngIf="visita.data.estado === 'C'" class="hrvisitacerrada">
+                        <hr *ngIf="visita.data.estado === 'A' && !visita.data.llamada" class="hrvisitaabierta">
+                        <hr *ngIf="visita.data.estado === 'C' && !visita.data.llamada" class="hrvisitacerrada">
+                        <!-- <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C' &&  && !visita.data.llamada" class="hrvisitanoabierta"> -->
                         <hr *ngIf="visita.data.estado != 'A' && visita.data.estado != 'C'" class="hrvisitanoabierta">
                         <h2 class="clientevisita">
                             <ion-text color="dark">{{visita.data.nombre}}</ion-text>
@@ -257,7 +258,10 @@
                                 <ion-text color="primary"> {{ _parEmpre.cadhoramil(visita.data.hora_in) }}</ion-text>
                             </div>
                         </h2>
-                        <hr class="hrvisitallamada">
+                        <hr *ngIf="visita.data.estado === 'A' && visita.data.llamada" class="hrvisitaabierta">
+                        <hr *ngIf="visita.data.estado === 'C' && visita.data.llamada" class="hrvisitacerrada">
+                        <hr *ngIf="visita.data.estado !== 'C' && visita.data.estado !== 'A' && visita.data.llamada" class="hrvisitallamada">
+                        <!-- <hr class="hrvisitallamada"> -->
                         <h2 class="clientevisita">
                             <ion-text color="dark"> {{visita.data.nombre}}</ion-text>
                         </h2>

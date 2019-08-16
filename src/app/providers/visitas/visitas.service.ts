@@ -167,7 +167,7 @@ cargaPeriodoUsuar(pcod_usuar){
       errorgrb_factu: false,
       errorgrb_pedido:false,
       errorgrb_recibo:false,
-      estado: 'L',
+      estado: '',
       fecha_fin: pdvisita.fecha_fin,
       fecha_in: pdvisita.fecha_in,
       fechahora_cierre: '',
@@ -564,6 +564,7 @@ cargaPeriodoUsuar(pcod_usuar){
                               console.log('Esta visita esta abierta ',datos);
                               this.visitaabierta = datos;
                             }
+                            console.log('datos.llamada:',datos.llamada);
                           });   
                             //recorrer visitas si latitud y longitud estan en 0 dejar la de boccherini
                             this.visitaTodas.map(function(dato){
@@ -572,7 +573,18 @@ cargaPeriodoUsuar(pcod_usuar){
                                   dato.longitud = -74.1230245;
                               }  
                           });
-                        console.log('Todas las visitas con id');
+                            //recorrer visitas si no tiene campo llamada incluirlo como falso
+                            this.visitaTodas.forEach(element => {
+                              if (element.data.llamada){
+                                console.log('es llamada ',element);
+                              } else {
+                                console.log('asigno llamada a falso ',element);
+                                element.data.llamada = false;
+                                console.log('element',element);
+                              }                              
+                            });
+
+                          console.log('Todas las visitas con id');
                           console.log(this.visitaTodas);                     
                           this.clasificaVisitas();
                           resolve(true);
@@ -592,20 +604,15 @@ cargaPeriodoUsuar(pcod_usuar){
  
   clasificaVisitas() {
       console.log('clasificando visitas 1');
-      this.visitas_cumplidas = this.visitaTodas.filter(reg => reg.data.estado === 'C');
-      this.visitas_pendientes = this.visitaTodas.filter(regP => regP.data.estado === 'P'
-       || regP.data.estado === 'A' || regP.data.estado === '');
-       this.visitas_xllamada = this.visitaTodas.filter(reg => reg.data.estado === 'L');
-       //  const visiabiertas = this.visitaTodas.filter(regP => regP.data.estado === 'A');
-      //  console.log('clasificando visitas 2',visiabiertas.data, visiabiertas.lenght);
-      //  if (visiabiertas.lenght > 0){
-      //    //asignar a abierta la primera que encuentre abierta
-      //    this.visitaabierta = visiabiertas[0].data;
-      //    console.log('hay visita abierta',this.visitaabierta);
-      //  }
-    // console.log('clasificando visitas 5');
-    // console.log(this.visitas_pendientes);
-    // console.log(this.visitas_cumplidas);
+      // this.visitas_cumplidas = this.visitaTodas.filter(reg => reg.data.estado === 'C' );
+      this.visitas_cumplidas = this.visitaTodas.filter(reg => reg.data.estado === 'C' && !reg.data.llamada);
+      this.visitas_pendientes = this.visitaTodas.filter(regP => (regP.data.estado === 'P'
+       || regP.data.estado === 'A' || regP.data.estado === '') && !regP.data.llamada );
+      //  this.visitas_xllamada = this.visitaTodas.filter(reg => reg.data.estado === 'L');
+       this.visitas_xllamada = this.visitaTodas.filter(regL => regL.data.llamada);
+    console.log('clasificando visitas 5');
+    console.log(this.visitas_pendientes);
+    console.log(this.visitas_cumplidas);
     console.log(this.visitas_xllamada);
   }
 

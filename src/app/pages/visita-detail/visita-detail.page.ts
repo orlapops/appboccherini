@@ -366,9 +366,10 @@ export class VisitaDetailPage implements OnInit {
     if (typeof this._visitas.visita_activa_copvdet.llamada !== undefined){
       esllamada =  this._visitas.visita_activa_copvdet.llamada;
     }
+    // estado: esllamada ? 'L' : 'A'
     const datactvisita = {
       fechahora_reingreso: Date(),
-      estado: esllamada ? 'L' : 'A'
+      estado: 'A'
     };
     console.log('registrarIngresoVisita ', this._visitas.visitaabierta,datactvisita);
     if (this._visitas.visitaabierta) {
@@ -384,9 +385,10 @@ export class VisitaDetailPage implements OnInit {
   validaCierreVisita() {
     let retorna = false;
     //valida si puede cerrar visita
-    let esllamada = false;
+    let esllamada = this._visitas.visita_activa_copvdet.llamada;
     let continua = false;
-    if (this._visitas.visita_activa_copvdet.estado === 'L') {
+    // if (this._visitas.visita_activa_copvdet.estado === 'L') {
+    if (esllamada) {
       console.log('3');
       continua = true;
     } else {
@@ -413,7 +415,8 @@ export class VisitaDetailPage implements OnInit {
     // validar si puede cerrar
     console.log('cerrarVisita visita activa:', this._visitas.visita_activa_copvdet);
     // console.log('cerrarVisita visita',this.visitaAct, this._visitas.visita_activa);
-    const esllamada = this._visitas.visita_activa_copvdet.estado === 'L' ? true : false;
+    // const esllamada = this._visitas.visita_activa_copvdet.estado === 'L' ? true : false;
+    const esllamada = this._visitas.visita_activa_copvdet.llamada;
     console.log('esllamada', esllamada);
     const fechCierre= new Date();
     const datactvisita = {

@@ -378,11 +378,11 @@ export class HomePage implements OnInit {
         // console.log('retorna bg-verde');
         // return 'bg-verde';
       } else {
-        if (estado === 'L') {
-          return 'colorvisllamada';
-        } else {
+        // if (estado === 'L') {
+          // return 'colorvisllamada';
+        // } else {
           return 'colorvispend';
-      }
+      // }
   
       }
   }
