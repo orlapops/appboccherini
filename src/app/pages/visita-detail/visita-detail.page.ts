@@ -218,6 +218,14 @@ export class VisitaDetailPage implements OnInit {
           }
           this.visitaAct = datos;
           this._visitas.visita_activa_copvdet = datos;
+          if (this._visitas.visita_activa_copvdet.llamada){
+            console.log('getVisitaActual es llamada ',this._visitas.visita_activa_copvdet);
+          } else {
+            console.log('getVisitaActual asigno llamada a falso ',this._visitas.visita_activa_copvdet);
+            this._visitas.visita_activa_copvdet.llamada = false;
+            console.log('getVisitaActual element',this._visitas.visita_activa_copvdet);
+          }                              
+
           this.cargoVisitaActual = true;
           // console.log('constructor detalle visita 4 this.visitaAct: ', this.visitaAct);
           this._actividad.getActividadesVisitaActual(this.visitaAct).subscribe((datosa: any) => {
@@ -385,6 +393,7 @@ export class VisitaDetailPage implements OnInit {
   validaCierreVisita() {
     let retorna = false;
     //valida si puede cerrar visita
+    console.log('this._visitas.visita_activa_copvdet.llamada:',this._visitas.visita_activa_copvdet.llamada);
     let esllamada = this._visitas.visita_activa_copvdet.llamada;
     let continua = false;
     // if (this._visitas.visita_activa_copvdet.estado === 'L') {
@@ -416,7 +425,13 @@ export class VisitaDetailPage implements OnInit {
     console.log('cerrarVisita visita activa:', this._visitas.visita_activa_copvdet);
     // console.log('cerrarVisita visita',this.visitaAct, this._visitas.visita_activa);
     // const esllamada = this._visitas.visita_activa_copvdet.estado === 'L' ? true : false;
-    const esllamada = this._visitas.visita_activa_copvdet.llamada;
+    let esllamada = false;
+    if (!this._visitas.visita_activa_copvdet.llamada) {
+      esllamada = false;
+    } else {
+      esllamada = this._visitas.visita_activa_copvdet.llamada;
+    }
+    // esllamada = this._visitas.visita_activa_copvdet.llamada;
     console.log('esllamada', esllamada);
     const fechCierre= new Date();
     const datactvisita = {
@@ -468,6 +483,7 @@ export class VisitaDetailPage implements OnInit {
             };
             this._visitas.genera_cierrevisita_netsolin(dvis_act, this.listaactividades, datosvp, datosvf, datosvr)
               .then(result => {
+                console.log(result);
                 if (result) {
                   console.log("sirvio envio");
                   datactvisita.envio_email = true;
@@ -484,6 +500,7 @@ export class VisitaDetailPage implements OnInit {
                     fechaing: this._visitas.visita_activa_copvdet.fechahora_ingreso,
                     fechacierre: fechCierre.toString()
                   };
+                  console.log('guardar cierre ',this.visitaID, dvis_cierre);
                   this._visitas.guardarcierrevisitaFb(this.visitaID, dvis_cierre);
                   this._visitas.visitaabierta = null;
                 } else {
