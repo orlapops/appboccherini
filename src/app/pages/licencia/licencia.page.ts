@@ -14,6 +14,8 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 
 export class LicenciaPage implements OnInit {
   public onRegisterForm: FormGroup;
+
+  seguimiento = "";
   constructor(
     public navCtrl: NavController,
     public menuCtrl: MenuController,
@@ -50,6 +52,7 @@ export class LicenciaPage implements OnInit {
   registrar(){
     console.log('evento registrar click');
     console.log(this.onRegisterForm.get('nitEmpre').value);
+    this.seguimiento = 'A verificar licencia';
     this.presentLoading('Verificando');
     this._parEmpreProv.verificaLicencia(this.onRegisterForm.get('nitEmpre').value)
     .then(()=>{ 
@@ -57,6 +60,7 @@ export class LicenciaPage implements OnInit {
         console.log('licenValida');
         console.log(this._parEmpreProv.licenValida);
         if (this._parEmpreProv.licenValida){
+          this.seguimiento = 'Licencia valida 0';
           //guardar datos licencia
           console.log(this._parEmpreProv.datoslicencia.apps);
           console.log(this._parEmpreProv.datoslicencia.url_publica);
@@ -66,19 +70,25 @@ export class LicenciaPage implements OnInit {
             AngularFireModule.initializeApp(this._parEmpreProv.datoslicencia.key_firebase);
             console.log('utiliza firebase inicializar 2')
           }
+          this.seguimiento = 'Licencia valida 1';
           if (this._parEmpreProv.datoslicencia.apps && this._parEmpreProv.datoslicencia.url_publica){
+            this.seguimiento = 'Licencia valida 2 guardar';
             this._parEmpreProv.guardarLicenciaStorage()
+            this.seguimiento = 'Licencia valida 3';
             // this._ps.cargar_todos();
             // this._ps.cargar_lineas();
           if(this._parEmpreProv.datoslicencia.util_logeo){
               //cambiar a pagina de login          
               // this.navCtrl.setRoot( LoginPage );
+              this.seguimiento = 'Licencia valida 4';
               this.navCtrl.navigateRoot('/login');
             } else {
+              this.seguimiento = 'Licencia valida 5';
               this.navCtrl.navigateRoot('/home');
               // this.navCtrl.setRoot( HomePage );
             }
           } else {
+            this.seguimiento = 'Licencia valida 6';
             this.alertCtrl.create({
               header:'Error',
               subHeader: 'Licencia Invalida',
