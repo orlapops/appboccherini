@@ -5,9 +5,6 @@
     <author email="info@netsolin.com" href="http://netsolin.com/">Equipo Netsolin</author>
     <content src="index.html" />
     <access origin="*" />
-    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
-        <application android:usesCleartextTraffic="true" />
-    </edit-config>
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
